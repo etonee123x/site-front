@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import eslint from 'vite-plugin-eslint';
 import * as path from 'path';
+import pluginRewriteAll from 'vite-plugin-rewrite-all';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,7 +11,7 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  plugins: [vue(), eslint({ cache: true })],
+  plugins: [vue(), eslint({ cache: true }), pluginRewriteAll()],
   css: {
     preprocessorOptions: {
       scss: {
