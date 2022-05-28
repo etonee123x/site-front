@@ -7,7 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { useExplorerStore } from '@/stores/explorer';
 import { computed } from 'vue';
 
 const props = withDefaults(defineProps<{ folderElement?: any; forcedRoute?: string }>(), {
@@ -15,9 +14,7 @@ const props = withDefaults(defineProps<{ folderElement?: any; forcedRoute?: stri
   forcedRoute: undefined,
 });
 
-const explorerStore = useExplorerStore();
-
-const route = computed(() => props.forcedRoute ?? explorerStore.getFullRoute(props.folderElement.url));
+const route = computed(() => props.forcedRoute ?? props.folderElement.url);
 </script>
 
 <style scoped lang="scss">

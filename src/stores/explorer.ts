@@ -9,7 +9,23 @@ const ROUTE_NAME = 'explorer';
 export const useExplorerStore = defineStore('explorer', () => {
   const data = ref();
 
-  const folderElements = computed(() => data.value?.filesList);
+  const moduleURLResolver = (url: string) => removeSlashes(`/${ROUTE_NAME}/${url}`);
+
+  const getFullRoute = (url: string) => moduleURLResolver(`/${currentDirectory.value}/${url}`);
+
+  const navigation = computed(() =>
+    (data.value?.navigation ?? []).map((item: any) => ({
+      ...item,
+      link: moduleURLResolver(item.link),
+    }))
+  );
+
+  const folderElements = computed(() =>
+    (data.value?.filesList ?? []).map((item: any) => ({
+      ...item,
+      url: getFullRoute(item.url),
+    }))
+  );
 
   const currentDirectory = computed(() => data.value?.currentDirectory);
 
@@ -17,9 +33,9 @@ export const useExplorerStore = defineStore('explorer', () => {
     if (!data.value?.paths) return {};
     const { lvlUp, abs, rel } = data.value.paths;
     return {
-      lvlUp: lvlUp ? `/${ROUTE_NAME}${lvlUp}` : lvlUp,
-      abs: `/${ROUTE_NAME}${abs}`,
-      rel: `/${ROUTE_NAME}${rel}`,
+      lvlUp: lvlUp ? moduleURLResolver(lvlUp) : lvlUp,
+      abs: moduleURLResolver(abs),
+      rel: moduleURLResolver(rel),
     };
   });
 
@@ -28,7 +44,5 @@ export const useExplorerStore = defineStore('explorer', () => {
     data.value = await response.json();
   };
 
-  const getFullRoute = (url: string) => removeSlashes(`/${ROUTE_NAME}/${currentDirectory.value}/${url}`);
-
-  return { fetchData, getFullRoute, data, folderElements, paths };
+  return { fetchData, folderElements, data, paths, navigation };
 });
