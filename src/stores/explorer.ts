@@ -13,8 +13,8 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const moduleURLResolver = (url: string) => removeSlashes(`/${ROUTE_NAME}/${url}`);
 
-  const getRoute = (url: string) => encodeURI(moduleURLResolver(`/${currentDirectory.value}/${url}`));
-  const getSrc = (url: string) => API_URL + encodeURI(removeSlashes(`/content/${currentDirectory.value}/${url}`));
+  const getRoute = (url: string) => moduleURLResolver(`/${currentDirectory.value}/${url}`);
+  const getSrc = (url: string) => API_URL + `content/${currentDirectory.value}/${url}`;
 
   const navigation: ComputedRef<NavItem[]> = computed(() =>
     (data.value?.navigation ?? []).map((item: NavItem) => ({
