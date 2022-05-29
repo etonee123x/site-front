@@ -1,16 +1,15 @@
 <template>
   <div class="navbar">
-    <div v-for="(element, idx) in elements" :key="idx" class="navbar__element">
+    <div v-for="(element, idx) in explorerStore.navigation" :key="idx" class="navbar__element">
       <router-link class="navbar__text" :to="element.link">{{ element.text }}</router-link>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useExplorerStore } from '@/stores/explorer';
+
 const explorerStore = useExplorerStore();
-const elements = computed(() => explorerStore.navigation ?? []);
 </script>
 
 <style scoped lang="scss">

@@ -43,7 +43,7 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        '@types*': path.resolve(__dirname, './includes/types/index.ts'),
+        '@types': path.resolve(__dirname, './includes/types'),
       },
     },
     plugins: [vue(), eslint({ cache: true }), pluginRewriteAll()],
