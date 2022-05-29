@@ -5,7 +5,7 @@
 <style lang="scss" scoped>
 .player {
   height: 8rem;
-  background-color: $color-background;
+  background-color: $color-bg;
   z-index: $zindex-bigplayer;
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;

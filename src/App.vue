@@ -18,7 +18,7 @@ import TheHeader from '@/components/TheHeader.vue';
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: $color-background;
+  background-color: $color-bg;
 
   &__content {
     padding: 0.5rem 0;

@@ -1,12 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800&display=swap');
-
 * {
   box-sizing: border-box;
 }
 
-html {
-  font-family: 'Manrope', Arial, sans-serif;
-  color: $color-black;
+html,
+body {
+  font-family: Roboto, 'Open Sans', sans-serif;
+  font-size: 16px;
 }
 
 ul {
@@ -19,7 +18,16 @@ li {
 }
 
 #app {
-  background-color: $color-background;
+  background-color: $color-bg;
   max-width: 100vw;
   min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: inherit;
+
+  &:hover {
+    color: $color-details;
+  }
 }
