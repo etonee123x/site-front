@@ -2,6 +2,7 @@ import { API_URL } from '@/config';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { removeSlashes } from '@/utils';
+import { NavItem, Item } from '@types';
 
 const API_MODULE_NAME = 'get-folder-data/';
 const ROUTE_NAME = 'explorer';
@@ -14,14 +15,14 @@ export const useExplorerStore = defineStore('explorer', () => {
   const getFullRoute = (url: string) => moduleURLResolver(`/${currentDirectory.value}/${url}`);
 
   const navigation = computed(() =>
-    (data.value?.navigation ?? []).map((item: any) => ({
+    (data.value?.navigation ?? []).map((item: NavItem) => ({
       ...item,
       link: moduleURLResolver(item.link),
     }))
   );
 
   const folderElements = computed(() =>
-    (data.value?.filesList ?? []).map((item: any) => ({
+    (data.value?.filesList ?? []).map((item: Item) => ({
       ...item,
       url: getFullRoute(item.url),
     }))

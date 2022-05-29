@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@types*': path.resolve(__dirname, './includes/types/index.ts'),
     },
   },
   plugins: [vue(), eslint({ cache: true }), pluginRewriteAll()],

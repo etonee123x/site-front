@@ -1,15 +1,16 @@
 <template>
   <router-link :to="route">
     <div class="folder-element">
-      <slot>{{ folderElement.name }}</slot>
+      <slot>{{ folderElement?.name }}</slot>
     </div>
   </router-link>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { Item } from '@types';
 
-const props = withDefaults(defineProps<{ folderElement?: any; forcedRoute?: string }>(), {
+const props = withDefaults(defineProps<{ folderElement?: Item; forcedRoute?: string }>(), {
   folderElement: undefined,
   forcedRoute: undefined,
 });
