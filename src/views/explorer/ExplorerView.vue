@@ -51,7 +51,6 @@ onBeforeRouteUpdate((to) => {
 <style lang="scss">
 .explorer {
   width: 90%;
-  margin: auto;
 
   &__content {
     display: flex;

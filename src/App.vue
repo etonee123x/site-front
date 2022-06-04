@@ -22,12 +22,14 @@ import TheHeader from '@/components/TheHeader.vue';
 
   &__content {
     padding: 0.5rem 0;
+    margin: 0 auto;
   }
 
   &__player {
     width: 100%;
     position: sticky;
     bottom: 0;
+    margin-top: auto;
   }
 }
 </style>
