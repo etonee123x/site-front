@@ -1,6 +1,14 @@
 <template>
-  <div class="player"></div>
+  <div v-if="playerStore.theTrack" class="player">
+    <audio id="big-player-audio" :src="playerStore.theTrack.url" controls autoplay />
+  </div>
 </template>
+
+<script setup lang="ts">
+import { usePlayerStore } from '@/stores/player';
+
+const playerStore = usePlayerStore();
+</script>
 
 <style lang="scss" scoped>
 .player {

@@ -1,9 +1,12 @@
 import { API_URL } from '@/config';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { removeSlashes } from '@/utils';
-import { NavItem, Item, FolderData } from '@types';
+import { NavItem, Item, FolderData, LinkedFile, AudioExts } from '@types';
 import { ComputedRef } from 'vue';
+import { usePlayerStore } from '@/stores/player';
+
+const { loadTrack } = usePlayerStore();
 
 const API_MODULE_NAME = 'get-folder-data/';
 const ROUTE_NAME = 'explorer';
@@ -22,6 +25,13 @@ export const useExplorerStore = defineStore('explorer', () => {
       link: moduleURLResolver(item.link),
     }))
   );
+
+  const linkedFile: ComputedRef<LinkedFile | null> = computed(() => data.value?.linkedFile ?? null);
+  watch(linkedFile, (linkedFile: LinkedFile | null) => {
+    if (!linkedFile) return;
+    if (Object.values(AudioExts).includes(linkedFile.ext as AudioExts))
+      loadTrack({ ...linkedFile, url: `${API_URL}/content/${linkedFile.url}` });
+  });
 
   const folderElements: ComputedRef<Item[]> = computed(() =>
     (data.value?.filesList ?? []).map((item: Item) => ({
@@ -50,5 +60,5 @@ export const useExplorerStore = defineStore('explorer', () => {
     data.value = await response.json();
   };
 
-  return { fetchData, folderElements, data, paths, navigation };
+  return { fetchData, folderElements, data, paths, navigation, linkedFile };
 });

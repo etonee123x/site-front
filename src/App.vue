@@ -2,13 +2,17 @@
   <div class="app">
     <TheHeader class="app_header" />
     <router-view class="app__content" />
-    <ThePlayer class="app__player" />
+    <ThePlayer v-if="playerStore.isTrackExists" class="app__player" />
   </div>
 </template>
 
 <script setup lang="ts">
 import ThePlayer from '@/components/ThePlayer.vue';
 import TheHeader from '@/components/TheHeader.vue';
+import { usePlayerStore } from '@/stores/player';
+import {} from 'pinia';
+
+const playerStore = usePlayerStore();
 </script>
 
 <style scoped lang="scss">
@@ -23,6 +27,7 @@ import TheHeader from '@/components/TheHeader.vue';
   &__content {
     padding: 0.5rem 0;
     margin: 0 auto;
+    margin-bottom: auto;
   }
 
   &__player {
