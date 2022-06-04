@@ -1,6 +1,6 @@
 import { format, intervalToDuration } from 'date-fns';
 
-export const removeSlashes = (text: string) => text.replace(/\/+/g, '/');
+export const removeSlashes = (text: string) => text.replace(/(?<!https:|http:)\/{2,}/g, '/');
 
 export const getFormattedBirthTime = (birthTime: Date, dateTimeFormat = 'dd/MM/yyyy, HH:mm') =>
   format(new Date(birthTime), dateTimeFormat);

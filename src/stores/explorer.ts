@@ -14,7 +14,7 @@ export const useExplorerStore = defineStore('explorer', () => {
   const moduleURLResolver = (url: string) => removeSlashes(`/${ROUTE_NAME}/${url}`);
 
   const getRoute = (url: string) => moduleURLResolver(`/${currentDirectory.value}/${url}`);
-  const getSrc = (url: string) => API_URL + `content/${currentDirectory.value}/${url}`;
+  const getSrc = (url: string) => removeSlashes(`${API_URL}/content/${currentDirectory.value}/${url}`);
 
   const navigation: ComputedRef<NavItem[]> = computed(() =>
     (data.value?.navigation ?? []).map((item: NavItem) => ({
@@ -44,7 +44,9 @@ export const useExplorerStore = defineStore('explorer', () => {
   });
 
   const fetchData = async (url: string): Promise<void> => {
-    const response = await fetch(API_URL + API_MODULE_NAME + url.replace('explorer', ''), { method: 'GET' });
+    const response = await fetch(removeSlashes(`${API_URL}/${API_MODULE_NAME}/${url.replace('explorer', '')}`), {
+      method: 'GET',
+    });
     data.value = await response.json();
   };
 
