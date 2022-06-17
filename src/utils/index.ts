@@ -11,3 +11,10 @@ export const formatDuration = (duration: number | string): string => {
   if (seconds === undefined) return '???';
   return `${minutes}:${seconds < 10 ? 0 : ''}${seconds}`;
 };
+
+export const to0To1Borders = (currentValue: number, maxValue: number, minValue = 0) => {
+  const result = (currentValue - minValue) / (maxValue - minValue);
+  if (result > 1) return 1;
+  if (result < 0) return 0;
+  return result;
+};

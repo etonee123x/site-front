@@ -45,11 +45,11 @@
           </div>
           <div v-if="element.metadata.bpm" class="metadata__item" title="BPM">
             <img class="metadata__icon" alt="bpm" src="https://img.icons8.com/ios/60/000000/metronome.png" />
-            <div class="metadata__value">{{ parseFloat(Number(element.metadata.bpm).toFixed(2)) }}</div>
+            <div class="metadata__value">{{ element.metadata.bpm }}</div>
           </div>
           <div v-if="element.metadata.bitrate" class="metadata__item" title="Bitrate">
             <img class="metadata__icon" alt="bitrate" src="https://img.icons8.com/ios/50/000000/bit-rate.png" />
-            <div class="metadata__value">{{ element.metadata.bitrate / 1000 }}</div>
+            <div class="metadata__value">{{ element.metadata.bitrate }}</div>
           </div>
         </div>
       </div>
@@ -62,6 +62,7 @@ import { ItemAudio } from '@types';
 import { getFormattedBirthTime, formatDuration } from '@/utils';
 
 defineProps<{ element: ItemAudio }>();
+
 </script>
 
 <style scoped lang="scss">
