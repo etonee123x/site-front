@@ -1,7 +1,7 @@
 <template>
   <div v-if="playerStore.theTrack" class="player">
     <div class="player__track-title">{{ playerStore.theTrack.name }}</div>
-    <audio id="big-player-audio" ref="audio" :src="playerStore.theTrack.url" autoplay />
+    <audio id="big-player-audio" ref="audio" :src="playerStore.theTrack.src" autoplay @ended="onEnded" />
     <div class="timeline">
       <div class="timeline__time-passed">{{ formatDuration(currentTime) }}</div>
       <div ref="timelineControl" class="timeline__zone-wrapper">
@@ -9,7 +9,7 @@
           <div
             v-if="duration"
             class="timeline__filler"
-            :style="`width: ${((currentTime * 100) / duration).toFixed(2)}%`"
+            :style="`width: ${(((isUsingPosition ? position : currentTime) * 100) / duration).toFixed(2)}%`"
           ></div>
           <div v-else class="timeline__filler" style="width: 0%" />
         </div>
@@ -35,8 +35,6 @@
         </div>
       </div>
     </div>
-    {{ timelineChanging }}
-    {{ volumeChanging }}
   </div>
 </template>
 
@@ -54,6 +52,9 @@ const playerStore = usePlayerStore();
 
 const playPauseIcon = computed(() => (playing.value ? '| |' : '|>'));
 
+const position = ref<number>(0);
+const isUsingPosition = ref<boolean>(false);
+
 const { playing, currentTime, duration, volume } = useMediaControls(audio);
 const { elementWidth: timelineControlWidth, elementX: timelineControlX } = useMouseInElement(timelineControl);
 const { elementWidth: volumeControlWidth, elementX: volumeControlX } = useMouseInElement(volumeControl);
@@ -61,10 +62,16 @@ const volumeChanging = useMousePressed({ target: volumeControl });
 const timelineChanging = useMousePressed({ target: timelineControl });
 
 watch(timelineChanging.pressed, async () => {
+  if (!timelineChanging.pressed.value) {
+    isUsingPosition.value = false;
+    return;
+  }
+  isUsingPosition.value = true;
   while (timelineChanging.pressed.value) {
     await new Promise((resolve) => setTimeout(resolve, 0));
-    currentTime.value = to0To1Borders(timelineControlX.value, timelineControlWidth.value) * duration.value;
+    position.value = to0To1Borders(timelineControlX.value, timelineControlWidth.value) * duration.value;
   }
+  currentTime.value = position.value;
 });
 
 watch(volumeChanging.pressed, async () => {
@@ -76,13 +83,21 @@ watch(volumeChanging.pressed, async () => {
 
 const clickOnPrev = () => {
   console.log('clickOnPrev');
+  playerStore.loadPrev();
 };
+
 const clickOnPlayPause = () => {
   playing.value = !playing.value;
 };
 
 const clickOnNext = () => {
   console.log('clickOnNext');
+  playerStore.loadNext();
+};
+
+const onEnded = () => {
+  console.log('onEnded');
+  playerStore.loadNext();
 };
 </script>
 

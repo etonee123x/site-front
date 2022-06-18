@@ -2,11 +2,11 @@ import { API_URL } from '@/config';
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { removeSlashes } from '@/utils';
-import { NavItem, Item, FolderData, LinkedFile, AudioExts } from '@types';
+import { NavItem, Item, FolderData, LinkedFile, AudioExts, PlaylistItem } from '@types';
 import { ComputedRef } from 'vue';
 import { usePlayerStore } from '@/stores/player';
 
-const { loadTrack } = usePlayerStore();
+const { loadTrack, loadPlaylist } = usePlayerStore();
 
 const API_MODULE_NAME = 'get-folder-data/';
 const ROUTE_NAME = 'explorer';
@@ -28,8 +28,13 @@ export const useExplorerStore = defineStore('explorer', () => {
   const linkedFile: ComputedRef<LinkedFile | null> = computed(() => data.value?.linkedFile ?? null);
   watch(linkedFile, (linkedFile: LinkedFile | null) => {
     if (!linkedFile) return;
-    if (Object.values(AudioExts).includes(linkedFile.ext as AudioExts))
-      loadTrack({ ...linkedFile, url: `${API_URL}/content/${linkedFile.url}` });
+    if (Object.values(AudioExts).includes(linkedFile.ext as AudioExts)) loadTrack(linkedFile);
+  });
+
+  const playlist: ComputedRef<PlaylistItem[] | null> = computed(() => data.value?.playlist ?? null);
+  watch(playlist, (playlist: PlaylistItem[] | null) => {
+    if (!playlist) return;
+    loadPlaylist(playlist);
   });
 
   const folderElements: ComputedRef<Item[]> = computed(() =>
