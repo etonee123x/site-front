@@ -14,7 +14,6 @@ export const usePlayerStore = defineStore('player', () => {
   };
 
   const loadPlaylist = (playlist: PlaylistItem[]) => {
-    console.log(playlist);
     thePlaylist.value = playlist;
     playlist.forEach((playlistItem, idx) => {
       if (playlistItem.thisIsLinkedFile) currentPlayingNumber.value = idx;

@@ -82,7 +82,6 @@ watch(volumeChanging.pressed, async () => {
 });
 
 const clickOnPrev = () => {
-  console.log('clickOnPrev');
   playerStore.loadPrev();
 };
 
@@ -91,19 +90,16 @@ const clickOnPlayPause = () => {
 };
 
 const clickOnNext = () => {
-  console.log('clickOnNext');
   playerStore.loadNext();
 };
 
 const onEnded = () => {
-  console.log('onEnded');
   playerStore.loadNext();
 };
 </script>
 
 <style lang="scss" scoped>
 .player {
-  height: 8rem;
   background-color: $color-bg;
   z-index: $zindex-bigplayer;
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
@@ -143,11 +139,9 @@ const onEnded = () => {
   &__btn {
     cursor: pointer;
     border: 1px $color-dark solid;
-    height: 1.75rem;
     width: 2rem;
     text-align: center;
-    vertical-align: middle;
-    line-height: 20px;
+    line-height: 1.5rem;
 
     svg {
       height: 100%;
@@ -155,11 +149,10 @@ const onEnded = () => {
   }
 
   &__volume {
-    @media (hover: none) {
-      display: none;
-    }
+    display: none;
     height: 100%;
-    width: 5rem;
+    width: 85%;
+    max-width: 5rem;
     display: flex;
     flex-direction: row;
     align-items: center;
