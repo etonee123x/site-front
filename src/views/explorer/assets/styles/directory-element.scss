@@ -1,0 +1,40 @@
+.directory-element {
+  background-color: $color-items;
+  border: 2px $color-dark solid;
+  border-radius: 0.5rem;
+  width: 100%;
+  cursor: pointer;
+
+  &__title {
+    max-width: 70%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 0.5rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px -1px 0px 0px rgba(34, 60, 80, 0.4) inset;
+  }
+
+  &__content {
+    margin: 0.5rem;
+  }
+
+  &__birth-time {
+    text-align: right;
+    margin: 0.5rem;
+  }
+
+  &_file {
+    .hoverable &:hover {
+      background-color: darken($color-items, 5%);
+    }
+  }
+
+  .hoverable &:hover {
+    border-color: $color-details;
+    background-color: darken($color-items, 5%);
+  }
+}
