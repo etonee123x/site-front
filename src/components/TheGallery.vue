@@ -28,7 +28,7 @@ const theMedia = ref<HTMLImageElement | null>(null);
 const isMediaVisible = ref(false);
 
 onClickOutside(mediaContainer, galleryStore.removeImage);
-const { x, y, style } = useDraggable(mediaContainer);
+const { x, y, style } = useDraggable(mediaContainer, { preventDefault: true, stopPropagation: true });
 
 const fullStyles = computed(() => [style.value, { opacity: Number(isMediaVisible.value) }]);
 
@@ -84,7 +84,7 @@ const onWheel = (e: WheelEvent) => {
   if (!theMedia.value || !mediaContainer.value || !e.target) {
     return;
   }
-  const theImageRect = theMedia.value?.getBoundingClientRect();
+  const theMediaRect = theMedia.value.getBoundingClientRect();
 
   const SCALE_FACTOR = 1.15;
 
@@ -98,10 +98,10 @@ const onWheel = (e: WheelEvent) => {
   theMedia.value.style.height = 'auto';
 
   mediaContainer.value.style.left = withPx(
-    (woPx(mediaContainer.value.style.left) ?? 0) - (e.clientX - theImageRect.left) * multiplier,
+    (woPx(mediaContainer.value.style.left) ?? 0) - (e.clientX - theMediaRect.left) * multiplier,
   );
   mediaContainer.value.style.top = withPx(
-    (woPx(mediaContainer.value.style.top) ?? 0) - (e.clientY - theImageRect.top) * multiplier,
+    (woPx(mediaContainer.value.style.top) ?? 0) - (e.clientY - theMediaRect.top) * multiplier,
   );
 };
 </script>
@@ -109,6 +109,7 @@ const onWheel = (e: WheelEvent) => {
 <style lang="scss" scoped>
 .gallery {
   &__media-container {
+    touch-action: pinch-zoom;
     position: fixed;
     background-color: $color-items;
     padding: 0.5rem;
