@@ -1,6 +1,11 @@
 <template>
   <div class="navbar">
-    <router-link v-for="(element, idx) in navigation" :key="idx" class="navbar__element" :to="element.link">
+    <router-link
+      v-for="(element, idx) in navigation"
+      :key="idx"
+      class="navbar__element"
+      :to="element.link"
+    >
       {{ element.text }}
     </router-link>
   </div>

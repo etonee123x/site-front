@@ -38,7 +38,7 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),
-        '@types': resolve(__dirname, './includes/types'),
+        '@types': resolve(__dirname, './submodules/types'),
       },
     },
     plugins: [vue(), pluginRewriteAll()],

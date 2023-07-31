@@ -2,7 +2,10 @@
   <div class="explorer">
     <NavBar class="explorer__navbar" />
     <div class="explorer__content">
-      <DirectoryElementSystem v-if="explorerStore.lvlUp" @click="() => navigate(explorerStore.lvlUp as string)">
+      <DirectoryElementSystem
+        v-if="explorerStore.lvlUp"
+        @click="() => navigate(explorerStore.lvlUp as string)"
+      >
         ...
       </DirectoryElementSystem>
       <component
@@ -21,7 +24,7 @@ import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { useExplorerStore } from '@/stores/explorer';
 import { createURL } from '@/utils';
 import { Item, AUDIO_EXT, PICTURE_EXT, ITEM_TYPE } from '@types';
-import { ROUTES_NAMES } from '@/types';
+import { ROUTE_NAME } from '@/router/';
 
 import NavBar from '@/views/explorer/components/NavBar.vue';
 import DirectoryElementSystem from '@/views/explorer/components/DirectoryElementSystem.vue';
@@ -38,23 +41,20 @@ const navigate = async (url: string) => {
 
 const getType = (item: Item) => {
   switch (true) {
-    case item.type === ITEM_TYPE.FOLDER: {
+    case item.type === ITEM_TYPE.FOLDER:
       return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementFolder.vue'));
-    }
-
-    case Object.values(AUDIO_EXT).includes(item.ext as AUDIO_EXT): {
+    case Object.values(AUDIO_EXT).includes(item.ext as AUDIO_EXT):
       return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementAudio.vue'));
-    }
-
-    case Object.values(PICTURE_EXT).includes(item.ext as PICTURE_EXT): {
+    case Object.values(PICTURE_EXT).includes(item.ext as PICTURE_EXT):
       return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementPicture.vue'));
-    }
+    default:
+      return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementSystem.vue'));
   }
 };
 
 const fetchData = (route: RouteLocationNormalizedLoaded) => {
   explorerStore.fetchData(createURL(...(route.params.link || []))).catch(async () => {
-    await router.push({ name: ROUTES_NAMES.EXPLORER });
+    await router.push({ name: ROUTE_NAME.EXPLORER });
   });
 };
 

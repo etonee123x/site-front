@@ -1,8 +1,19 @@
 <template>
   <div class="toasts">
-    <div v-for="toast in toasts.slice(0, 5)" :key="toast.id" class="toasts__toast toast">
-      <div class="toast__type">{{ toast.type === TOAST_TYPE.SUCCESS ? '✅' : '❌' }}</div>
-      <div class="toast__close" @click="() => closeToast(toast.id)">X</div>
+    <div
+      v-for="toast in toasts.slice(0, 5)"
+      :key="toast.id"
+      class="toasts__toast toast"
+    >
+      <div class="toast__type">
+        {{ toast.type === TOAST_TYPE.SUCCESS ? '✅' : '❌' }}
+      </div>
+      <div
+        class="toast__close"
+        @click="() => closeToast(toast.id)"
+      >
+        X
+      </div>
       {{ toast.text }}
     </div>
   </div>

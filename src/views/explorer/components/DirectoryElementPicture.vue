@@ -5,13 +5,20 @@
         <div class="directory-element__title">
           {{ element.name }}
         </div>
-        <div class="directory-element__birth-time" title="Created at">
+        <div
+          class="directory-element__birth-time"
+          title="Created at"
+        >
           {{ getFormattedBirthTime(element.birthtime) }}
         </div>
       </div>
       <div class="directory-element__content">
         <div class="picture__wrapper">
-          <img class="picture__content" alt="Картинка" :src="element.src" />
+          <img
+            class="picture__content"
+            alt="Картинка"
+            :src="element.src"
+          >
         </div>
       </div>
     </div>

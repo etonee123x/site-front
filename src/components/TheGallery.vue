@@ -1,7 +1,16 @@
 <template>
-  <div v-if="theImg" class="gallery">
-    <div ref="mediaContainer" :style="fullStyles" class="gallery__media-container">
-      <p class="gallery__media-info">{{ theImg.name }}</p>
+  <div
+    v-if="theImg"
+    class="gallery"
+  >
+    <div
+      ref="mediaContainer"
+      :style="fullStyles"
+      class="gallery__media-container"
+    >
+      <p class="gallery__media-info">
+        {{ theImg.name }}
+      </p>
       <img
         ref="theMedia"
         class="gallery__the-media"
@@ -9,7 +18,7 @@
         :src="theImg.src"
         @load="onImgLoad"
         @wheel="onWheel"
-      />
+      >
     </div>
   </div>
 </template>

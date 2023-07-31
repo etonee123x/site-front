@@ -1,10 +1,13 @@
 <template>
   <div class="app">
-    <div class="app__container container">
+    <div class="app__container l-container">
       <TheHeader class="app_header" />
       <router-view class="app__content" />
     </div>
-    <ThePlayer v-if="isTrackLoaded" class="app__player" />
+    <ThePlayer
+      v-if="isTrackLoaded"
+      class="app__player"
+    />
     <TheToasts />
     <TheGallery />
   </div>

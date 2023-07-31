@@ -1,17 +1,36 @@
 <template>
-  <div id="the-player" v-if="theTrack" class="player">
-    <div class="player__container container">
+  <div
+    v-if="theTrack"
+    id="the-player"
+    class="player"
+  >
+    <div class="player__container l-container">
       <div class="player__track-title">
         {{ theTrack.name }}
       </div>
-      <audio id="big-player-audio" ref="audio" :src="theTrack.src" autoplay @ended="loadNext" />
+      <audio
+        id="big-player-audio"
+        ref="audio"
+        :src="theTrack.src"
+        autoplay
+        @ended="loadNext"
+      />
       <div class="timeline">
         <div class="timeline__time-passed">
           {{ formattedCurrentTime }}
         </div>
-        <div ref="timelineControl" class="timeline__zone-wrapper">
-          <div id="timeline-controls" class="timeline__zone">
-            <div class="timeline__filler" :style="`width: ${timelineFillerWidth}%`" />
+        <div
+          ref="timelineControl"
+          class="timeline__zone-wrapper"
+        >
+          <div
+            id="timeline-controls"
+            class="timeline__zone"
+          >
+            <div
+              class="timeline__filler"
+              :style="`width: ${timelineFillerWidth}%`"
+            />
           </div>
         </div>
         <div class="timeline__duration">
@@ -20,24 +39,47 @@
       </div>
       <div class="controls-buttons">
         <div class="controls-buttons__left">
-          <BaseButton class="controls-buttons__btn" @click="onCopyLinkClick"> ⛓️ </BaseButton>
+          <BaseButton
+            class="controls-buttons__btn"
+            @click="onCopyLinkClick"
+          >
+            ⛓️
+          </BaseButton>
         </div>
         <div class="controls-buttons__center">
-          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="loadPrev">
+          <BaseButton
+            class="controls-buttons__btn controls-buttons__btn_main"
+            @click="loadPrev"
+          >
             {{ '|<<' }}
           </BaseButton>
-          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="onPlayPauseClick">
+          <BaseButton
+            class="controls-buttons__btn controls-buttons__btn_main"
+            @click="onPlayPauseClick"
+          >
             {{ playPauseIcon }}
           </BaseButton>
-          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="loadNext">
+          <BaseButton
+            class="controls-buttons__btn controls-buttons__btn_main"
+            @click="loadNext"
+          >
             {{ '>>|' }}
           </BaseButton>
         </div>
         <div class="controls-buttons__right">
-          <div ref="volumeControl" class="controls-buttons__volume">
+          <div
+            ref="volumeControl"
+            class="controls-buttons__volume"
+          >
             <div class="controls-buttons__volume-zone-wrapper">
-              <div id="volume-controls" class="controls-buttons__volume-zone">
-                <div class="controls-buttons__volume-filler" :style="`width: ${(volume * 100).toFixed(2)}%`" />
+              <div
+                id="volume-controls"
+                class="controls-buttons__volume-zone"
+              >
+                <div
+                  class="controls-buttons__volume-filler"
+                  :style="`width: ${(volume * 100).toFixed(2)}%`"
+                />
               </div>
             </div>
           </div>

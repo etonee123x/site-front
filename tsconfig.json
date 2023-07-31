@@ -15,7 +15,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@types": ["includes/types/index.ts"]
+      "@types": ["submodules/types/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

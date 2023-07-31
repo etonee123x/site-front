@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
+import type { DynamicComponent } from '@/types';
 declare module '*.vue' {
-  import type { DefineComponent } from 'vue';
-  const component: DefineComponent<{}, {}, any>;
+  const component: DynamicComponent;
   export default component;
 }
