@@ -1,14 +1,25 @@
 <template>
-  <div class="navbar">
+  <ul class="navbar">
     <router-link
       v-for="(element, idx) in navigation"
       :key="idx"
-      class="navbar__element"
+      v-slot="{ href, navigate, isActive, isExactActive }"
       :to="element.link"
+      custom
     >
-      {{ element.text }}
+      <li
+        :class="[
+          'navbar__element',
+          isActive && 'router-link-active',
+          isExactActive && 'router-link-exact-active'
+        ]"
+      >
+        <a :href="href" @click="navigate">
+          {{ element.text }}
+        </a>
+      </li>
     </router-link>
-  </div>
+  </ul>
 </template>
 
 <script setup lang="ts">
@@ -20,12 +31,15 @@ const { navigation } = storeToRefs(useExplorerStore());
 
 <style scoped lang="scss">
 .navbar {
+  position: sticky;
+  top: 0;
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
   overflow-x: auto;
+  background-color: var(--color-bg);
+  padding: 0.5rem 0;
 
   &__element {
-    line-height: 3rem;
     white-space: nowrap;
     display: table-cell;
     vertical-align: middle;
@@ -37,7 +51,7 @@ const { navigation } = storeToRefs(useExplorerStore());
     }
 
     &:last-child {
-      color: $color-details;
+      color: var(--color-details);
     }
   }
 }

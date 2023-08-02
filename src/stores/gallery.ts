@@ -15,5 +15,10 @@ export const useGalleryStore = defineStore('gallery', () => {
     theImg.value = null;
   };
 
-  return { loadImage, removeImage, theImg, isImgSelected };
+  return {
+    theImg,
+    isImgSelected,
+    loadImage,
+    removeImage,
+  };
 });

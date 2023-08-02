@@ -1,6 +1,6 @@
 .directory-element {
-  background-color: $color-items;
-  border: 2px $color-dark solid;
+  background-color: var(--color-items);
+  border: 2px var(--color-dark) solid;
   border-radius: 0.5rem;
   width: 100%;
   cursor: pointer;
@@ -29,12 +29,12 @@
 
   &_file {
     .hoverable &:hover {
-      background-color: darken($color-items, 5%);
+      background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
     }
   }
 
   .hoverable &:hover {
-    border-color: $color-details;
-    background-color: darken($color-items, 5%);
+    border-color: var(--color-details);
+    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
   }
 }

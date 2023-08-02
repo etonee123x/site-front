@@ -18,9 +18,9 @@ defineProps<{ element: FolderItem }>();
 @import '../assets/styles/directory-element.scss';
 .directory-element {
   &_folder {
-    background-color: $color-folders;
+    background-color: var(--color-folders);
     .hoverable &:hover {
-      background-color: darken($color-folders, 10%);
+      background-color: color-mix(in srgb, var(--color-folders) 90%, var(--color-black));
     }
   }
 }

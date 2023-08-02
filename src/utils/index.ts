@@ -1,7 +1,5 @@
 import { format, intervalToDuration } from 'date-fns';
 
-export const removeSlashes = (text: string) => text.replace(/([^:]\/)\/+/g, '$1');
-
 export const createURL = (...parts: string[]) =>
   parts
     .map(part => part.replace(/^\/+|\/+$/, ''))

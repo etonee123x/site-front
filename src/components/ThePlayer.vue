@@ -177,8 +177,8 @@ const onCopyLinkClick = async () => {
 
 <style lang="scss" scoped>
 .player {
-  background-color: $color-bg;
-  z-index: $zindex-bigplayer;
+  background-color: var(--color-bg);
+  z-index: var(--z-index-the-player);
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;
 
@@ -186,7 +186,6 @@ const onCopyLinkClick = async () => {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    width: 100%;
   }
 
   &__track-title {
@@ -240,12 +239,12 @@ const onCopyLinkClick = async () => {
   }
 
   &__volume-zone {
-    background-color: $color-dark;
+    background-color: var(--color-dark);
   }
 
   &__volume-filler {
     height: 0.25rem;
-    background-color: $color-details;
+    background-color: var(--color-details);
   }
 }
 .timeline {
@@ -264,12 +263,12 @@ const onCopyLinkClick = async () => {
   }
 
   &__zone {
-    background-color: $color-dark;
+    background-color: var(--color-dark);
   }
 
   &__filler {
     height: 0.25rem;
-    background-color: $color-details;
+    background-color: var(--color-details);
   }
 }
 </style>

@@ -43,5 +43,10 @@ module.exports = {
     '@typescript-eslint/object-curly-spacing': ['error', 'always'],
     'comma-dangle': 'off',
     '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
+    'arrow-parens': ['error', 'as-needed'],
+    'vue/max-attributes-per-line': ['error', {
+      singleline: { max: 3 },
+      multiline: { max: 1 },
+    }],
   },
 };

@@ -22,11 +22,22 @@ a {
   text-decoration-line: inherit;
 
   .hoverable &:hover {
-    color: $color-details;
+    color: var(--color-details);
   }
 }
 
 p {
   all: unset;
   display: block;
+}
+
+:root {
+  --color-black: #000000;
+  --color-details: #ff0000;
+  --color-items: #f8faff;
+  --color-folders: #fff1b2;
+  --color-bg: #ffffff;
+  --color-dark: #808080;
+
+  --z-index-the-player: 1000;
 }

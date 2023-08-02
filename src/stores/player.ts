@@ -41,5 +41,13 @@ export const usePlayerStore = defineStore('player', () => {
     theTrack.value = realPlaylist[currentPlayingNumber];
   };
 
-  return { loadTrack, loadRealPlaylist, loadPotentialPlaylist, loadPrev, loadNext, isTrackLoaded, theTrack };
+  return {
+    theTrack,
+    isTrackLoaded,
+    loadTrack,
+    loadRealPlaylist,
+    loadPotentialPlaylist,
+    loadPrev,
+    loadNext,
+  };
 });

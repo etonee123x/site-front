@@ -7,4 +7,15 @@ if (!matchMedia('(hover: none)').matches) {
   document.body.classList.add('hoverable');
 }
 
-createApp(App).use(createPinia()).use(router).mount('#app');
+fetch('/config.json')
+  .then(r =>
+    r.json()
+      .then(rJsoned => { window.CONFIG = rJsoned; })
+      .catch(console.error),
+  )
+  .finally(() => {
+    createApp(App)
+      .use(createPinia())
+      .use(router)
+      .mount('#app');
+  });

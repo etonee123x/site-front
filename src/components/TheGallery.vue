@@ -120,15 +120,16 @@ const onWheel = (e: WheelEvent) => {
   &__media-container {
     touch-action: pinch-zoom;
     position: fixed;
-    background-color: $color-items;
+    background-color: var(--color-items);
     padding: 0.5rem;
-    border: 2px $color-dark solid;
+    border: 2px var(--color-dark) solid;
   }
   &__media-info {
     text-align: center;
     margin-bottom: 0.25rem;
   }
   &__the-media {
+    margin: 0 auto;
     display: block;
   }
 }

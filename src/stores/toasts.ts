@@ -45,10 +45,11 @@ export const useToastsStore = defineStore('toasts', () => {
   };
 
   return {
+    toasts,
+    areToastsExist,
+
     toastSuccess,
     toastError,
     closeToast,
-    toasts,
-    areToastsExist,
   };
 });

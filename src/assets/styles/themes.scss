@@ -1,0 +1,43 @@
+.theme {
+  &_color {
+    &_red {
+      --color-details: #ff0000;
+    }
+
+    &_blue {
+      --color-details: #0000ff;
+    }
+
+    &_green {
+      --color-details: #00ff00;
+    }
+
+    &_cyan {
+      --color-details: #00ffff;
+    }
+
+    &_magenta {
+      --color-details: #ff00ff;
+    }
+
+    &_yellow {
+      --color-details: #ffff00;
+    }
+  }
+
+  &_mode {
+    &_light {
+      --color-items: #f8faff;
+      --color-folders: #fff1b2;
+      --color-bg: white;
+      --color-dark: #808080;
+    }
+
+    &_dark {
+      --color-items: #7a7b83;
+      --color-folders: #bbb38e;
+      --color-bg: #808080;
+      --color-dark: #404040;
+    }
+  }
+}

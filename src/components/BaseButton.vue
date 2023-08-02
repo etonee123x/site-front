@@ -7,20 +7,22 @@
 <style lang="scss" scoped>
 .button {
   all: unset;
-  background-color: $color-items;
-  box-shadow: 0px 0px 0px 1px $color-dark;
+  background-color: var(--color-items);
+  box-shadow: 0px 0px 0px 1px var(--color-dark);
   border-radius: 0.125rem;
   padding: 0.25rem;
   text-align: center;
   cursor: pointer;
   user-select: none;
+
   .hoverable &:hover {
-    background-color: darken($color-items, 5%);
+    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
   }
+
   &:active {
-    background-color: darken($color-items, 5%);
-    color: $color-details;
-    border-color: $color-details;
+    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+    color: var(--color-details);
+    border-color: var(--color-details);
   }
 }
 </style>

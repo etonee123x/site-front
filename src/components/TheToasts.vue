@@ -42,9 +42,9 @@ const { toasts } = storeToRefs(toastsStore);
   margin: 0 auto;
   width: fit-content;
   min-width: min(20rem, 80vw);
-  background-color: $color-bg;
+  background-color: var(--color-bg);
   position: relative;
-  box-shadow: 0px 0px 0px 1px $color-dark;
+  box-shadow: 0px 0px 0px 1px var(--color-dark);
   border-radius: 0.125rem;
   .hoverable &:hover {
     transform: scale(1.02);

@@ -51,7 +51,7 @@ export const useExplorerStore = defineStore(ROUTE_NAME, () => {
       })) ?? [],
   );
 
-  const lvlUp = computed(() => (data.value?.lvlUp ? moduleURLResolver(data.value.lvlUp) : null));
+  const lvlUp = computed(() => data.value?.lvlUp ? moduleURLResolver(data.value.lvlUp) : null);
 
   const fetchData = async (url: string) => {
     data.value = await get(createURL(apiRoute, url));
@@ -59,5 +59,11 @@ export const useExplorerStore = defineStore(ROUTE_NAME, () => {
 
   watch(data, handlePlayer, { deep: true });
 
-  return { fetchData, folderElements, lvlUp, navigation, linkedFile };
+  return {
+    folderElements,
+    lvlUp,
+    navigation,
+    linkedFile,
+    fetchData,
+  };
 });
