@@ -47,7 +47,7 @@ const { navigation } = storeToRefs(useExplorerStore());
     &:not(:first-child)::before {
       content: '>';
       color: initial;
-      padding: 0 0.25rem;
+      padding: 0 0.5rem;
     }
 
     &:last-child {

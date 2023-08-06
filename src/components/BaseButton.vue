@@ -14,6 +14,9 @@
   text-align: center;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .hoverable &:hover {
     background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));

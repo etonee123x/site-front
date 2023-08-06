@@ -29,7 +29,7 @@ import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { computed, ref } from 'vue';
 
 import { type Option } from '@/components/BaseSelect/types';
-import BaseIcon from '../BaseIcon.vue';
+import BaseIcon from '@/components/BaseIcon.vue';
 
 const props = defineProps<{
   modelValue?: Option;

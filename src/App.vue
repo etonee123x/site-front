@@ -2,16 +2,11 @@
   <div class="app">
     <TheHeader class="app__header" />
     <main class="app__main">
-      <div class="app__container l-container">
-        <router-view class="app__content" />
-      </div>
-      <ThePlayer
-        v-if="isTrackLoaded"
-        class="app__player"
-      />
+      <router-view class="l-container" />
       <TheToasts />
       <TheGallery />
     </main>
+    <ThePlayer v-if="isTrackLoaded" class="app__player" />
   </div>
 </template>
 
@@ -39,6 +34,7 @@ useSettingsStore().initSettings();
   height: 100vh;
 
   &__main {
+    position: relative;
     overflow-y: auto;
     display: flex;
     flex-direction: column;

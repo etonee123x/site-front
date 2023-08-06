@@ -1,17 +1,13 @@
 <template>
-  <div
-    v-if="theTrack"
-    id="the-player"
-    class="player"
-  >
+  <div id="the-player" ref="thePlayer" class="player">
     <div class="player__container l-container">
       <div class="player__track-title">
-        {{ theTrack.name }}
+        {{ theTrack?.name }}
       </div>
       <audio
         id="big-player-audio"
         ref="audio"
-        :src="theTrack.src"
+        :src="theTrack?.src"
         autoplay
         @ended="loadNext"
       />
@@ -19,18 +15,9 @@
         <div class="timeline__time-passed">
           {{ formattedCurrentTime }}
         </div>
-        <div
-          ref="timelineControl"
-          class="timeline__zone-wrapper"
-        >
-          <div
-            id="timeline-controls"
-            class="timeline__zone"
-          >
-            <div
-              class="timeline__filler"
-              :style="`width: ${timelineFillerWidth}%`"
-            />
+        <div ref="timelineControl" class="timeline__zone-wrapper">
+          <div class="timeline__zone">
+            <div class="timeline__filler" :style="`width: ${timelineFillerWidth}%`" />
           </div>
         </div>
         <div class="timeline__duration">
@@ -39,47 +26,26 @@
       </div>
       <div class="controls-buttons">
         <div class="controls-buttons__left">
-          <BaseButton
-            class="controls-buttons__btn"
-            @click="onCopyLinkClick"
-          >
-            ⛓️
+          <BaseButton class="controls-buttons__btn" @click="onCopyLinkClick">
+            <BaseIcon size="20" :path="mdiLinkVariant" />
           </BaseButton>
         </div>
         <div class="controls-buttons__center">
-          <BaseButton
-            class="controls-buttons__btn controls-buttons__btn_main"
-            @click="loadPrev"
-          >
-            {{ '|<<' }}
+          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="loadPrev">
+            <BaseIcon :path="mdiSkipBackward" />
           </BaseButton>
-          <BaseButton
-            class="controls-buttons__btn controls-buttons__btn_main"
-            @click="onPlayPauseClick"
-          >
-            {{ playPauseIcon }}
+          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="onPlayPauseClick">
+            <BaseIcon :path="playPauseIcon" />
           </BaseButton>
-          <BaseButton
-            class="controls-buttons__btn controls-buttons__btn_main"
-            @click="loadNext"
-          >
-            {{ '>>|' }}
+          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="loadNext">
+            <BaseIcon :path="mdiSkipForward" />
           </BaseButton>
         </div>
         <div class="controls-buttons__right">
-          <div
-            ref="volumeControl"
-            class="controls-buttons__volume"
-          >
+          <div ref="volumeControl" class="controls-buttons__volume">
             <div class="controls-buttons__volume-zone-wrapper">
-              <div
-                id="volume-controls"
-                class="controls-buttons__volume-zone"
-              >
-                <div
-                  class="controls-buttons__volume-filler"
-                  :style="`width: ${(volume * 100).toFixed(2)}%`"
-                />
+              <div class="controls-buttons__volume-zone">
+                <div class="controls-buttons__volume-filler" :style="`width: ${(volume * 100).toFixed(2)}%`" />
               </div>
             </div>
           </div>
@@ -90,14 +56,28 @@
 </template>
 
 <script lang="ts" setup>
+import { useMediaControls, useMousePressed, useMouseInElement, useElementSize } from '@vueuse/core';
+import { mdiLinkVariant, mdiPause, mdiPlay, mdiSkipBackward, mdiSkipForward } from '@mdi/js';
 import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import { usePlayerStore } from '@/stores/player';
-import { useMediaControls, useMousePressed, useMouseInElement } from '@vueuse/core';
 import { formatDuration, to0To1Borders, createURL } from '@/utils';
+import { useToastsStore } from '@/stores/toasts';
 
 import BaseButton from '@/components/BaseButton.vue';
-import { useToastsStore } from '@/stores/toasts';
-import { storeToRefs } from 'pinia';
+import BaseIcon from '@/components/BaseIcon.vue';
+
+const thePlayer = ref<HTMLDivElement | null>(null);
+
+const { height } = useElementSize(thePlayer, undefined, { box: 'border-box' });
+
+watch(
+  height,
+  v => {
+    document.documentElement.style.setProperty('--size-player-height', `${v}px`);
+  },
+);
 
 const playerStore = usePlayerStore();
 const { loadPrev, loadNext } = playerStore;
@@ -124,7 +104,7 @@ const timelineFillerWidth = computed(() =>
 );
 const formatedDuration = computed(() => formatDuration(duration.value));
 const formattedCurrentTime = computed(() => formatDuration(currentTime.value));
-const playPauseIcon = computed(() => (playing.value ? '| |' : '|>'));
+const playPauseIcon = computed(() => (playing.value ? mdiPause : mdiPlay));
 
 watch(timelineChanging.pressed, async () => {
   if (!timelineChanging.pressed.value) {
@@ -171,7 +151,7 @@ const onCopyLinkClick = async () => {
     console.error(e);
   }
   await window.navigator.clipboard?.writeText(url);
-  toastSuccess('Скопировано!');
+  toastSuccess('Copied!');
 };
 </script>
 
@@ -226,6 +206,7 @@ const onCopyLinkClick = async () => {
   &__btn {
     white-space: nowrap;
     min-width: 1.5rem;
+
     &_main {
       height: 1.5rem;
       width: 2rem;
