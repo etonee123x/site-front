@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { usePreferredDark } from '@vueuse/core';
+
 import { Settings, THEME_COLOR, THEME_MODE } from '@/types';
 
 enum CLASS_TITLE {
@@ -25,32 +27,33 @@ const getLocalStorageSettings = () => {
 };
 
 export const useSettingsStore = defineStore('settings', () => {
-  const settings = ref<Settings>(Object.assign(
+  const _settings = ref<Settings>(Object.assign(
+    {},
     window.CONFIG,
     getLocalStorageSettings(),
   ));
 
-  const color = computed(() => settings.value?.themeColor ?? null);
-  const mode = computed(() => settings.value?.themeMode ?? null);
+  const isPreferredDark = usePreferredDark();
+
+  const settings = computed({
+    get: () => _settings.value,
+    set: v => {
+      _settings.value = v;
+
+      initSettings();
+    },
+  });
+
+  const themeColor = computed(() => _settings.value.themeColor);
+  const themeMode = computed(() => _settings.value.themeMode);
 
   const initSettings = () => {
-    if (color.value) {
-      setColor(color.value);
-    }
-
-    if (mode.value) {
-      setMode(mode.value);
-    }
+    setColor(themeColor.value);
+    setMode(themeMode.value);
   };
 
   const setColor = (color: THEME_COLOR) => {
     type ThemeColorWithoutRandom = Exclude<THEME_COLOR, THEME_COLOR.RANDOM>
-
-    const bodyClassList = document.querySelector('body')?.classList;
-
-    const oldClasses = Array.from(bodyClassList ?? []);
-
-    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLE.THEME_COLOR));
 
     let _color: ThemeColorWithoutRandom | null = null;
     if (color === THEME_COLOR.RANDOM) {
@@ -61,31 +64,64 @@ export const useSettingsStore = defineStore('settings', () => {
       _color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)];
     }
 
+    const bodyClassList = document.querySelector('body')?.classList;
+    const oldClasses = Array.from(bodyClassList ?? []);
+    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLE.THEME_COLOR));
+
     newClasses.push([CLASS_TITLE.THEME_COLOR, _color ?? color].join('_'));
 
     bodyClassList?.remove(...oldClasses);
     bodyClassList?.add(...newClasses);
 
-    settings.value.themeColor = color;
+    _settings.value.themeColor = color;
   };
 
-  const setMode = (mode: THEME_MODE) => {
-    settings.value.themeMode = mode;
+  const themeModeSystem = computed(() => isPreferredDark.value ? THEME_MODE.DARK : THEME_MODE.LIGHT);
+
+  const setMode = (mode: THEME_MODE, asSystem = false) => {
+    const _mode = mode === THEME_MODE.SYSTEM || asSystem ? themeModeSystem.value : mode;
+    const bodyClassList = document.querySelector('body')?.classList;
+    const oldClasses = Array.from(bodyClassList ?? []);
+    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLE.THEME_MODE));
+
+    newClasses.push([CLASS_TITLE.THEME_MODE, _mode].join('_'));
+
+    bodyClassList?.remove(...oldClasses);
+    bodyClassList?.add(...newClasses);
+
+    _settings.value.themeMode = asSystem ? THEME_MODE.SYSTEM : mode;
+  };
+
+  const setSettings = (_settings: Settings) => {
+    settings.value = Object.assign(settings.value, _settings);
   };
 
   const saveSettings = () => localStorage.setItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE, JSON.stringify(settings.value));
 
   const resetSettings = () => {
     localStorage.removeItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE);
-    settings.value = window.CONFIG;
-    initSettings();
+
+    settings.value = Object.assign({}, window.CONFIG);
   };
+
+  watch(
+    themeModeSystem,
+    v => {
+      if (_settings.value.themeMode !== THEME_MODE.SYSTEM) {
+        return;
+      }
+
+      setMode(v, true);
+    },
+    { immediate: true },
+  );
 
   return {
     settings,
-    color,
-    mode,
+    themeColor,
+    themeMode,
 
+    setSettings,
     initSettings,
     saveSettings,
     resetSettings,

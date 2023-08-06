@@ -1,12 +1,12 @@
 <template>
   <header class="header">
     <div class="header__inner l-container">
-      <span class="header__logo">eto_ne_E123x</span>
+      <span class="header__logo f-h1">eto_ne_E123x</span>
       <span class="header__settings" @click="onIconSettingsClick">
         <BaseIcon :path="mdiCog" />
       </span>
     </div>
-    <TheDialogSettings v-model="isDialogSettingsOpened" />
+    <DialogSettings v-model="isDialogSettingsOpened" />
   </header>
 </template>
 
@@ -15,7 +15,7 @@ import { ref } from 'vue';
 import { mdiCog } from '@mdi/js';
 
 import BaseIcon from '@/components/BaseIcon.vue';
-import TheDialogSettings from '@/components/TheDialogSettings.vue';
+import DialogSettings from '@/components/DialogSettings.vue';
 
 const isDialogSettingsOpened = ref(false);
 
@@ -39,6 +39,7 @@ const onIconSettingsClick = () => {
     display: flex;
     align-items: center;
     justify-items: center;
+    cursor: pointer;
   }
 }
 </style>

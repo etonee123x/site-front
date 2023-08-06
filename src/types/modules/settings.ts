@@ -1,11 +1,11 @@
 export enum THEME_COLOR {
   RANDOM = 'random',
+  RED = 'red',
+  GREEN = 'green',
   BLUE = 'blue',
   CYAN = 'cyan',
-  GREEN = 'green',
   MAGENTA = 'magenta',
-  RED = 'red',
-  YELLOW = 'yellow',
+  ORANGE = 'orange',
 }
 
 export enum THEME_MODE {

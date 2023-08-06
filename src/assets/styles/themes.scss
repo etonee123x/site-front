@@ -20,8 +20,8 @@
       --color-details: #ff00ff;
     }
 
-    &_yellow {
-      --color-details: #ffff00;
+    &_orange {
+      --color-details: #ff8000;
     }
   }
 
@@ -31,6 +31,13 @@
       --color-folders: #fff1b2;
       --color-bg: white;
       --color-dark: #808080;
+
+      &-preview {
+        --color-items: #f8faff !important;
+        --color-folders: #fff1b2 !important;
+        --color-bg: white !important;
+        --color-dark: #808080 !important;
+      }
     }
 
     &_dark {
@@ -38,6 +45,13 @@
       --color-folders: #bbb38e;
       --color-bg: #808080;
       --color-dark: #404040;
+
+      &-preview {
+        --color-items: #7a7b83 !important;
+        --color-folders: #bbb38e !important;
+        --color-bg: #808080 !important;
+        --color-dark: #404040 !important;
+      }
     }
   }
 }

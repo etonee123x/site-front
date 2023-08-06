@@ -8,8 +8,8 @@
 .button {
   all: unset;
   background-color: var(--color-items);
-  box-shadow: 0px 0px 0px 1px var(--color-dark);
-  border-radius: 0.125rem;
+  border: 1px solid var(--color-dark);
+  border-radius: 0.25rem;
   padding: 0.25rem;
   text-align: center;
   cursor: pointer;
