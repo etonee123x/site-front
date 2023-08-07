@@ -11,4 +11,5 @@ export default () => defineConfig({
     },
   },
   plugins: [vue(), pluginRewriteAll()],
+  publicDir: 'public',
 });

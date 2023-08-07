@@ -2,3 +2,5 @@ node_modules
 dist
 dist-ssr
 .env
+
+public/config.json
