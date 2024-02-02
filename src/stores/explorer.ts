@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { createURL, isIn } from '@/utils';
-import { FolderData, AudioItem, AUDIO_EXT } from '@types';
+import { createURL } from '@/utils';
+import { FolderData, isItemAudio } from '@types';
 import { usePlayerStore } from '@/stores/player';
 import { get } from '@/http';
 
@@ -20,14 +20,14 @@ export const useExplorerStore = defineStore(ROUTE_NAME, () => {
       return;
     }
 
-    const playlist = data.value.items.filter(item => isIn(item.ext, AUDIO_EXT)) as AudioItem[];
+    const playlist = data.value.items.filter(isItemAudio);
     if (!playlist.length) {
       return;
     }
 
-    if (data.value.linkedFile && isIn(data.value.linkedFile.ext, AUDIO_EXT)) {
+    if (data.value.linkedFile && isItemAudio(data.value.linkedFile)) {
       loadRealPlaylist(playlist);
-      loadTrack(data.value.linkedFile as AudioItem);
+      loadTrack(data.value.linkedFile);
     } else {
       loadPotentialPlaylist(playlist);
     }
@@ -64,6 +64,7 @@ export const useExplorerStore = defineStore(ROUTE_NAME, () => {
     lvlUp,
     navigation,
     linkedFile,
+
     fetchData,
   };
 });

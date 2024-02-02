@@ -26,11 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { PictureItem } from '@types';
+import { ItemPicture } from '@types';
 import { getFormattedBirthTime } from '@/utils';
 import { useGalleryStore } from '@/stores/gallery';
 
-const props = defineProps<{ element: PictureItem }>();
+const props = defineProps<{ element: ItemPicture }>();
 
 const { loadImage } = useGalleryStore();
 

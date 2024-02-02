@@ -48,5 +48,8 @@ module.exports = {
       singleline: { max: 3 },
       multiline: { max: 1 },
     }],
+    '@typescript-eslint/no-unsafe-declaration-merging': 'off',
+    'no-redeclare': 'off',
+    '@typescript-eslint/no-redeclare': 'error',
   },
 };

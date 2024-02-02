@@ -4,12 +4,12 @@
     <div class="explorer__content">
       <DirectoryElementSystem
         v-if="explorerStore.lvlUp"
-        @click="() => navigate(explorerStore.lvlUp as string)"
+        @click="navigate(explorerStore.lvlUp)"
       >
         ...
       </DirectoryElementSystem>
       <component
-        :is="getType(folderElement)"
+        :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"
         :key="idx"
         :element="folderElement"
@@ -23,13 +23,20 @@ import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { useExplorerStore } from '@/stores/explorer';
 import { createURL } from '@/utils';
-import { Item, AUDIO_EXT, PICTURE_EXT, ITEM_TYPE } from '@types';
+import { Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
 import { ROUTE_NAME } from '@/router/';
 
 import NavBar from '@/views/explorer/components/NavBar.vue';
 import DirectoryElementSystem from '@/views/explorer/components/DirectoryElementSystem.vue';
 
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
+
+const DirectoryElementFolder
+  = defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementFolder.vue'));
+const DirectoryElementAudio
+  = defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementAudio.vue'));
+const DirectoryElementPicture
+  = defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementPicture.vue'));
 
 const explorerStore = useExplorerStore();
 const route = useRoute();
@@ -39,23 +46,22 @@ const navigate = async (url: string) => {
   await router.push(url);
 };
 
-const getType = (item: Item) => {
+const getComponent = (item: Item) => {
   switch (true) {
-    case item.type === ITEM_TYPE.FOLDER:
-      return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementFolder.vue'));
-    case Object.values(AUDIO_EXT).includes(item.ext as AUDIO_EXT):
-      return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementAudio.vue'));
-    case Object.values(PICTURE_EXT).includes(item.ext as PICTURE_EXT):
-      return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementPicture.vue'));
+    case isItemFolder(item):
+      return DirectoryElementFolder;
+    case isItemAudio(item):
+      return DirectoryElementAudio;
+    case isItemPicture(item):
+      return DirectoryElementPicture;
     default:
-      return defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementSystem.vue'));
+      return DirectoryElementSystem;
   }
 };
 
 const fetchData = (route: RouteLocationNormalizedLoaded) => {
-  explorerStore.fetchData(createURL(...(route.params.link || []))).catch(async () => {
-    await router.push({ name: ROUTE_NAME.EXPLORER });
-  });
+  explorerStore.fetchData(createURL(...(route.params.link || [])))
+    .catch(() => router.push({ name: ROUTE_NAME.EXPLORER }));
 };
 
 fetchData(route);

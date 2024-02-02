@@ -27,5 +27,3 @@ export const addId = <T>(
   el: T,
   id = Number(crypto.randomUUID().match(/[\d]/g)?.join('')),
 ): WithId<T> => ({ ...el, id });
-
-export const isIn = <T>(value: T, Enum: { [key: string]: T }): boolean => Object.values(Enum).includes(value);

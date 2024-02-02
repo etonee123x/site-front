@@ -1,19 +1,19 @@
-import { AudioItem } from '@types';
+import { ItemAudio } from '@types';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 
 let realPlaylistHref = window.location.href;
 let currentPlayingNumber = 0;
 
-let potentialPlaylist: AudioItem[] = [];
-let realPlaylist: AudioItem[] = [];
+let potentialPlaylist: ItemAudio[] = [];
+let realPlaylist: ItemAudio[] = [];
 
 export const usePlayerStore = defineStore('player', () => {
-  const theTrack = ref<AudioItem | null>(null);
+  const theTrack = ref<ItemAudio | null>(null);
 
   const isTrackLoaded = computed(() => Boolean(theTrack.value));
 
-  const loadTrack = (track: AudioItem) => {
+  const loadTrack = (track: ItemAudio) => {
     if (window.location.href !== realPlaylistHref || !theTrack.value) {
       realPlaylist = potentialPlaylist;
       realPlaylistHref = window.location.href;
@@ -22,12 +22,12 @@ export const usePlayerStore = defineStore('player', () => {
     currentPlayingNumber = realPlaylist.findIndex(({ name }) => name === theTrack.value?.name);
   };
 
-  const loadRealPlaylist = (playlist: AudioItem[]) => {
+  const loadRealPlaylist = (playlist: ItemAudio[]) => {
     realPlaylistHref = window.location.href;
     realPlaylist = playlist;
   };
 
-  const loadPotentialPlaylist = (playlist: AudioItem[]) => {
+  const loadPotentialPlaylist = (playlist: ItemAudio[]) => {
     potentialPlaylist = playlist;
   };
 

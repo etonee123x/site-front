@@ -9,9 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { FolderItem } from '@types';
+import { ItemFolder } from '@types';
 
-defineProps<{ element: FolderItem }>();
+defineProps<{ element: ItemFolder }>();
 </script>
 
 <style scoped lang="scss">

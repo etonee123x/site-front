@@ -90,11 +90,11 @@
 </template>
 
 <script setup lang="ts">
-import { AudioItem } from '@types';
+import { ItemAudio } from '@types';
 import { getFormattedBirthTime, formatDuration } from '@/utils';
 import { usePlayerStore } from '@/stores/player';
 
-const props = defineProps<{ element: AudioItem }>();
+const props = defineProps<{ element: ItemAudio }>();
 
 const playerStore = usePlayerStore();
 
