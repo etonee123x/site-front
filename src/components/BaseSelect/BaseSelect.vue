@@ -1,9 +1,5 @@
 <template>
-  <div
-    ref="refSelect"
-    :class="[$style.select, isOpened && $style.select_opened]"
-    @click="onWrapClick"
-  >
+  <div ref="refSelect" :class="[$style.select, isOpened && $style.select_opened]" @click="onWrapClick">
     <div :class="[$style.option, $style.option_selected]">
       <span v-if="_modelValue">{{ _modelValue }}</span>
       <BaseIcon size="20" :path="path" />
@@ -36,14 +32,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:modelValue': [Option];
-  'select': [Option];
+  select: [Option];
 }>();
 
 const refSelect = ref<HTMLDivElement>();
 
 const isOpened = ref(false);
 
-const path = computed(() => isOpened.value ? mdiChevronUp : mdiChevronDown);
+const path = computed(() => (isOpened.value ? mdiChevronUp : mdiChevronDown));
 
 const _modelValue = computed(() => props.modelValue?.text ?? null);
 

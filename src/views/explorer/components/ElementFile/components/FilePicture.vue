@@ -1,7 +1,7 @@
 <template>
   <ElementFile :element="element" @click="onClick">
     <div :class="$style.wrapper">
-      <img :class="$style.thePicture" alt="Картинка" :src="element.src">
+      <img :class="$style.thePicture" alt="Картинка" :src="element.src" />
     </div>
   </ElementFile>
 </template>
@@ -29,6 +29,6 @@ const onClick = () => loadImage(props.element);
 }
 
 .thePicture {
-    max-width: 100%;
+  max-width: 100%;
 }
 </style>

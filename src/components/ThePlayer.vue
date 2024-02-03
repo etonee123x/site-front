@@ -1,20 +1,10 @@
 <template>
-  <div
-    v-if="theTrack"
-    id="the-player"
-    ref="refPlayer"
-    :class="$style.player"
-  >
+  <div v-if="theTrack" id="the-player" ref="refPlayer" :class="$style.player">
     <div :class="[$style.container, 'l-container']">
       <div :class="$style.title">
         {{ theTrack.name }}
       </div>
-      <audio
-        ref="refAudio"
-        :src="theTrack.src"
-        autoplay
-        @ended="loadNext"
-      />
+      <audio ref="refAudio" :src="theTrack.src" autoplay @ended="loadNext" />
       <div :class="$style.timeline">
         <div>
           {{ formattedCurrentTime }}
@@ -75,12 +65,9 @@ const refPlayer = ref<HTMLDivElement>();
 
 const { height } = useElementSize(refPlayer, undefined, { box: 'border-box' });
 
-watch(
-  height,
-  v => {
-    document.documentElement.style.setProperty('--size-player-height', `${v}px`);
-  },
-);
+watch(height, (v) => {
+  document.documentElement.style.setProperty('--size-player-height', `${v}px`);
+});
 
 const playerStore = usePlayerStore();
 const { loadPrev, loadNext } = playerStore;
@@ -102,20 +89,22 @@ const { elementWidth: volumeControlWidth, elementX: volumeControlX } = useMouseI
 const { pressed: isTimelinePressed } = useMousePressed({ target: refTimelineControl });
 const { pressed: isVolumePressed } = useMousePressed({ target: refVolumeControl });
 
-const controlButtons = computed(() => [
-  {
-    icon: mdiSkipBackward,
-    onClick: loadPrev,
-  },
-  {
-    icon: playing.value ? mdiPause : mdiPlay,
-    onClick: onClickPlayPause,
-  },
-  {
-    icon: mdiSkipForward,
-    onClick: loadNext,
-  },
-].map(addId));
+const controlButtons = computed(() =>
+  [
+    {
+      icon: mdiSkipBackward,
+      onClick: loadPrev,
+    },
+    {
+      icon: playing.value ? mdiPause : mdiPlay,
+      onClick: onClickPlayPause,
+    },
+    {
+      icon: mdiSkipForward,
+      onClick: loadNext,
+    },
+  ].map(addId),
+);
 
 const timelineFillerWidth = computed(() =>
   duration.value
@@ -133,7 +122,7 @@ watch(isTimelinePressed, async () => {
 
   isUsingPosition.value = true;
   while (isTimelinePressed.value) {
-    await new Promise<void>(resolve =>
+    await new Promise<void>((resolve) =>
       setTimeout(() => {
         position.value = to0To1Borders(timelineControlX.value, [, timelineControlWidth.value]) * duration.value;
         resolve();
@@ -145,7 +134,7 @@ watch(isTimelinePressed, async () => {
 
 watch(isVolumePressed, async () => {
   while (isVolumePressed.value) {
-    await new Promise<void>(resolve =>
+    await new Promise<void>((resolve) =>
       setTimeout(() => {
         volume.value = to0To1Borders(volumeControlX.value, [, volumeControlWidth.value]);
         resolve();

@@ -28,12 +28,9 @@ const { toasts } = storeToRefs(toastsStore);
 
 const $style = useCssModule();
 
-const getClassesToast = (toast: Toast) => [
-  $style.toast,
-  $style[`toast_${toast.type}`],
-];
+const getClassesToast = (toast: Toast) => [$style.toast, $style[`toast_${toast.type}`]];
 
-const getIconPath = (toast: Toast) => toast.type === TOAST_TYPE.SUCCESS ? mdiCheck : mdiClose;
+const getIconPath = (toast: Toast) => (toast.type === TOAST_TYPE.SUCCESS ? mdiCheck : mdiClose);
 
 const onClickClose = (toast: Toast) => toastsStore.closeToast(toast.id);
 </script>
@@ -74,13 +71,13 @@ const onClickClose = (toast: Toast) => toastsStore.closeToast(toast.id);
 
   &_error {
     .toastIcon {
-      color: var(--color-error)
+      color: var(--color-error);
     }
   }
 
   &_success {
     .toastIcon {
-      color: var(--color-success)
+      color: var(--color-success);
     }
   }
 }

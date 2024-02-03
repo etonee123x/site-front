@@ -26,11 +26,9 @@ export const useToastsStore = defineStore('toasts', () => {
 
   const hasToasts = computed(() => isNotEmptyArray(toasts));
 
-  const toastSuccess = (text: string, options?: Options) =>
-    toast(text, { type: TOAST_TYPE.SUCCESS, ...options });
+  const toastSuccess = (text: string, options?: Options) => toast(text, { type: TOAST_TYPE.SUCCESS, ...options });
 
-  const toastError = (text: string, options?: Options) =>
-    toast(text, { type: TOAST_TYPE.ERROR, ...options });
+  const toastError = (text: string, options?: Options) => toast(text, { type: TOAST_TYPE.ERROR, ...options });
 
   const closeToast = (id: number) => {
     const index = toasts.findIndex(({ id: _id }) => _id === id);

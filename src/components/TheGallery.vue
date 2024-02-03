@@ -11,7 +11,7 @@
         :src="theImage.src"
         @load="onImgLoad"
         @wheel="onWheel"
-      >
+      />
     </div>
   </div>
 </template>

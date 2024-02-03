@@ -8,11 +8,7 @@
       custom
     >
       <li
-        :class="[
-          $style.navigationItem,
-          isActive && 'router-link-active',
-          isExactActive && 'router-link-exact-active'
-        ]"
+        :class="[$style.navigationItem, isActive && 'router-link-active', isExactActive && 'router-link-exact-active']"
       >
         <a :href="href" @click="navigate">
           {{ navigationItem.text }}
@@ -39,7 +35,6 @@ const { navigationItems } = storeToRefs(explorerStore);
   overflow-x: auto;
   background-color: var(--color-bg);
   padding: 0.5rem 0;
-
 }
 
 .navigationItem {

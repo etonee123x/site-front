@@ -5,10 +5,13 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{
-  path: string;
-  size?: string;
-}>(), {
-  size: '24',
-});
+withDefaults(
+  defineProps<{
+    path: string;
+    size?: string;
+  }>(),
+  {
+    size: '24',
+  },
+);
 </script>

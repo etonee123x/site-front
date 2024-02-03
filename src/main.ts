@@ -8,13 +8,12 @@ import { getConfig } from '@/api';
 import App from '@/App.vue';
 
 getConfig()
-  .then(config => { window.CONFIG = config; })
+  .then((config) => {
+    window.CONFIG = config;
+  })
   .catch(console.error)
   .finally(() => {
-    createApp(App)
-      .use(createPinia())
-      .use(router)
-      .mount('#app');
+    createApp(App).use(createPinia()).use(router).mount('#app');
 
     useSettingsStore().initSettings();
   });

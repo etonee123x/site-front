@@ -10,19 +10,13 @@
     <div :class="$style.content">
       <div :class="$style.row">
         <span>Color:</span>
-        <BaseSelect
-          v-model="themeColor"
-          :class="[$style.select, $style.select_colors]"
-          :options="themeColorOptions"
-        />
+        <BaseSelect v-model="themeColor" :class="[$style.select, $style.select_colors]" :options="themeColorOptions" />
       </div>
       <div :class="$style.row">
         <span>Mode:</span>
         <BaseSelect v-model="themeMode" :class="$style.select" :options="themeModeOptions" />
       </div>
-      <BaseButton @click="onClickResetSettings">
-        Reset Settings
-      </BaseButton>
+      <BaseButton @click="onClickResetSettings"> Reset Settings </BaseButton>
     </div>
   </BaseDialog>
 </template>
@@ -55,22 +49,24 @@ const refDialog = ref<InstanceType<typeof BaseDialog>>();
 
 const $style = useCssModule();
 
-const themeColorOptions = Object.values(THEME_COLOR)
-  .map(color => addId({ text: color, value: color }));
+const themeColorOptions = Object.values(THEME_COLOR).map((color) => addId({ text: color, value: color }));
 
-const themeModeOptions = Object.values(THEME_MODE)
-  .map(mode => addId({ text: mode, value: mode }));
+const themeModeOptions = Object.values(THEME_MODE).map((mode) => addId({ text: mode, value: mode }));
 
 const model = ref(settings.value);
 
 const themeColor = computed({
   get: () => themeColorOptions.find(({ value }) => value === model.value.themeColor) || themeColorOptions[0],
-  set: v => { model.value.themeColor = v.value; },
+  set: (v) => {
+    model.value.themeColor = v.value;
+  },
 });
 
 const themeMode = computed({
   get: () => themeModeOptions.find(({ value }) => value === model.value.themeMode) || themeModeOptions[0],
-  set: v => { model.value.themeMode = v.value; },
+  set: (v) => {
+    model.value.themeMode = v.value;
+  },
 });
 
 const onDialogClose = () => emit('update:modelValue', false);
@@ -91,7 +87,7 @@ const onClickResetSettings = () => {
 
 watch(
   () => props.modelValue,
-  value => {
+  (value) => {
     if (!value) {
       return;
     }

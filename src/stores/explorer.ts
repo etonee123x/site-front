@@ -31,7 +31,7 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const navigationItems = computed(
     () =>
-      data.value?.navigationItems.map(navigationItem => ({
+      data.value?.navigationItems.map((navigationItem) => ({
         ...navigationItem,
         link: moduleURLResolver(navigationItem.link),
       })) ?? [],
@@ -41,7 +41,7 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const folderElements = computed(
     () =>
-      data.value?.items.map(item => ({
+      data.value?.items.map((item) => ({
         ...item,
         url: moduleURLResolver(item.url),
       })) ?? [],

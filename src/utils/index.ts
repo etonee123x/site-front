@@ -22,7 +22,7 @@ export const to0To1Borders = (currentValue: number, [minValue = 0, maxValue]: [n
   return result;
 };
 
-export const addId = <T>(
-  el: T,
-  id = Number(crypto.randomUUID().match(/[\d]/g)?.join('')),
-): WithId<T> => ({ ...el, id });
+export const addId = <T>(el: T, id = Number(crypto.randomUUID().match(/[\d]/g)?.join(''))): WithId<T> => ({
+  ...el,
+  id,
+});

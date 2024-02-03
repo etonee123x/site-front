@@ -33,19 +33,22 @@ import BaseButton from './BaseButton.vue';
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
 
-const props = withDefaults(defineProps<{
-  title?: string;
-  width?: string;
-  height?: string;
-  buttonTextConfirm?: string;
-  buttonTextCancel?: string;
-}>(), {
-  title: undefined,
-  width: 'auto',
-  height: 'auto',
-  buttonTextConfirm: 'Confirm',
-  buttonTextCancel: 'Cancel',
-});
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    width?: string;
+    height?: string;
+    buttonTextConfirm?: string;
+    buttonTextCancel?: string;
+  }>(),
+  {
+    title: undefined,
+    width: 'auto',
+    height: 'auto',
+    buttonTextConfirm: 'Confirm',
+    buttonTextCancel: 'Cancel',
+  },
+);
 
 const emit = defineEmits<{
   close: [];

@@ -5,4 +5,4 @@ export enum TOAST_TYPE {
   SUCCESS = 'success',
 }
 
-export type Toast = WithId<{ text: string; type: TOAST_TYPE }>
+export type Toast = WithId<{ text: string; type: TOAST_TYPE }>;

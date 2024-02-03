@@ -27,17 +27,13 @@ const getLocalStorageSettings = () => {
 };
 
 export const useSettingsStore = defineStore('settings', () => {
-  const _settings = ref<Settings>(Object.assign(
-    {},
-    window.CONFIG,
-    getLocalStorageSettings(),
-  ));
+  const _settings = ref<Settings>(Object.assign({}, window.CONFIG, getLocalStorageSettings()));
 
   const isPreferredDark = usePreferredDark();
 
   const settings = computed({
     get: () => _settings.value,
-    set: v => {
+    set: (v) => {
       _settings.value = v;
 
       initSettings();
@@ -53,20 +49,20 @@ export const useSettingsStore = defineStore('settings', () => {
   };
 
   const setColor = (color: THEME_COLOR) => {
-    type ThemeColorWithoutRandom = Exclude<THEME_COLOR, THEME_COLOR.RANDOM>
+    type ThemeColorWithoutRandom = Exclude<THEME_COLOR, THEME_COLOR.RANDOM>;
 
     let _color: ThemeColorWithoutRandom | null = null;
     if (color === THEME_COLOR.RANDOM) {
-      const colorsWithoutRandom = Object
-        .values(THEME_COLOR)
-        .filter((c): c is ThemeColorWithoutRandom => c !== THEME_COLOR.RANDOM);
+      const colorsWithoutRandom = Object.values(THEME_COLOR).filter(
+        (c): c is ThemeColorWithoutRandom => c !== THEME_COLOR.RANDOM,
+      );
 
       _color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)];
     }
 
     const bodyClassList = document.querySelector('body')?.classList;
     const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLES.THEME_COLOR));
+    const newClasses = oldClasses.filter((_class) => !_class.startsWith(CLASS_TITLES.THEME_COLOR));
 
     newClasses.push([CLASS_TITLES.THEME_COLOR, _color ?? color].join('_'));
 
@@ -76,13 +72,13 @@ export const useSettingsStore = defineStore('settings', () => {
     _settings.value.themeColor = color;
   };
 
-  const themeModeSystem = computed(() => isPreferredDark.value ? THEME_MODE.DARK : THEME_MODE.LIGHT);
+  const themeModeSystem = computed(() => (isPreferredDark.value ? THEME_MODE.DARK : THEME_MODE.LIGHT));
 
   const setMode = (mode: THEME_MODE, asSystem = false) => {
     const _mode = mode === THEME_MODE.SYSTEM || asSystem ? themeModeSystem.value : mode;
     const bodyClassList = document.querySelector('body')?.classList;
     const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLES.THEME_MODE));
+    const newClasses = oldClasses.filter((_class) => !_class.startsWith(CLASS_TITLES.THEME_MODE));
 
     newClasses.push([CLASS_TITLES.THEME_MODE, _mode].join('_'));
 
@@ -106,7 +102,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
   watch(
     themeModeSystem,
-    v => {
+    (v) => {
       if (_settings.value.themeMode !== THEME_MODE.SYSTEM) {
         return;
       }

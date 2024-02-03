@@ -2,12 +2,7 @@
   <div>
     <NavBar />
     <div :class="$style.content">
-      <LazyElementSystem
-        v-if="explorerStore.lvlUp"
-        @click="navigate(explorerStore.lvlUp)"
-      >
-        ...
-      </LazyElementSystem>
+      <LazyElementSystem v-if="explorerStore.lvlUp" @click="navigate(explorerStore.lvlUp)">...</LazyElementSystem>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"
@@ -29,14 +24,14 @@ import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
 
 import NavBar from '@/views/explorer/components/NavBar.vue';
 
-const LazyElementSystem
-  = defineAsyncComponent(() => import('@/views/explorer/components/ElementSystem.vue'));
-const LazyElementFolder
-  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFolder.vue'));
-const LazyFileAudio
-  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FileAudio.vue'));
-const LazyFilePicture
-  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FilePicture.vue'));
+const LazyElementSystem = defineAsyncComponent(() => import('@/views/explorer/components/ElementSystem.vue'));
+const LazyElementFolder = defineAsyncComponent(() => import('@/views/explorer/components/ElementFolder.vue'));
+const LazyFileAudio = defineAsyncComponent(
+  () => import('@/views/explorer/components/ElementFile/components/FileAudio.vue'),
+);
+const LazyFilePicture = defineAsyncComponent(
+  () => import('@/views/explorer/components/ElementFile/components/FilePicture.vue'),
+);
 
 const explorerStore = useExplorerStore();
 const route = useRoute();
@@ -60,7 +55,8 @@ const getComponent = (item: Item) => {
 };
 
 const fetchData = (route: RouteLocationNormalizedLoaded) =>
-  explorerStore.getFolderData(route.fullPath.replace('/explorer', ''))
+  explorerStore
+    .getFolderData(route.fullPath.replace('/explorer', ''))
     .catch(() => router.push({ name: ROUTE_NAME.EXPLORER }));
 
 fetchData(route);
@@ -69,7 +65,6 @@ onBeforeRouteUpdate(fetchData);
 </script>
 
 <style lang="scss" module>
-
 .content {
   display: flex;
   flex-direction: column;

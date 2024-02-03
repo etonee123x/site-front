@@ -27,7 +27,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  'click': [];
+  click: [];
 }>();
 
 const onClick = () => emit('click');
