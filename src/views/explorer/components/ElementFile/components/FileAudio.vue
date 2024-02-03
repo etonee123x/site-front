@@ -36,7 +36,7 @@ const metadataList = computed(() => [
   {
     title: 'Duration',
     iconSrc: 'https://img.icons8.com/material-outlined/48/000000/clock--v1.png',
-    value: formatDuration(props.element.metadata.duration),
+    value: formatDuration(props.element.metadata.duration * 1000),
   },
   isNotEmptyArray(props.element.metadata.artists) && {
     title: 'Artist(-s)',

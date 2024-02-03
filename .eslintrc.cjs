@@ -51,5 +51,6 @@ module.exports = {
     '@typescript-eslint/no-unsafe-declaration-merging': 'off',
     'no-redeclare': 'off',
     '@typescript-eslint/no-redeclare': 'error',
+    'no-sparse-arrays': 'off',
   },
 };

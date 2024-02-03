@@ -65,7 +65,7 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { usePlayerStore } from '@/stores/player';
-import { formatDuration, to0To1Borders, createURL, addId } from '@/utils';
+import { formatDuration, to0To1Borders, addId } from '@/utils';
 import { useToastsStore } from '@/stores/toasts';
 
 import BaseButton from '@/components/BaseButton.vue';
@@ -95,10 +95,12 @@ const position = ref<number>(0);
 const isUsingPosition = ref<boolean>(false);
 
 const { playing, currentTime, duration, volume } = useMediaControls(refAudio);
+
 const { elementWidth: timelineControlWidth, elementX: timelineControlX } = useMouseInElement(refTimelineControl);
 const { elementWidth: volumeControlWidth, elementX: volumeControlX } = useMouseInElement(refVolumeControl);
-const timelineChanging = useMousePressed({ target: refTimelineControl });
-const volumeChanging = useMousePressed({ target: refVolumeControl });
+
+const { pressed: isTimelinePressed } = useMousePressed({ target: refTimelineControl });
+const { pressed: isVolumePressed } = useMousePressed({ target: refVolumeControl });
 
 const controlButtons = computed(() => [
   {
@@ -120,20 +122,20 @@ const timelineFillerWidth = computed(() =>
     ? (((isUsingPosition.value ? position.value : currentTime.value) * 100) / duration.value).toFixed(2)
     : 0,
 );
-const formatedDuration = computed(() => formatDuration(duration.value));
-const formattedCurrentTime = computed(() => formatDuration(currentTime.value));
+const formatedDuration = computed(() => formatDuration(duration.value * 1000));
+const formattedCurrentTime = computed(() => formatDuration(currentTime.value * 1000));
 
-watch(timelineChanging.pressed, async () => {
-  if (!timelineChanging.pressed.value) {
+watch(isTimelinePressed, async () => {
+  if (!isTimelinePressed.value) {
     isUsingPosition.value = false;
     return;
   }
 
   isUsingPosition.value = true;
-  while (timelineChanging.pressed.value) {
+  while (isTimelinePressed.value) {
     await new Promise<void>(resolve =>
       setTimeout(() => {
-        position.value = to0To1Borders(timelineControlX.value, timelineControlWidth.value) * duration.value;
+        position.value = to0To1Borders(timelineControlX.value, [, timelineControlWidth.value]) * duration.value;
         resolve();
       }, 0),
     );
@@ -141,11 +143,11 @@ watch(timelineChanging.pressed, async () => {
   currentTime.value = position.value;
 });
 
-watch(volumeChanging.pressed, async () => {
-  while (volumeChanging.pressed.value) {
+watch(isVolumePressed, async () => {
+  while (isVolumePressed.value) {
     await new Promise<void>(resolve =>
       setTimeout(() => {
-        volume.value = to0To1Borders(volumeControlX.value, volumeControlWidth.value);
+        volume.value = to0To1Borders(volumeControlX.value, [, volumeControlWidth.value]);
         resolve();
       }, 0),
     );
@@ -161,7 +163,9 @@ const onCopyLinkClick = async () => {
     return;
   }
 
-  let url = createURL(window.location.origin, theTrack.value.url);
+  console.log(theTrack.value.url);
+
+  let url = [window.location.origin, theTrack.value.url].join('');
 
   try {
     url = decodeURI(url);

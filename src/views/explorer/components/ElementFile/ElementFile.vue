@@ -6,7 +6,7 @@
           {{ element.name }}
         </div>
         <div :class="$style.birthTime" title="Created at">
-          {{ getFormattedBirthTime(element.birthtime) }}
+          {{ birthTimeFormatted }}
         </div>
       </div>
       <div :class="$style.content">
@@ -17,10 +17,12 @@
 </template>
 
 <script setup lang="ts">
-import { getFormattedBirthTime } from '@/utils';
+import { computed } from 'vue';
+import { format } from 'date-fns';
+
 import { ItemFile } from '@types';
 
-defineProps<{
+const props = defineProps<{
   element: ItemFile;
 }>();
 
@@ -29,6 +31,8 @@ const emit = defineEmits<{
 }>();
 
 const onClick = () => emit('click');
+
+const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
 </script>
 
 <style lang="scss" module>

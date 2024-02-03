@@ -1,11 +1,10 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { createURL } from '@/utils';
 import { FolderData, isItemAudio } from '@types';
 import { usePlayerStore } from '@/stores/player';
 import { getFolderData as _getFolderData } from '@/api';
 
-const moduleURLResolver = (url: string) => '/' + createURL('explorer', url);
+const moduleURLResolver = (url: string) => `/explorer${url}`;
 
 const data = ref<FolderData>();
 
