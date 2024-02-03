@@ -4,11 +4,11 @@ import { usePreferredDark } from '@vueuse/core';
 
 import { Settings, THEME_COLOR, THEME_MODE } from '@/types';
 
-enum CLASS_TITLE {
-  THEME = 'theme',
-  THEME_COLOR = 'theme_color',
-  THEME_MODE = 'theme_mode',
-}
+const CLASS_TITLES = Object.freeze({
+  THEME: 'theme',
+  THEME_COLOR: 'theme_color',
+  THEME_MODE: 'theme_mode',
+});
 
 const LOCAL_STORAGE_SETTINGS_FIELD_TITLE = 'SETTINGS';
 
@@ -66,9 +66,9 @@ export const useSettingsStore = defineStore('settings', () => {
 
     const bodyClassList = document.querySelector('body')?.classList;
     const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLE.THEME_COLOR));
+    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLES.THEME_COLOR));
 
-    newClasses.push([CLASS_TITLE.THEME_COLOR, _color ?? color].join('_'));
+    newClasses.push([CLASS_TITLES.THEME_COLOR, _color ?? color].join('_'));
 
     bodyClassList?.remove(...oldClasses);
     bodyClassList?.add(...newClasses);
@@ -82,9 +82,9 @@ export const useSettingsStore = defineStore('settings', () => {
     const _mode = mode === THEME_MODE.SYSTEM || asSystem ? themeModeSystem.value : mode;
     const bodyClassList = document.querySelector('body')?.classList;
     const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLE.THEME_MODE));
+    const newClasses = oldClasses.filter(_class => !_class.startsWith(CLASS_TITLES.THEME_MODE));
 
-    newClasses.push([CLASS_TITLE.THEME_MODE, _mode].join('_'));
+    newClasses.push([CLASS_TITLES.THEME_MODE, _mode].join('_'));
 
     bodyClassList?.remove(...oldClasses);
     bodyClassList?.add(...newClasses);

@@ -18,7 +18,7 @@ import { usePlayerStore } from '@/stores/player';
 import { useGalleryStore } from '@/stores/gallery';
 import { useToastsStore } from '@/stores/toasts';
 
-import TheHeader from '@/components/TheHeader.vue';
+import TheHeader from '@/components/TheHeader';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer.vue'));
 const LazyTheGallery = defineAsyncComponent(() => import('@/components/TheGallery.vue'));

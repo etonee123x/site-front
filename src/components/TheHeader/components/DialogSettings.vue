@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, computed } from 'vue';
+import { watch, ref, computed, useCssModule } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useSettingsStore } from '@/stores/settings';
@@ -36,9 +36,9 @@ import { addId } from '@/utils';
 
 import BaseDialog from '@/components/BaseDialog.vue';
 import BaseSelect from '@/components/BaseSelect';
+import BaseButton from '@/components/BaseButton.vue';
 
 import { THEME_COLOR, THEME_MODE } from '@/types';
-import BaseButton from './BaseButton.vue';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -49,13 +49,14 @@ const emit = defineEmits<{
 }>();
 
 const settingsStore = useSettingsStore();
-
 const { settings } = storeToRefs(settingsStore);
 
 const refDialog = ref<InstanceType<typeof BaseDialog>>();
 
+const $style = useCssModule();
+
 const themeColorOptions = Object.values(THEME_COLOR)
-  .map(color => addId({ text: color, value: color, class: `theme_color_${color}` }));
+  .map(color => addId({ text: color, value: color }));
 
 const themeModeOptions = Object.values(THEME_MODE)
   .map(mode => addId({ text: mode, value: mode }));
@@ -116,14 +117,6 @@ watch(
 .select {
   width: 8rem;
 
-  &:deep(.select__option-text) {
-    text-transform: capitalize;
-  }
-
-  &_colors {
-    &:deep(.select__option:not(.theme_color_random, .select__option_selected)) {
-      color: var(--color-details)
-    }
-  }
+  --select__option--text-transform: capitalize;
 }
 </style>

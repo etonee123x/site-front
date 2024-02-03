@@ -15,7 +15,7 @@ import { ref } from 'vue';
 import { mdiCog } from '@mdi/js';
 
 import BaseIcon from '@/components/BaseIcon.vue';
-import DialogSettings from '@/components/DialogSettings.vue';
+import DialogSettings from '@/components/TheHeader/components/DialogSettings.vue';
 
 const isDialogSettingsOpened = ref(false);
 
