@@ -44,6 +44,7 @@ export const usePlayerStore = defineStore('player', () => {
   return {
     theTrack,
     isTrackLoaded,
+
     loadTrack,
     loadRealPlaylist,
     loadPotentialPlaylist,

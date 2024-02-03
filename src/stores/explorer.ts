@@ -30,11 +30,11 @@ export const useExplorerStore = defineStore('explorer', () => {
     }
   };
 
-  const navigation = computed(
+  const navigationItems = computed(
     () =>
-      data.value?.navigation.map(item => ({
-        ...item,
-        link: moduleURLResolver(item.link),
+      data.value?.navigationItems.map(navigationItem => ({
+        ...navigationItem,
+        link: moduleURLResolver(navigationItem.link),
       })) ?? [],
   );
 
@@ -59,7 +59,7 @@ export const useExplorerStore = defineStore('explorer', () => {
   return {
     folderElements,
     lvlUp,
-    navigation,
+    navigationItems,
     linkedFile,
 
     getFolderData,

@@ -1,37 +1,39 @@
-import { WithId } from '@/types';
+import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
-import { reactive } from 'vue';
 
-export enum TOAST_TYPE {
-  ERROR = 'error',
-  SUCCESS = 'success',
+import { type Toast, TOAST_TYPE } from '@/types';
+import { isNotEmptyArray } from '@types';
+
+interface Options {
+  ttl?: number;
+  type: Toast['type'];
 }
 
-type Toast = WithId<{ text: string; type: TOAST_TYPE }>
-
-interface ToastOptions { ttl: number }
-
-const DEFAULT_TOAST_OPTIONS: ToastOptions = {
+const DEFAULT_OPTIONS = Object.freeze({
   ttl: 5000,
-};
+});
 
 export const useToastsStore = defineStore('toasts', () => {
   const toasts = reactive<Array<Toast>>([]);
 
-  const toast = ({ text, ttl, type }: { text: string; ttl: number; type: TOAST_TYPE }) => {
+  const toast = (text: string, { ttl = DEFAULT_OPTIONS.ttl, ...options }: Options) => {
     const id = Date.now();
-    toasts.push({ text, type, id });
+
+    toasts.push({ text, id, ...options });
+
     setTimeout(() => closeToast(id), ttl);
   };
 
-  const toastSuccess = (text: string, { ttl }: ToastOptions = DEFAULT_TOAST_OPTIONS) =>
-    toast({ text, type: TOAST_TYPE.SUCCESS, ttl });
+  const hasToasts = computed(() => isNotEmptyArray(toasts));
 
-  const toastError = (text: string, { ttl }: ToastOptions = DEFAULT_TOAST_OPTIONS) =>
-    toast({ text, type: TOAST_TYPE.ERROR, ttl });
+  const toastSuccess = (text: string, options?: Options) =>
+    toast(text, { type: TOAST_TYPE.SUCCESS, ...options });
+
+  const toastError = (text: string, options?: Options) =>
+    toast(text, { type: TOAST_TYPE.ERROR, ...options });
 
   const closeToast = (id: number) => {
-    const index = toasts.findIndex(toast => toast.id === id);
+    const index = toasts.findIndex(({ id: _id }) => _id === id);
     if (index === -1) {
       return;
     }
@@ -41,6 +43,7 @@ export const useToastsStore = defineStore('toasts', () => {
 
   return {
     toasts,
+    hasToasts,
 
     toastSuccess,
     toastError,

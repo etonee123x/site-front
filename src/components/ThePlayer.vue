@@ -1,51 +1,54 @@
 <template>
-  <div id="the-player" ref="thePlayer" class="player">
-    <div class="player__container l-container">
-      <div class="player__track-title">
-        {{ theTrack?.name }}
+  <div
+    v-if="theTrack"
+    id="the-player"
+    ref="refPlayer"
+    :class="$style.player"
+  >
+    <div :class="[$style.container, 'l-container']">
+      <div :class="$style.title">
+        {{ theTrack.name }}
       </div>
       <audio
-        id="big-player-audio"
-        ref="audio"
-        :src="theTrack?.src"
+        ref="refAudio"
+        :src="theTrack.src"
         autoplay
         @ended="loadNext"
       />
-      <div class="timeline">
-        <div class="timeline__time-passed">
+      <div :class="$style.timeline">
+        <div>
           {{ formattedCurrentTime }}
         </div>
-        <div ref="timelineControl" class="timeline__zone-wrapper">
-          <div class="timeline__zone">
-            <div class="timeline__filler" :style="`width: ${timelineFillerWidth}%`" />
+        <div ref="refTimelineControl" :class="$style.timelineZoneWrapper">
+          <div :class="$style.timelineZone">
+            <div :class="$style.timelineFiller" :style="`width: ${timelineFillerWidth}%`" />
           </div>
         </div>
-        <div class="timeline__duration">
+        <div>
           {{ formatedDuration }}
         </div>
       </div>
-      <div class="controls-buttons">
-        <div class="controls-buttons__left">
-          <BaseButton class="controls-buttons__btn" @click="onCopyLinkClick">
+      <div :class="$style.controls">
+        <div :class="$style.controlsLeft">
+          <BaseButton :class="$style.controlsButton" @click="onCopyLinkClick">
             <BaseIcon size="20" :path="mdiLinkVariant" />
           </BaseButton>
         </div>
-        <div class="controls-buttons__center">
-          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="loadPrev">
-            <BaseIcon :path="mdiSkipBackward" />
-          </BaseButton>
-          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="onPlayPauseClick">
-            <BaseIcon :path="playPauseIcon" />
-          </BaseButton>
-          <BaseButton class="controls-buttons__btn controls-buttons__btn_main" @click="loadNext">
-            <BaseIcon :path="mdiSkipForward" />
+        <div :class="$style.controlsCenter">
+          <BaseButton
+            v-for="controlButton in controlButtons"
+            :key="controlButton.id"
+            :class="[$style.controlsButton, $style.controlsButton_main]"
+            @click="controlButton.onClick"
+          >
+            <BaseIcon :path="controlButton.icon" />
           </BaseButton>
         </div>
-        <div class="controls-buttons__right">
-          <div ref="volumeControl" class="controls-buttons__volume">
-            <div class="controls-buttons__volume-zone-wrapper">
-              <div class="controls-buttons__volume-zone">
-                <div class="controls-buttons__volume-filler" :style="`width: ${(volume * 100).toFixed(2)}%`" />
+        <div :class="$style.controlsRight">
+          <div ref="refVolumeControl" :class="$style.controlsVolume">
+            <div :class="$style.controlsVolumeZoneWrapper">
+              <div :class="$style.controlsVolumeZone">
+                <div :class="$style.controlsVolumeFiller" :style="`width: ${(volume * 100).toFixed(2)}%`" />
               </div>
             </div>
           </div>
@@ -62,15 +65,15 @@ import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { usePlayerStore } from '@/stores/player';
-import { formatDuration, to0To1Borders, createURL } from '@/utils';
+import { formatDuration, to0To1Borders, createURL, addId } from '@/utils';
 import { useToastsStore } from '@/stores/toasts';
 
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 
-const thePlayer = ref<HTMLDivElement | null>(null);
+const refPlayer = ref<HTMLDivElement>();
 
-const { height } = useElementSize(thePlayer, undefined, { box: 'border-box' });
+const { height } = useElementSize(refPlayer, undefined, { box: 'border-box' });
 
 watch(
   height,
@@ -84,18 +87,33 @@ const { loadPrev, loadNext } = playerStore;
 const { theTrack } = storeToRefs(playerStore);
 const { toastSuccess } = useToastsStore();
 
-const audio = ref<HTMLAudioElement>();
-const timelineControl = ref<HTMLElement>();
-const volumeControl = ref<HTMLElement>();
+const refAudio = ref<HTMLAudioElement>();
+const refTimelineControl = ref<HTMLElement>();
+const refVolumeControl = ref<HTMLElement>();
 
 const position = ref<number>(0);
 const isUsingPosition = ref<boolean>(false);
 
-const { playing, currentTime, duration, volume } = useMediaControls(audio);
-const { elementWidth: timelineControlWidth, elementX: timelineControlX } = useMouseInElement(timelineControl);
-const { elementWidth: volumeControlWidth, elementX: volumeControlX } = useMouseInElement(volumeControl);
-const timelineChanging = useMousePressed({ target: timelineControl });
-const volumeChanging = useMousePressed({ target: volumeControl });
+const { playing, currentTime, duration, volume } = useMediaControls(refAudio);
+const { elementWidth: timelineControlWidth, elementX: timelineControlX } = useMouseInElement(refTimelineControl);
+const { elementWidth: volumeControlWidth, elementX: volumeControlX } = useMouseInElement(refVolumeControl);
+const timelineChanging = useMousePressed({ target: refTimelineControl });
+const volumeChanging = useMousePressed({ target: refVolumeControl });
+
+const controlButtons = computed(() => [
+  {
+    icon: mdiSkipBackward,
+    onClick: loadPrev,
+  },
+  {
+    icon: playing.value ? mdiPause : mdiPlay,
+    onClick: onClickPlayPause,
+  },
+  {
+    icon: mdiSkipForward,
+    onClick: loadNext,
+  },
+].map(addId));
 
 const timelineFillerWidth = computed(() =>
   duration.value
@@ -104,7 +122,6 @@ const timelineFillerWidth = computed(() =>
 );
 const formatedDuration = computed(() => formatDuration(duration.value));
 const formattedCurrentTime = computed(() => formatDuration(currentTime.value));
-const playPauseIcon = computed(() => (playing.value ? mdiPause : mdiPlay));
 
 watch(timelineChanging.pressed, async () => {
   if (!timelineChanging.pressed.value) {
@@ -135,7 +152,7 @@ watch(volumeChanging.pressed, async () => {
   }
 });
 
-const onPlayPauseClick = () => {
+const onClickPlayPause = () => {
   playing.value = !playing.value;
 };
 
@@ -145,89 +162,94 @@ const onCopyLinkClick = async () => {
   }
 
   let url = createURL(window.location.origin, theTrack.value.url);
+
   try {
     url = decodeURI(url);
   } catch (e) {
     console.error(e);
   }
+
   await window.navigator.clipboard?.writeText(url);
+
   toastSuccess('Copied!');
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .player {
   background-color: var(--color-bg);
   z-index: var(--z-index-the-player);
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;
-
-  &__container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  &__track-title {
-    text-align: center;
-  }
 }
-.controls-buttons {
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.title {
+  text-align: center;
+}
+
+.controls {
   display: grid;
   grid-template-areas: 'left center right';
   grid-template-columns: 1fr min-content 1fr;
   grid-column-gap: 1rem;
   align-items: center;
+}
 
-  &__center {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-  }
+.controlsLeft {
+  display: flex;
+  justify-content: end;
+}
 
-  &__right {
-    display: flex;
-  }
+.controlsCenter {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
-  &__left {
-    display: flex;
-    justify-content: end;
-  }
+.controlsRight {
+  display: flex;
+}
 
-  &__volume {
-    display: none;
-    height: 100%;
-    width: 85%;
-    max-width: 5rem;
-    display: flex;
-    align-items: center;
-  }
+.controlsButton {
+  white-space: nowrap;
+  min-width: 1.5rem;
 
-  &__btn {
-    white-space: nowrap;
-    min-width: 1.5rem;
-
-    &_main {
-      height: 1.5rem;
-      width: 2rem;
-    }
-  }
-
-  &__volume-zone-wrapper {
-    width: 100%;
-    padding: 0.25rem 0;
-    cursor: pointer;
-  }
-
-  &__volume-zone {
-    background-color: var(--color-dark);
-  }
-
-  &__volume-filler {
-    height: 0.25rem;
-    background-color: var(--color-details);
+  &_main {
+    height: 1.5rem;
+    width: 2rem;
   }
 }
+
+.controlsVolume {
+  display: none;
+  height: 100%;
+  width: 85%;
+  max-width: 5rem;
+  display: flex;
+  align-items: center;
+}
+
+.controlsVolumeZoneWrapper {
+  width: 100%;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
+
+.controlsVolumeZone {
+  background-color: var(--color-dark);
+}
+
+.controlsVolumeFiller {
+  height: 0.25rem;
+  background-color: var(--color-details);
+}
+
 .timeline {
   height: 1.25rem;
   width: 100%;
@@ -235,21 +257,21 @@ const onCopyLinkClick = async () => {
   display: flex;
   justify-content: space-between;
   gap: 0.5rem;
+}
 
-  &__zone-wrapper {
-    margin: auto;
-    width: 100%;
-    padding: 0.25rem 0;
-    cursor: pointer;
-  }
+.timelineZoneWrapper {
+  margin: auto;
+  width: 100%;
+  padding: 0.25rem 0;
+  cursor: pointer;
+}
 
-  &__zone {
-    background-color: var(--color-dark);
-  }
+.timelineZone {
+  background-color: var(--color-dark);
+}
 
-  &__filler {
-    height: 0.25rem;
-    background-color: var(--color-details);
-  }
+.timelineFiller {
+  height: 0.25rem;
+  background-color: var(--color-details);
 }
 </style>

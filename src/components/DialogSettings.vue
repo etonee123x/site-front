@@ -1,25 +1,24 @@
 <template>
   <BaseDialog
-    ref="dialog"
+    ref="refDialog"
     title="Settings"
-    class="dialog-settings"
     width="20rem"
     height="20rem"
     @close="onDialogClose"
     @confirm="onDialogConfirm"
   >
-    <div class="dialog-settings__content">
-      <div class="dialog-settings__row">
+    <div :class="$style.content">
+      <div :class="$style.row">
         <span>Color:</span>
         <BaseSelect
           v-model="themeColor"
-          class="dialog-settings__select dialog-settings__select_colors"
+          :class="[$style.select, $style.select_colors]"
           :options="themeColorOptions"
         />
       </div>
-      <div class="dialog-settings__row">
+      <div :class="$style.row">
         <span>Mode:</span>
-        <BaseSelect v-model="themeMode" class="dialog-settings__select" :options="themeModeOptions" />
+        <BaseSelect v-model="themeMode" :class="$style.select" :options="themeModeOptions" />
       </div>
       <BaseButton @click="onClickResetSettings">
         Reset Settings
@@ -38,7 +37,7 @@ import { addId } from '@/utils';
 import BaseDialog from '@/components/BaseDialog.vue';
 import BaseSelect from '@/components/BaseSelect';
 
-import { DynamicComponent, THEME_COLOR, THEME_MODE } from '@/types';
+import { THEME_COLOR, THEME_MODE } from '@/types';
 import BaseButton from './BaseButton.vue';
 
 const props = defineProps<{
@@ -53,7 +52,7 @@ const settingsStore = useSettingsStore();
 
 const { settings } = storeToRefs(settingsStore);
 
-const dialog = ref<DynamicComponent & { theDialog: HTMLDialogElement } | null>(null);
+const refDialog = ref<InstanceType<typeof BaseDialog>>();
 
 const themeColorOptions = Object.values(THEME_COLOR)
   .map(color => addId({ text: color, value: color, class: `theme_color_${color}` }));
@@ -96,37 +95,34 @@ watch(
       return;
     }
 
-    dialog.value?.theDialog.showModal();
+    refDialog.value?.refDialog?.showModal();
   },
 );
 </script>
 
-<style lang="scss" scoped>
-.dialog-settings {
+<style lang="scss" module>
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.select {
+  width: 8rem;
+
+  &:deep(.select__option-text) {
+    text-transform: capitalize;
   }
 
-  &__row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  &__select {
-    width: 8rem;
-
-    &:deep(.select__option-text) {
-      text-transform: capitalize;
-    }
-
-    &_colors {
-      &:deep(.select__option:not(.theme_color_random, .select__option_selected)) {
-        color: var(--color-details)
-      }
+  &_colors {
+    &:deep(.select__option:not(.theme_color_random, .select__option_selected)) {
+      color: var(--color-details)
     }
   }
 }

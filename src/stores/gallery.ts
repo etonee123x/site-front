@@ -1,23 +1,25 @@
-import { ItemPicture } from '@types';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 
-export const useGalleryStore = defineStore('gallery', () => {
-  const theImg = ref<ItemPicture | null>(null);
+import type { ItemPicture } from '@types';
 
-  const isImgSelected = computed(() => Boolean(theImg.value));
+export const useGalleryStore = defineStore('gallery', () => {
+  const theImage = ref<ItemPicture | null>(null);
+
+  const isImageLoaded = computed(() => Boolean(theImage.value));
 
   const loadImage = (img: ItemPicture) => {
-    theImg.value = img;
+    theImage.value = img;
   };
 
   const removeImage = () => {
-    theImg.value = null;
+    theImage.value = null;
   };
 
   return {
-    theImg,
-    isImgSelected,
+    theImage,
+    isImageLoaded,
+
     loadImage,
     removeImage,
   };

@@ -1,21 +1,21 @@
 <template>
-  <dialog ref="theDialog" class="dialog">
-    <div ref="theDialogInner" class="dialog__inner">
-      <div class="dialog__header">
-        <span class="dialog__title f-h2">{{ title }}</span>
-        <span class="dialog__close-icon" @click="onClickCloseIcon">
+  <dialog ref="refDialog" :style="style" :class="$style.dialog">
+    <div ref="refDialogInner" :class="$style.inner">
+      <div :class="$style.header">
+        <span :class="[$style.title, 'f-h2']">{{ title }}</span>
+        <span :class="$style.closeIcon" @click="onClickCloseIcon">
           <BaseIcon size="20" :path="mdiClose" />
         </span>
       </div>
-      <div class="dialog__main">
+      <div :class="$style.main">
         <slot v-bind="{ close }" />
       </div>
-      <div class="dialog__footer">
+      <div :class="$style.footer">
         <BaseButton @click="onClickButtonCancel">
           {{ buttonTextCancel }}
         </BaseButton>
-        <BaseButton @click="onClickButtonSave">
-          {{ buttonTextSave }}
+        <BaseButton @click="onClickButtonConfirm">
+          {{ buttonTextConfirm }}
         </BaseButton>
       </div>
     </div>
@@ -23,27 +23,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 
 import BaseIcon from '@/components/BaseIcon.vue';
 import BaseButton from './BaseButton.vue';
 
-const theDialog = ref<HTMLDialogElement | null>();
-const theDialogInner = ref<HTMLDivElement | null>();
+const refDialog = ref<HTMLDialogElement>();
+const refDialogInner = ref<HTMLDivElement>();
 
 const props = withDefaults(defineProps<{
   title?: string;
   width?: string;
   height?: string;
-  buttonTextSave?: string;
+  buttonTextConfirm?: string;
   buttonTextCancel?: string;
 }>(), {
   title: undefined,
   width: 'auto',
   height: 'auto',
-  buttonTextSave: 'Save',
+  buttonTextConfirm: 'Confirm',
   buttonTextCancel: 'Cancel',
 });
 
@@ -52,29 +52,32 @@ const emit = defineEmits<{
   confirm: [];
 }>();
 
+const style = computed(() => ({
+  width: props.width,
+  height: props.height,
+}));
+
 const close = () => {
-  theDialog.value?.close();
+  refDialog.value?.close();
   emit('close');
 };
 
-onClickOutside(theDialogInner, close);
+onClickOutside(refDialogInner, close);
 
 const onClickCloseIcon = close;
 
 const onClickButtonCancel = close;
 
-const onClickButtonSave = () => {
+const onClickButtonConfirm = () => {
   emit('confirm');
   close();
 };
 
-defineExpose({ theDialog });
+defineExpose({ refDialog });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .dialog {
-  width: v-bind('props.width');
-  height: v-bind('props.height');
   padding: 0;
   border: 1px var(--color-details) solid;
   outline: none;
@@ -84,31 +87,31 @@ defineExpose({ theDialog });
   &::backdrop {
     background: rgba(0, 0, 0, 50%);
   }
+}
 
-  &__inner {
-    padding: 1rem;
-    display: flex;
-    gap: 1.5rem;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-  }
+.inner {
+  padding: 1rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  &__footer {
-    margin-top: auto;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
+.footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
 
-  &__close-icon {
-    cursor: pointer;
-  }
+.closeIcon {
+  cursor: pointer;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
-  <button class="button">
+  <button :class="$style.button">
     <slot />
   </button>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .button {
   all: unset;
   background-color: var(--color-items);

@@ -1,7 +1,17 @@
 <template>
   <ElementFile :element="element" @click="onClick">
     <div :class="$style.metadataList">
-      <AudioMetadata v-for="metadata in metadataList" :key="metadata.id" :metadata="metadata" />
+      <div
+        v-for="metadata in metadataList"
+        :key="metadata.id"
+        :class="$style.metadata"
+        :title="metadata.title"
+      >
+        <img :class="$style.metadataIcon" :alt="metadata.title" :src="metadata.iconSrc">
+        <div :class="$style.metadataValue">
+          {{ metadata.value }}
+        </div>
+      </div>
     </div>
   </ElementFile>
 </template>
@@ -12,7 +22,6 @@ import { isNotEmptyArray, isTruthy, ItemAudio } from '@types';
 import { formatDuration, addId } from '@/utils';
 import { usePlayerStore } from '@/stores/player';
 
-import AudioMetadata from '@/views/explorer/components/ElementFile/components/FileAudio/components/AudioMetadata.vue';
 import ElementFile from '@/views/explorer/components/ElementFile';
 
 const props = defineProps<{
@@ -57,5 +66,20 @@ const metadataList = computed(() => [
   display: flex;
   gap: 1rem;
   overflow-x: auto;
+}
+
+.metadata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.metadataIcon {
+  height: 1.5rem;
+}
+
+.metadataValue {
+  text-align: center;
+  max-width: 10rem;
 }
 </style>

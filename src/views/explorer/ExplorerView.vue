@@ -34,7 +34,7 @@ const LazyElementSystem
 const LazyElementFolder
   = defineAsyncComponent(() => import('@/views/explorer/components/ElementFolder.vue'));
 const LazyFileAudio
-  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FileAudio'));
+  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FileAudio.vue'));
 const LazyFilePicture
   = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FilePicture.vue'));
 

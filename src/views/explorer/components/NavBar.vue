@@ -1,21 +1,21 @@
 <template>
-  <ul class="navbar">
+  <ul :class="$style.navbar">
     <RouterLink
-      v-for="(element, idx) in navigation"
+      v-for="(navigationItem, idx) in navigationItems"
       :key="idx"
       v-slot="{ href, isActive, isExactActive, navigate }"
-      :to="element.link"
+      :to="navigationItem.link"
       custom
     >
       <li
         :class="[
-          'navbar__element',
+          $style.navigationItem,
           isActive && 'router-link-active',
           isExactActive && 'router-link-exact-active'
         ]"
       >
         <a :href="href" @click="navigate">
-          {{ element.text }}
+          {{ navigationItem.text }}
         </a>
       </li>
     </RouterLink>
@@ -27,10 +27,10 @@ import { useExplorerStore } from '@/stores/explorer';
 import { storeToRefs } from 'pinia';
 
 const explorerStore = useExplorerStore();
-const { navigation } = storeToRefs(explorerStore);
+const { navigationItems } = storeToRefs(explorerStore);
 </script>
 
-<style scoped lang="scss">
+<style module lang="scss">
 .navbar {
   position: sticky;
   top: 0;
@@ -40,20 +40,21 @@ const { navigation } = storeToRefs(explorerStore);
   background-color: var(--color-bg);
   padding: 0.5rem 0;
 
-  &__element {
-    white-space: nowrap;
-    display: table-cell;
-    vertical-align: middle;
+}
 
-    &:not(:first-child)::before {
-      content: '>';
-      color: initial;
-      padding: 0 0.5rem;
-    }
+.navigationItem {
+  white-space: nowrap;
+  display: table-cell;
+  vertical-align: middle;
 
-    &:last-child {
-      color: var(--color-details);
-    }
+  &:not(:first-child)::before {
+    content: '>';
+    color: initial;
+    padding: 0 0.5rem;
+  }
+
+  &:last-child {
+    color: var(--color-details);
   }
 }
 </style>

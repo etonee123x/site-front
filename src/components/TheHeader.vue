@@ -1,8 +1,8 @@
 <template>
-  <header class="header">
-    <div class="header__inner l-container">
-      <span class="header__logo f-h1">eto_ne_E123x</span>
-      <span class="header__settings" @click="onIconSettingsClick">
+  <header :class="$style.header">
+    <div :class="[$style.inner, 'l-container']">
+      <span :class="[$style.logo, 'f-h1']">eto_ne_E123x</span>
+      <span :class="$style.settings" @click="onIconSettingsClick">
         <BaseIcon :path="mdiCog" />
       </span>
     </div>
@@ -24,22 +24,22 @@ const onIconSettingsClick = () => {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" module>
 .header {
   border-bottom: var(--color-details) 1px solid;
+}
 
-  &__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-  }
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
 
-  &__settings {
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    cursor: pointer;
-  }
+.settings {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  cursor: pointer;
 }
 </style>

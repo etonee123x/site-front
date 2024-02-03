@@ -1,21 +1,14 @@
 <template>
-  <div
-    v-if="theImg"
-    class="gallery"
-  >
-    <div
-      ref="mediaContainer"
-      :style="fullStyles"
-      class="gallery__media-container"
-    >
-      <p class="gallery__media-info">
-        {{ theImg.name }}
-      </p>
+  <div v-if="theImage">
+    <div ref="refMediaContainer" :style="fullStyles" :class="$style.mediaContainer">
+      <div :class="$style.mediaInfo">
+        {{ theImage.name }}
+      </div>
       <img
-        ref="theMedia"
-        class="gallery__the-media"
+        ref="refMedia"
+        :class="$style.theMedia"
         :draggable="false"
-        :src="theImg.src"
+        :src="theImage.src"
         @load="onImgLoad"
         @wheel="onWheel"
       >
@@ -30,19 +23,19 @@ import { ref, computed, watch } from 'vue';
 import { onClickOutside, useDraggable } from '@vueuse/core';
 
 const galleryStore = useGalleryStore();
-const { theImg } = storeToRefs(galleryStore);
+const { theImage } = storeToRefs(galleryStore);
 
-const mediaContainer = ref<HTMLDivElement | null>(null);
-const theMedia = ref<HTMLImageElement | null>(null);
+const refMediaContainer = ref<HTMLDivElement>();
+const refMedia = ref<HTMLImageElement>();
 const isMediaVisible = ref(false);
 
-onClickOutside(mediaContainer, galleryStore.removeImage);
-const { x, y, style } = useDraggable(mediaContainer, { preventDefault: true, stopPropagation: true });
+onClickOutside(refMediaContainer, galleryStore.removeImage);
+const { x, y, style } = useDraggable(refMediaContainer, { preventDefault: true, stopPropagation: true });
 
 const fullStyles = computed(() => [style.value, { opacity: Number(isMediaVisible.value) }]);
 
-watch(theImg, () => {
-  if (!theImg.value) {
+watch(theImage, () => {
+  if (!theImage.value) {
     isMediaVisible.value = false;
   }
 });
@@ -54,7 +47,7 @@ const woPx = (value: string) => {
 };
 
 const onImgLoad = () => {
-  if (!theMedia.value || !mediaContainer.value) {
+  if (!refMedia.value || !refMediaContainer.value) {
     return;
   }
 
@@ -69,20 +62,20 @@ const onImgLoad = () => {
     width: Math.floor(freeSpace.width * MEDIA_OVER_SCREEN_SIZE),
   };
   const windowToImageScaleFactors = {
-    height: theMedia.value.clientHeight / maxSafeFreeSpace.height,
-    width: theMedia.value.clientWidth / maxSafeFreeSpace.width,
+    height: refMedia.value.clientHeight / maxSafeFreeSpace.height,
+    width: refMedia.value.clientWidth / maxSafeFreeSpace.width,
   };
-  const imageAspectRatio = theMedia.value.clientWidth / theMedia.value.clientHeight;
+  const imageAspectRatio = refMedia.value.clientWidth / refMedia.value.clientHeight;
   if (windowToImageScaleFactors.height > 1 || windowToImageScaleFactors.width > 1) {
     if (windowToImageScaleFactors.height > windowToImageScaleFactors.width) {
-      theMedia.value.style.height = withPx(maxSafeFreeSpace.height);
-      theMedia.value.style.width = withPx(Math.floor(theMedia.value.clientHeight * imageAspectRatio));
+      refMedia.value.style.height = withPx(maxSafeFreeSpace.height);
+      refMedia.value.style.width = withPx(Math.floor(refMedia.value.clientHeight * imageAspectRatio));
     } else {
-      theMedia.value.style.width = withPx(maxSafeFreeSpace.width);
-      theMedia.value.style.height = withPx(Math.floor(theMedia.value.clientWidth / imageAspectRatio));
+      refMedia.value.style.width = withPx(maxSafeFreeSpace.width);
+      refMedia.value.style.height = withPx(Math.floor(refMedia.value.clientWidth / imageAspectRatio));
     }
   }
-  const newSizes = { width: mediaContainer.value.offsetWidth, height: mediaContainer.value.offsetHeight };
+  const newSizes = { width: refMediaContainer.value.offsetWidth, height: refMediaContainer.value.offsetHeight };
   x.value = Math.floor(freeSpace.width - newSizes.width) / 2;
   y.value = Math.floor(freeSpace.height - newSizes.height) / 2;
   isMediaVisible.value = true;
@@ -90,10 +83,10 @@ const onImgLoad = () => {
 
 const onWheel = (e: WheelEvent) => {
   e.preventDefault();
-  if (!theMedia.value || !mediaContainer.value || !e.target) {
+  if (!refMedia.value || !refMediaContainer.value || !e.target) {
     return;
   }
-  const theMediaRect = theMedia.value.getBoundingClientRect();
+  const refMediaRect = refMedia.value.getBoundingClientRect();
 
   const SCALE_FACTOR = 1.15;
 
@@ -101,36 +94,36 @@ const onWheel = (e: WheelEvent) => {
 
   const multiplier = isZoomingIn ? SCALE_FACTOR - 1 : 1 / SCALE_FACTOR - 1;
 
-  theMedia.value.style.width = isZoomingIn
-    ? withPx(theMedia.value.clientWidth * SCALE_FACTOR)
-    : withPx(theMedia.value.clientWidth / SCALE_FACTOR);
-  theMedia.value.style.height = 'auto';
+  refMedia.value.style.width = isZoomingIn
+    ? withPx(refMedia.value.clientWidth * SCALE_FACTOR)
+    : withPx(refMedia.value.clientWidth / SCALE_FACTOR);
+  refMedia.value.style.height = 'auto';
 
-  mediaContainer.value.style.left = withPx(
-    (woPx(mediaContainer.value.style.left) ?? 0) - (e.clientX - theMediaRect.left) * multiplier,
+  refMediaContainer.value.style.left = withPx(
+    (woPx(refMediaContainer.value.style.left) ?? 0) - (e.clientX - refMediaRect.left) * multiplier,
   );
-  mediaContainer.value.style.top = withPx(
-    (woPx(mediaContainer.value.style.top) ?? 0) - (e.clientY - theMediaRect.top) * multiplier,
+  refMediaContainer.value.style.top = withPx(
+    (woPx(refMediaContainer.value.style.top) ?? 0) - (e.clientY - refMediaRect.top) * multiplier,
   );
 };
 </script>
 
-<style lang="scss" scoped>
-.gallery {
-  &__media-container {
-    touch-action: pinch-zoom;
-    position: fixed;
-    background-color: var(--color-items);
-    padding: 0.5rem;
-    border: 2px var(--color-dark) solid;
-  }
-  &__media-info {
-    text-align: center;
-    margin-bottom: 0.25rem;
-  }
-  &__the-media {
-    margin: 0 auto;
-    display: block;
-  }
+<style lang="scss" module>
+.mediaContainer {
+  touch-action: pinch-zoom;
+  position: fixed;
+  background-color: var(--color-items);
+  padding: 0.5rem;
+  border: 2px var(--color-dark) solid;
+}
+
+.mediaInfo {
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.theMedia {
+  margin: 0 auto;
+  display: block;
 }
 </style>
