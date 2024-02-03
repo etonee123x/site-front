@@ -1,13 +1,13 @@
 <template>
-  <div class="explorer">
-    <NavBar class="explorer__navbar" />
-    <div class="explorer__content">
-      <DirectoryElementSystem
+  <div>
+    <NavBar />
+    <div :class="$style.content">
+      <LazyElementSystem
         v-if="explorerStore.lvlUp"
         @click="navigate(explorerStore.lvlUp)"
       >
         ...
-      </DirectoryElementSystem>
+      </LazyElementSystem>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"
@@ -20,23 +20,23 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
+
 import { useExplorerStore } from '@/stores/explorer';
-import { createURL } from '@/utils';
-import { Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
-import { ROUTE_NAME } from '@/router/';
+import { ROUTE_NAME } from '@/router';
+
+import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
 
 import NavBar from '@/views/explorer/components/NavBar.vue';
-import DirectoryElementSystem from '@/views/explorer/components/DirectoryElementSystem.vue';
 
-import type { RouteLocationNormalizedLoaded } from 'vue-router';
-
-const DirectoryElementFolder
-  = defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementFolder.vue'));
-const DirectoryElementAudio
-  = defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementAudio.vue'));
-const DirectoryElementPicture
-  = defineAsyncComponent(() => import('@/views/explorer/components/DirectoryElementPicture.vue'));
+const LazyElementSystem
+  = defineAsyncComponent(() => import('@/views/explorer/components/ElementSystem.vue'));
+const LazyElementFolder
+  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFolder.vue'));
+const LazyFileAudio
+  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FileAudio'));
+const LazyFilePicture
+  = defineAsyncComponent(() => import('@/views/explorer/components/ElementFile/components/FilePicture.vue'));
 
 const explorerStore = useExplorerStore();
 const route = useRoute();
@@ -49,33 +49,31 @@ const navigate = async (url: string) => {
 const getComponent = (item: Item) => {
   switch (true) {
     case isItemFolder(item):
-      return DirectoryElementFolder;
+      return LazyElementFolder;
     case isItemAudio(item):
-      return DirectoryElementAudio;
+      return LazyFileAudio;
     case isItemPicture(item):
-      return DirectoryElementPicture;
+      return LazyFilePicture;
     default:
-      return DirectoryElementSystem;
+      return LazyElementSystem;
   }
 };
 
-const fetchData = (route: RouteLocationNormalizedLoaded) => {
-  explorerStore.fetchData(createURL(...(route.params.link || [])))
+const fetchData = (route: RouteLocationNormalizedLoaded) =>
+  explorerStore.getFolderData(route.fullPath.replace('/explorer', ''))
     .catch(() => router.push({ name: ROUTE_NAME.EXPLORER }));
-};
 
 fetchData(route);
 
 onBeforeRouteUpdate(fetchData);
 </script>
 
-<style lang="scss">
-.explorer {
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-  }
+<style lang="scss" module>
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
 }
 </style>

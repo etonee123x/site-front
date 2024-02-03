@@ -52,7 +52,7 @@ const { toasts } = storeToRefs(toastsStore);
     border: 1px solid var(--color-dark);
     border-radius: 0.125rem;
 
-    .hoverable &:hover {
+    @include withHover {
       transform: scale(1.02);
     }
 

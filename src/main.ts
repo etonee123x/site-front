@@ -1,21 +1,20 @@
 import { createApp } from 'vue';
-import App from '@/App.vue';
-import router from '@/router';
 import { createPinia } from 'pinia';
 
-if (!matchMedia('(hover: none)').matches) {
-  document.body.classList.add('hoverable');
-}
+import router from '@/router';
+import { useSettingsStore } from '@/stores/settings';
+import { getConfig } from '@/api';
 
-fetch('/config.json')
-  .then(r =>
-    r.json()
-      .then(rJsoned => { window.CONFIG = rJsoned; })
-      .catch(console.error),
-  )
+import App from '@/App.vue';
+
+getConfig()
+  .then(config => { window.CONFIG = config; })
+  .catch(console.error)
   .finally(() => {
     createApp(App)
       .use(createPinia())
       .use(router)
       .mount('#app');
+
+    useSettingsStore().initSettings();
   });

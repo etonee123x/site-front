@@ -27,3 +27,7 @@ export const addId = <T>(
   el: T,
   id = Number(crypto.randomUUID().match(/[\d]/g)?.join('')),
 ): WithId<T> => ({ ...el, id });
+
+export const isArray = <T>(arg: unknown): arg is Array<T> => Array.isArray(arg);
+
+export const wrapToArray = <T>(arg: T | Array<T>): Array<T> => isArray(arg) ? arg : [arg];

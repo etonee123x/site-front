@@ -10,6 +10,13 @@ export default () => defineConfig({
       '@types': resolve(__dirname, './submodules/types'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "./src/assets/styles/mixins/index.scss";',
+      },
+    },
+  },
   plugins: [vue(), pluginRewriteAll()],
   publicDir: 'public',
 });

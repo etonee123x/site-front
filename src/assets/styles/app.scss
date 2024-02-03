@@ -21,7 +21,7 @@ a {
   color: inherit;
   text-decoration-line: inherit;
 
-  .hoverable &:hover {
+  @include withHover {
     color: var(--color-details);
   }
 }

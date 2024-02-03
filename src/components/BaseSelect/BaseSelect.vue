@@ -98,7 +98,7 @@ const onOptionClick = (option: Option) => {
   &__option {
     padding: 0.25rem;
 
-    .hoverable &:hover {
+    @include withHover {
       background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
     }
 

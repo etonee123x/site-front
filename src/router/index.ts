@@ -9,8 +9,8 @@ export default createRouter({
   routes: [
     {
       name: ROUTE_NAME.EXPLORER,
-      path: '/explorer/:link*',
-      component: () => import('@/views/explorer/ExplorerView.vue'),
+      path: '/explorer/:links*',
+      component: () => import('@/views/explorer'),
     },
     {
       name: ROUTE_NAME.HOME,

@@ -3,16 +3,13 @@ import { computed, ref, watch } from 'vue';
 import { createURL } from '@/utils';
 import { FolderData, isItemAudio } from '@types';
 import { usePlayerStore } from '@/stores/player';
-import { get } from '@/http';
+import { getFolderData as _getFolderData } from '@/api';
 
-const apiRoute = createURL(import.meta.env.VITE_API_URL, import.meta.env.VITE_GET_FOLDER_DATA_ROUTE);
-
-const ROUTE_NAME = 'explorer';
-const moduleURLResolver = (url: string) => '/' + createURL(ROUTE_NAME, url);
+const moduleURLResolver = (url: string) => '/' + createURL('explorer', url);
 
 const data = ref<FolderData>();
 
-export const useExplorerStore = defineStore(ROUTE_NAME, () => {
+export const useExplorerStore = defineStore('explorer', () => {
   const { loadTrack, loadRealPlaylist, loadPotentialPlaylist } = usePlayerStore();
 
   const handlePlayer = () => {
@@ -51,13 +48,13 @@ export const useExplorerStore = defineStore(ROUTE_NAME, () => {
       })) ?? [],
   );
 
-  const lvlUp = computed(() => data.value?.lvlUp ? moduleURLResolver(data.value.lvlUp) : null);
+  const lvlUp = computed(() => data.value?.lvlUp && moduleURLResolver(data.value.lvlUp));
 
-  const fetchData = async (url: string) => {
-    data.value = await get(createURL(apiRoute, url));
+  const getFolderData = async (url: string) => {
+    data.value = await _getFolderData(url);
   };
 
-  watch(data, handlePlayer, { deep: true });
+  watch(data, handlePlayer);
 
   return {
     folderElements,
@@ -65,6 +62,6 @@ export const useExplorerStore = defineStore(ROUTE_NAME, () => {
     navigation,
     linkedFile,
 
-    fetchData,
+    getFolderData,
   };
 });

@@ -1,58 +1,51 @@
 <template>
-  <div class="app">
-    <TheHeader class="app__header" />
-    <main class="app__main">
-      <router-view class="l-container" />
+  <div :class="$style.app">
+    <TheHeader />
+    <main :class="$style.main">
+      <RouterView class="l-container" />
       <TheToasts />
       <TheGallery />
     </main>
-    <ThePlayer v-if="isTrackLoaded" class="app__player" />
+    <LazyThePlayer v-if="isTrackLoaded" :class="$style.player" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { usePlayerStore } from '@/stores/player';
-import { useSettingsStore } from '@/stores/settings';
 
-import ThePlayer from '@/components/ThePlayer.vue';
 import TheHeader from '@/components/TheHeader.vue';
 import TheToasts from '@/components/TheToasts.vue';
 import TheGallery from '@/components/TheGallery.vue';
 
-const { isTrackLoaded } = storeToRefs(usePlayerStore());
+const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer.vue'));
 
-useSettingsStore().initSettings();
+const playerStore = usePlayerStore();
+const { isTrackLoaded } = storeToRefs(playerStore);
 </script>
 
-<style scoped lang="scss">
+<style module lang="scss">
 .app {
   display: flex;
   flex-direction: column;
   background-color: var(--color-bg);
   height: 100vh;
+}
 
-  &__main {
-    position: relative;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    scrollbar-gutter: stable both-edges;
-  }
+.main {
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  scrollbar-gutter: stable both-edges;
+}
 
-  &__player {
-    position: sticky;
-    bottom: 0;
-    margin-top: auto;
-  }
-
-  &__toasts {
-    position: fixed;
-    top: 0.5rem;
-    left: 0;
-    right: 0;
-  }
+.player {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
 }
 </style>

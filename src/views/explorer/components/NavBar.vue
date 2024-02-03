@@ -1,9 +1,9 @@
 <template>
   <ul class="navbar">
-    <router-link
+    <RouterLink
       v-for="(element, idx) in navigation"
       :key="idx"
-      v-slot="{ href, navigate, isActive, isExactActive }"
+      v-slot="{ href, isActive, isExactActive, navigate }"
       :to="element.link"
       custom
     >
@@ -18,7 +18,7 @@
           {{ element.text }}
         </a>
       </li>
-    </router-link>
+    </RouterLink>
   </ul>
 </template>
 
@@ -26,7 +26,8 @@
 import { useExplorerStore } from '@/stores/explorer';
 import { storeToRefs } from 'pinia';
 
-const { navigation } = storeToRefs(useExplorerStore());
+const explorerStore = useExplorerStore();
+const { navigation } = storeToRefs(explorerStore);
 </script>
 
 <style scoped lang="scss">
