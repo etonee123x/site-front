@@ -16,7 +16,7 @@
         <span>Mode:</span>
         <BaseSelect v-model="themeMode" :class="$style.select" :options="themeModeOptions" />
       </div>
-      <BaseButton @click="onClickResetSettings"> Reset Settings </BaseButton>
+      <BaseButton @click="onClickResetSettings">Reset Settings</BaseButton>
     </div>
   </BaseDialog>
 </template>

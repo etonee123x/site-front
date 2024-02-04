@@ -78,8 +78,8 @@ const refAudio = ref<HTMLAudioElement>();
 const refTimelineControl = ref<HTMLElement>();
 const refVolumeControl = ref<HTMLElement>();
 
-const position = ref<number>(0);
-const isUsingPosition = ref<boolean>(false);
+const position = ref(0);
+const isUsingPosition = ref(false);
 
 const { playing, currentTime, duration, volume } = useMediaControls(refAudio);
 

@@ -15,9 +15,11 @@ const LOCAL_STORAGE_SETTINGS_FIELD_TITLE = 'SETTINGS';
 const getLocalStorageSettings = () => {
   let result: Partial<Settings> = {};
 
-  if (localStorage.getItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE)) {
+  const localStorageSettings = localStorage.getItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE);
+
+  if (localStorageSettings) {
     try {
-      result = JSON.parse(localStorage.getItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE) ?? '');
+      result = JSON.parse(localStorageSettings);
     } catch (e) {
       console.error(e);
     }
@@ -27,7 +29,7 @@ const getLocalStorageSettings = () => {
 };
 
 export const useSettingsStore = defineStore('settings', () => {
-  const _settings = ref<Settings>(Object.assign({}, window.CONFIG, getLocalStorageSettings()));
+  const _settings = ref(Object.assign({}, window.CONFIG, getLocalStorageSettings()));
 
   const isPreferredDark = usePreferredDark();
 
