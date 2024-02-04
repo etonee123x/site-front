@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { FolderData, isItemAudio } from '@types';
+import { type FolderData, isItemAudio } from '@types';
+
 import { usePlayerStore } from '@/stores/player';
 import { getFolderData as _getFolderData } from '@/api';
 

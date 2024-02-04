@@ -1,8 +1,8 @@
 import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
+import { isNotEmptyArray } from '@types';
 
 import { type Toast, TOAST_TYPE } from '@/types';
-import { isNotEmptyArray } from '@types';
 
 interface Options {
   ttl?: number;

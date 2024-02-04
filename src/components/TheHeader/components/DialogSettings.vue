@@ -27,11 +27,9 @@ import { storeToRefs } from 'pinia';
 
 import { useSettingsStore } from '@/stores/settings';
 import { addId } from '@/utils';
-
 import BaseDialog from '@/components/BaseDialog.vue';
 import BaseSelect from '@/components/BaseSelect';
 import BaseButton from '@/components/BaseButton.vue';
-
 import { THEME_COLOR, THEME_MODE } from '@/types';
 
 const props = defineProps<{

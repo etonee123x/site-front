@@ -1,6 +1,6 @@
 import { intervalToDuration } from 'date-fns';
 
-import { WithId } from '@/types';
+import type { WithId } from '@/types';
 
 export const formatDuration = (end: number): string => {
   const { minutes = '??', seconds = '??' } = intervalToDuration({ start: 0, end });

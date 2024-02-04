@@ -15,7 +15,7 @@ module.exports = {
     sourceType: 'module',
     parser: '@typescript-eslint/parser',
   },
-  plugins: ['prettier', 'vue', '@typescript-eslint'],
+  plugins: ['prettier', 'vue', '@typescript-eslint', 'import'],
   rules: {
     'prettier/prettier': 'error',
     indent: ['error', 2, { SwitchCase: 1 }],
@@ -46,5 +46,6 @@ module.exports = {
     'no-sparse-arrays': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vue/html-self-closing': 'off',
+    'import/order': ['error', { 'newlines-between': 'always' }],
   },
 };

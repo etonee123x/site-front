@@ -14,9 +14,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { isNotEmptyArray, isTruthy, ItemAudio } from '@types';
+
 import { formatDuration, addId } from '@/utils';
 import { usePlayerStore } from '@/stores/player';
-
 import ElementFile from '@/views/explorer/components/ElementFile';
 
 const props = defineProps<{

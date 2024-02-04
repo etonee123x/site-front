@@ -1,5 +1,6 @@
-import { get } from '@/api/client';
 import type { FolderData } from '@types';
+
+import { get } from '@/api/client';
 import type { Settings } from '@/types';
 
 export const getFolderData = (url: string) =>

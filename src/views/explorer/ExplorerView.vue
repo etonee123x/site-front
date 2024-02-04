@@ -16,12 +16,10 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
+import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
 
 import { useExplorerStore } from '@/stores/explorer';
 import { ROUTE_NAME } from '@/router';
-
-import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
-
 import NavBar from '@/views/explorer/components/NavBar.vue';
 
 const LazyElementSystem = defineAsyncComponent(() => import('@/views/explorer/components/ElementSystem.vue'));

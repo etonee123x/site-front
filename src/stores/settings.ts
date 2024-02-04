@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { usePreferredDark } from '@vueuse/core';
 
-import { Settings, THEME_COLOR, THEME_MODE } from '@/types';
+import { type Settings, THEME_COLOR, THEME_MODE } from '@/types';
 
 const CLASS_TITLES = Object.freeze({
   THEME: 'theme',

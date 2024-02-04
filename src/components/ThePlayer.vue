@@ -57,7 +57,6 @@ import { storeToRefs } from 'pinia';
 import { usePlayerStore } from '@/stores/player';
 import { formatDuration, to0To1Borders, addId } from '@/utils';
 import { useToastsStore } from '@/stores/toasts';
-
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 

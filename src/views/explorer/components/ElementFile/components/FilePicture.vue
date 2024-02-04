@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import { ItemPicture } from '@types';
-import { useGalleryStore } from '@/stores/gallery';
 
+import { useGalleryStore } from '@/stores/gallery';
 import ElementFile from '@/views/explorer/components/ElementFile';
 
 const props = defineProps<{

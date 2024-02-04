@@ -5,7 +5,7 @@ export enum ROUTE_NAME {
   HOME = 'HOME',
 }
 
-export default createRouter({
+export const router = createRouter({
   routes: [
     {
       name: ROUTE_NAME.EXPLORER,

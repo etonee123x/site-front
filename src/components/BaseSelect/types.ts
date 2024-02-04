@@ -1,4 +1,4 @@
-import { VueClass, WithId } from '@/types';
+import type { VueClass, WithId } from '@/types';
 
 export type Option = WithId<{
   text: string;

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-
 import type { ItemPicture } from '@types';
 
 export const useGalleryStore = defineStore('gallery', () => {

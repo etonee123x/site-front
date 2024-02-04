@@ -17,7 +17,6 @@ import { storeToRefs } from 'pinia';
 import { usePlayerStore } from '@/stores/player';
 import { useGalleryStore } from '@/stores/gallery';
 import { useToastsStore } from '@/stores/toasts';
-
 import TheHeader from '@/components/TheHeader';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer.vue'));

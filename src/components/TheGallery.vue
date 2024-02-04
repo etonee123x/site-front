@@ -17,10 +17,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useGalleryStore } from '@/stores/gallery';
 import { storeToRefs } from 'pinia';
 import { ref, computed, watch } from 'vue';
 import { onClickOutside, useDraggable } from '@vueuse/core';
+
+import { useGalleryStore } from '@/stores/gallery';
 
 const galleryStore = useGalleryStore();
 const { theImage } = storeToRefs(galleryStore);

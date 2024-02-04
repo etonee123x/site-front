@@ -18,9 +18,7 @@ import { storeToRefs } from 'pinia';
 import { useCssModule } from 'vue';
 
 import { useToastsStore } from '@/stores/toasts';
-
-import { TOAST_TYPE, Toast } from '@/types';
-
+import { TOAST_TYPE, type Toast } from '@/types';
 import BaseIcon from '@/components/BaseIcon.vue';
 
 const toastsStore = useToastsStore();

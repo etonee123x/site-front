@@ -27,8 +27,8 @@ import { computed, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 
+import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
-import BaseButton from './BaseButton.vue';
 
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
