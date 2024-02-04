@@ -10,10 +10,10 @@
 withDefaults(
   defineProps<{
     path: string;
-    size?: string;
+    size?: number | `${number}`;
   }>(),
   {
-    size: '24',
+    size: 24,
   },
 );
 </script>

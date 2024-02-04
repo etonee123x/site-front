@@ -20,7 +20,7 @@ import { useToastsStore } from '@/stores/toasts';
 import { useComponentsStore } from '@/stores/components';
 import TheHeader from '@/components/TheHeader';
 
-const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer.vue'));
+const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheGallery = defineAsyncComponent(() => import('@/components/TheGallery.vue'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
 

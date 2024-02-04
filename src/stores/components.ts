@@ -2,7 +2,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useElementSize } from '@vueuse/core';
 
-import ThePlayer from '@/components/ThePlayer.vue';
+import ThePlayer from '@/components/ThePlayer';
 
 export const useComponentsStore = defineStore('components', () => {
   const thePlayer = ref<InstanceType<typeof ThePlayer> | null>(null);
