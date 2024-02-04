@@ -1,4 +1,3 @@
-/* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution');
 
 module.exports = {
@@ -18,31 +17,11 @@ module.exports = {
   plugins: ['prettier', 'vue', '@typescript-eslint', 'import'],
   rules: {
     'prettier/prettier': 'error',
-    indent: ['error', 2, { SwitchCase: 1 }],
-    'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single'],
-    semi: ['error', 'always'],
-    'max-len': ['error', 120],
-    'operator-linebreak': ['error', 'before'],
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/member-delimiter-style': 'error',
-    '@typescript-eslint/ban-ts-comment': 'off',
-    'func-call-spacing': 'off',
-    '@typescript-eslint/func-call-spacing': 'error',
-    '@typescript-eslint/type-annotation-spacing': ['error', { after: true }],
-    'space-before-blocks': 'off',
-    '@typescript-eslint/space-before-blocks': 'error',
-    'space-infix-ops': 'off',
-    '@typescript-eslint/space-infix-ops': 'error',
-    'object-curly-spacing': 'off',
-    '@typescript-eslint/object-curly-spacing': ['error', 'always'],
-    'comma-dangle': 'off',
-    '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
     'vue/max-attributes-per-line': 'off',
     '@typescript-eslint/no-unsafe-declaration-merging': 'off',
-    'no-redeclare': 'off',
-    '@typescript-eslint/no-redeclare': 'error',
     'no-sparse-arrays': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vue/html-self-closing': 'off',
