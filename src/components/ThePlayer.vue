@@ -1,8 +1,6 @@
 <template>
   <div v-if="theTrack" id="the-player" :class="$style.player">
-    <div v-if="!isPlaying" :class="$style.playerClose" @click="onClickClose">
-      <BaseIcon :path="mdiClose" />
-    </div>
+    <BaseIcon v-if="!isPlaying" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
     <div :class="[$style.container, 'l-container']">
       <div :class="$style.title">
         {{ theTrack.name }}

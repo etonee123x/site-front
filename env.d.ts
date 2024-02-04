@@ -1,10 +1,11 @@
 /// <reference types="vite/client" />
 
+import type { ComponentPublicInstance } from 'vue';
+
 import { Settings } from '@/types';
-import type { DynamicComponent } from '@/types';
 
 declare module '*.vue' {
-  const component: DynamicComponent;
+  const component: ComponentPublicInstance;
   export default component;
 }
 

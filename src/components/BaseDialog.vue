@@ -3,9 +3,7 @@
     <div ref="refDialogInner" :class="$style.inner">
       <div :class="$style.header">
         <span :class="[$style.title, 'f-h2']">{{ title }}</span>
-        <span :class="$style.closeIcon" @click="onClickCloseIcon">
-          <BaseIcon size="20" :path="mdiClose" />
-        </span>
+        <BaseIcon size="20" :path="mdiClose" :class="$style.closeIcon" @click="onClickCloseIcon" />
       </div>
       <div :class="$style.main">
         <slot v-bind="{ close }" />

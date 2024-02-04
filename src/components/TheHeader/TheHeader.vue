@@ -2,9 +2,7 @@
   <header :class="$style.header">
     <div :class="[$style.inner, 'l-container']">
       <span :class="[$style.logo, 'f-h1']">eto_ne_E123x</span>
-      <span :class="$style.settings" @click="onIconSettingsClick">
-        <BaseIcon :path="mdiCog" />
-      </span>
+      <BaseIcon :path="mdiCog" :class="$style.settings" @click="onIconSettingsClick" />
     </div>
     <DialogSettings v-model="isDialogSettingsOpened" />
   </header>

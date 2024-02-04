@@ -4,9 +4,7 @@
       <span :class="$style.toastInner">
         <BaseIcon :path="getIconPath(toast)" :class="$style.toastIcon" />
         <span>{{ toast.text }}</span>
-        <span :class="$style.toastClose" @click="() => onClickClose(toast)">
-          <BaseIcon size="20" :path="mdiClose" />
-        </span>
+        <BaseIcon size="20" :path="mdiClose" :class="$style.toastClose" @click="() => onClickClose(toast)" />
       </span>
     </li>
   </ul>
