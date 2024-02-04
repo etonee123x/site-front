@@ -32,13 +32,7 @@ import BaseSelect from '@/components/BaseSelect';
 import BaseButton from '@/components/BaseButton.vue';
 import { THEME_COLOR, THEME_MODE } from '@/types';
 
-const props = defineProps<{
-  modelValue: boolean;
-}>();
-
-const emit = defineEmits<{
-  'update:modelValue': [boolean];
-}>();
+const isOpened = defineModel<boolean>();
 
 const settingsStore = useSettingsStore();
 const { settings } = storeToRefs(settingsStore);
@@ -67,7 +61,9 @@ const themeMode = computed({
   },
 });
 
-const onDialogClose = () => emit('update:modelValue', false);
+const onDialogClose = () => {
+  isOpened.value = false;
+};
 
 const onDialogConfirm = () => {
   settingsStore.setSettings(model.value);
@@ -83,16 +79,13 @@ const onClickResetSettings = () => {
   onDialogClose();
 };
 
-watch(
-  () => props.modelValue,
-  (value) => {
-    if (!value) {
-      return;
-    }
+watch(isOpened, (value) => {
+  if (!value) {
+    return;
+  }
 
-    refDialog.value?.refDialog?.showModal();
-  },
-);
+  refDialog.value?.refDialog?.showModal();
+});
 </script>
 
 <style lang="scss" module>
