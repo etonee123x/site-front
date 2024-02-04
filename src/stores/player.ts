@@ -1,6 +1,6 @@
 import { ItemAudio } from '@types';
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, shallowRef } from 'vue';
 
 let realPlaylistHref = window.location.href;
 let currentPlayingNumber = 0;
@@ -9,7 +9,7 @@ let potentialPlaylist: ItemAudio[] = [];
 let realPlaylist: ItemAudio[] = [];
 
 export const usePlayerStore = defineStore('player', () => {
-  const theTrack = ref<ItemAudio | null>(null);
+  const theTrack = shallowRef<ItemAudio | null>(null);
 
   const isTrackLoaded = computed(() => Boolean(theTrack.value));
 
@@ -20,6 +20,10 @@ export const usePlayerStore = defineStore('player', () => {
     }
     theTrack.value = track;
     currentPlayingNumber = realPlaylist.findIndex(({ name }) => name === theTrack.value?.name);
+  };
+
+  const unloadTrack = () => {
+    theTrack.value = null;
   };
 
   const loadRealPlaylist = (playlist: ItemAudio[]) => {
@@ -46,6 +50,7 @@ export const usePlayerStore = defineStore('player', () => {
     isTrackLoaded,
 
     loadTrack,
+    unloadTrack,
     loadRealPlaylist,
     loadPotentialPlaylist,
     loadPrev,

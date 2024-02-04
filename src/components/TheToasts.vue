@@ -1,5 +1,5 @@
 <template>
-  <ul :class="$style.toasts">
+  <ul :style="style" :class="$style.toasts">
     <li v-for="toast in toasts.slice(0, 5)" :key="toast.id" :class="getClassesToast(toast)">
       <span :class="$style.toastInner">
         <BaseIcon :path="getIconPath(toast)" :class="$style.toastIcon" />
@@ -15,14 +15,18 @@
 <script setup lang="ts">
 import { mdiCheck, mdiClose } from '@mdi/js';
 import { storeToRefs } from 'pinia';
-import { useCssModule } from 'vue';
+import { useCssModule, computed } from 'vue';
 
 import { useToastsStore } from '@/stores/toasts';
 import { TOAST_TYPE, type Toast } from '@/types';
 import BaseIcon from '@/components/BaseIcon.vue';
+import { useComponentsStore } from '@/stores/components';
 
 const toastsStore = useToastsStore();
 const { toasts } = storeToRefs(toastsStore);
+
+const componentsStore = useComponentsStore();
+const { playerHeight } = storeToRefs(componentsStore);
 
 const $style = useCssModule();
 
@@ -31,6 +35,8 @@ const getClassesToast = (toast: Toast) => [$style.toast, $style[`toast_${toast.t
 const getIconPath = (toast: Toast) => (toast.type === TOAST_TYPE.SUCCESS ? mdiCheck : mdiClose);
 
 const onClickClose = (toast: Toast) => toastsStore.closeToast(toast.id);
+
+const style = computed(() => ({ bottom: `calc(1rem + ${playerHeight.value}px)` }));
 </script>
 
 <style lang="scss" module>
@@ -39,7 +45,6 @@ const onClickClose = (toast: Toast) => toastsStore.closeToast(toast.id);
   flex-direction: column;
   gap: 0.5rem;
   position: fixed;
-  bottom: calc(1rem + var(--size-player-height, 0px));
   left: 50%;
   transform: translateX(-50%);
 

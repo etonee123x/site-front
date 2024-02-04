@@ -30,7 +30,7 @@ const refMediaContainer = ref<HTMLDivElement>();
 const refMedia = ref<HTMLImageElement>();
 const isMediaVisible = ref(false);
 
-onClickOutside(refMediaContainer, galleryStore.removeImage);
+onClickOutside(refMediaContainer, galleryStore.unloadImage);
 const { x, y, style } = useDraggable(refMediaContainer, { preventDefault: true, stopPropagation: true });
 
 const fullStyles = computed(() => [style.value, { opacity: Number(isMediaVisible.value) }]);

@@ -1,10 +1,13 @@
 <template>
-  <div v-if="theTrack" id="the-player" ref="refPlayer" :class="$style.player">
+  <div v-if="theTrack" id="the-player" :class="$style.player">
+    <div v-if="!isPlaying" :class="$style.playerClose" @click="onClickClose">
+      <BaseIcon :path="mdiClose" />
+    </div>
     <div :class="[$style.container, 'l-container']">
       <div :class="$style.title">
         {{ theTrack.name }}
       </div>
-      <audio ref="refAudio" :src="theTrack.src" autoplay @ended="loadNext" />
+      <audio ref="refAudio" :src="theTrack.src" autoplay @ended="onEnded" />
       <div :class="$style.timeline">
         <div>
           {{ formattedCurrentTime }}
@@ -49,8 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useMediaControls, useMousePressed, useMouseInElement, useElementSize } from '@vueuse/core';
-import { mdiLinkVariant, mdiPause, mdiPlay, mdiSkipBackward, mdiSkipForward } from '@mdi/js';
+import { useMediaControls, useMousePressed, useMouseInElement } from '@vueuse/core';
+import { mdiClose, mdiLinkVariant, mdiPause, mdiPlay, mdiSkipBackward, mdiSkipForward } from '@mdi/js';
 import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
@@ -60,18 +63,9 @@ import { useToastsStore } from '@/stores/toasts';
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 
-const refPlayer = ref<HTMLDivElement>();
-
-const { height } = useElementSize(refPlayer, undefined, { box: 'border-box' });
-
-watch(height, (v) => {
-  document.documentElement.style.setProperty('--size-player-height', `${v}px`);
-});
-
 const playerStore = usePlayerStore();
-const { loadPrev, loadNext } = playerStore;
 const { theTrack } = storeToRefs(playerStore);
-const { toastSuccess } = useToastsStore();
+const toastsStore = useToastsStore();
 
 const refAudio = ref<HTMLAudioElement>();
 const refTimelineControl = ref<HTMLElement>();
@@ -80,7 +74,7 @@ const refVolumeControl = ref<HTMLElement>();
 const position = ref(0);
 const isUsingPosition = ref(false);
 
-const { playing, currentTime, duration, volume } = useMediaControls(refAudio);
+const { playing: isPlaying, currentTime, duration, volume } = useMediaControls(refAudio);
 
 const { elementWidth: timelineControlWidth, elementX: timelineControlX } = useMouseInElement(refTimelineControl);
 const { elementWidth: volumeControlWidth, elementX: volumeControlX } = useMouseInElement(refVolumeControl);
@@ -92,15 +86,15 @@ const controlButtons = computed(() =>
   [
     {
       icon: mdiSkipBackward,
-      onClick: loadPrev,
+      onClick: playerStore.loadPrev,
     },
     {
-      icon: playing.value ? mdiPause : mdiPlay,
+      icon: isPlaying.value ? mdiPause : mdiPlay,
       onClick: onClickPlayPause,
     },
     {
       icon: mdiSkipForward,
-      onClick: loadNext,
+      onClick: playerStore.loadNext,
     },
   ].map(addId),
 );
@@ -143,7 +137,7 @@ watch(isVolumePressed, async () => {
 });
 
 const onClickPlayPause = () => {
-  playing.value = !playing.value;
+  isPlaying.value = !isPlaying.value;
 };
 
 const onCopyLinkClick = async () => {
@@ -163,8 +157,12 @@ const onCopyLinkClick = async () => {
 
   await window.navigator.clipboard?.writeText(url);
 
-  toastSuccess('Copied!');
+  toastsStore.toastSuccess('Copied!');
 };
+
+const onEnded = playerStore.loadNext;
+
+const onClickClose = playerStore.unloadTrack;
 </script>
 
 <style lang="scss" module>
@@ -173,6 +171,13 @@ const onCopyLinkClick = async () => {
   z-index: var(--z-index-the-player);
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;
+}
+
+.playerClose {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  cursor: pointer;
 }
 
 .container {

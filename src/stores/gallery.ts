@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { shallowRef, computed } from 'vue';
 import type { ItemPicture } from '@types';
 
 export const useGalleryStore = defineStore('gallery', () => {
-  const theImage = ref<ItemPicture | null>(null);
+  const theImage = shallowRef<ItemPicture | null>(null);
 
   const isImageLoaded = computed(() => Boolean(theImage.value));
 
@@ -11,7 +11,7 @@ export const useGalleryStore = defineStore('gallery', () => {
     theImage.value = img;
   };
 
-  const removeImage = () => {
+  const unloadImage = () => {
     theImage.value = null;
   };
 
@@ -20,6 +20,6 @@ export const useGalleryStore = defineStore('gallery', () => {
     isImageLoaded,
 
     loadImage,
-    removeImage,
+    unloadImage,
   };
 });
