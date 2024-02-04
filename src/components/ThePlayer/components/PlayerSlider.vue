@@ -39,18 +39,22 @@ const { elementWidth, elementX } = useMouseInElement(refSlider);
 
 watch(isPressed, () => (props.isLazy ? onIsPressedChangeLazy() : onIsPressedChange()));
 
+const getPosition = () =>
+  new Promise<number>((resolve) =>
+    setTimeout(() => resolve(to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplicator), 0),
+  );
+
 const onIsPressedChange = async () => {
+  position.value = props.modelValue;
+
   while (isPressed.value) {
-    await new Promise<void>((resolve) =>
-      setTimeout(() => {
-        model.value = to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplicator;
-        resolve();
-      }, 0),
-    );
+    model.value = await getPosition();
   }
 };
 
 const onIsPressedChangeLazy = async () => {
+  position.value = props.modelValue;
+
   if (!isPressed.value) {
     isUsingPosition.value = false;
     return;
@@ -59,13 +63,7 @@ const onIsPressedChangeLazy = async () => {
   isUsingPosition.value = true;
 
   while (isPressed.value) {
-    await new Promise<void>((resolve) =>
-      setTimeout(() => {
-        position.value = to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplicator;
-
-        resolve();
-      }, 0),
-    );
+    position.value = await getPosition();
   }
 
   model.value = position.value;
