@@ -3,7 +3,7 @@ import { intervalToDuration } from 'date-fns';
 import type { WithId } from '@/types';
 
 export const formatDuration = (end: number): string => {
-  const { minutes = '??', seconds = '??' } = intervalToDuration({ start: 0, end });
+  const { minutes = 0, seconds = 0 } = intervalToDuration({ start: 0, end });
 
   return `${minutes}:${String(seconds).padStart(2, '0')}`;
 };
