@@ -28,9 +28,13 @@ const isUsingPosition = ref(false);
 
 const model = defineModel<number>();
 
-const style = computed(() => ({
-  width: `${Number(((isUsingPosition.value ? position.value : props.modelValue) * 100) / props.multiplicator).toFixed(2)}%`,
-}));
+const style = computed(() => {
+  const _position = isUsingPosition.value ? position.value : props.modelValue;
+
+  return {
+    width: `${Number((_position * 100) / props.multiplicator).toFixed(2)}%`,
+  };
+});
 
 const refSlider = ref<HTMLDivElement>();
 
@@ -45,28 +49,28 @@ const getPosition = () =>
   );
 
 const onIsPressedChange = async () => {
-  position.value = props.modelValue;
-
   while (isPressed.value) {
     model.value = await getPosition();
   }
 };
 
 const onIsPressedChangeLazy = async () => {
-  position.value = props.modelValue;
-
   if (!isPressed.value) {
-    isUsingPosition.value = false;
     return;
   }
 
   isUsingPosition.value = true;
 
   while (isPressed.value) {
-    position.value = await getPosition();
-  }
+    position.value = await getPosition().then((position) => {
+      if (!isPressed.value) {
+        model.value = position;
+        isUsingPosition.value = false;
+      }
 
-  model.value = position.value;
+      return position;
+    });
+  }
 };
 </script>
 
