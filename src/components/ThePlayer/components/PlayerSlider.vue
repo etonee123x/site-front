@@ -62,14 +62,12 @@ const onIsPressedChangeLazy = async () => {
   isUsingPosition.value = true;
 
   while (isPressed.value) {
-    position.value = await getPosition().then((position) => {
-      if (!isPressed.value) {
-        model.value = position;
-        isUsingPosition.value = false;
-      }
+    position.value = await getPosition();
 
-      return position;
-    });
+    if (!isPressed.value) {
+      model.value = position.value;
+      isUsingPosition.value = false;
+    }
   }
 };
 </script>
