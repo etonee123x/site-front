@@ -1,7 +1,7 @@
 <template>
-  <div v-if="theTrack" id="the-player" :class="$style.player">
-    <BaseIcon v-if="!isPlaying" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
+  <BaseSwipable v-if="theTrack" id="the-player" :class="$style.player" @swiped="onSwiped">
     <div :class="[$style.container, 'l-container']">
+      <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
       <div :class="$style.title">
         {{ theTrack.name }}
       </div>
@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </BaseSwipable>
 </template>
 
 <script lang="ts" setup>
@@ -51,6 +51,7 @@ import { useToastsStore } from '@/stores/toasts';
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 import PlayerSlider from '@/components/ThePlayer/components/PlayerSlider.vue';
+import BaseSwipable from '@/components/BaseSwipable.vue';
 
 const playerStore = usePlayerStore();
 const { theTrack } = storeToRefs(playerStore);
@@ -59,7 +60,9 @@ const toastsStore = useToastsStore();
 
 const refAudio = ref<HTMLAudioElement>();
 
-const { playing: isPlaying, currentTime, duration, volume } = useMediaControls(refAudio);
+const { playing: isPlaying, waiting: isWaiting, currentTime, duration, volume } = useMediaControls(refAudio);
+
+const shouldRenderButtonClose = computed(() => !(isPlaying.value || isWaiting.value));
 
 const controlButtons = computed(() =>
   [
@@ -106,6 +109,8 @@ const onCopyLinkClick = async () => {
 const onEnded = playerStore.loadNext;
 
 const onClickClose = playerStore.unloadTrack;
+
+const onSwiped = playerStore.unloadTrack;
 </script>
 
 <style lang="scss" module>
@@ -114,6 +119,14 @@ const onClickClose = playerStore.unloadTrack;
   z-index: var(--z-index-the-player);
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  justify-content: center;
 }
 
 .playerClose {
@@ -121,12 +134,10 @@ const onClickClose = playerStore.unloadTrack;
   right: 0.5rem;
   top: 0.5rem;
   cursor: pointer;
-}
 
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  @media (hover: none) {
+    display: none;
+  }
 }
 
 .title {
@@ -176,6 +187,7 @@ const onClickClose = playerStore.unloadTrack;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 0.5rem;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div ref="refSlider" :class="$style.wrapper">
+  <div ref="refSlider" :class="$style.wrapper" @pointerdown.stop @dragstart.stop @mousedown.stop @touchstart.stop>
     <div :class="$style.zone">
       <div :class="$style.filler" :style="style" />
     </div>

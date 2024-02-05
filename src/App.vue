@@ -49,6 +49,7 @@ watch(refThePlayer, (v) => {
   flex-direction: column;
   background-color: var(--color-bg);
   height: 100vh;
+  overflow: hidden;
 }
 
 .main {
@@ -58,11 +59,5 @@ watch(refThePlayer, (v) => {
   flex-direction: column;
   flex: 1;
   scrollbar-gutter: stable both-edges;
-}
-
-.player {
-  position: sticky;
-  bottom: 0;
-  margin-top: auto;
 }
 </style>

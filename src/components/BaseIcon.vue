@@ -7,10 +7,12 @@
 </template>
 
 <script setup lang="ts">
+import type { Numberable } from '@/types';
+
 withDefaults(
   defineProps<{
     path: string;
-    size?: number | `${number}`;
+    size?: Numberable;
   }>(),
   {
     size: 24,
