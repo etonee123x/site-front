@@ -1,5 +1,5 @@
 <template>
-  <BaseSwipable v-if="theTrack" id="the-player" :class="$style.player" @swiped="onSwiped">
+  <BaseSwipable v-if="theTrack" :class="$style.player" @swiped="onSwiped">
     <div :class="[$style.container, 'l-container']">
       <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
       <div :class="$style.title">
@@ -10,7 +10,7 @@
         <div>
           {{ formattedCurrentTime }}
         </div>
-        <PlayerSlider v-model="currentTime" :multiplicator="duration" is-lazy />
+        <PlayerSlider v-model="currentTime" :multiplier="duration" is-lazy />
         <div>
           {{ formatedDuration }}
         </div>

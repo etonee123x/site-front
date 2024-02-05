@@ -10,7 +10,7 @@
         :draggable="false"
         :src="theImage.src"
         @load="onImgLoad"
-        @wheel="onWheel"
+        @wheel.prevent="onWheel"
       />
     </div>
   </div>
@@ -22,9 +22,13 @@ import { ref, computed, watch } from 'vue';
 import { onClickOutside, useDraggable } from '@vueuse/core';
 
 import { useGalleryStore } from '@/stores/gallery';
+import { useComponentsStore } from '@/stores/components';
 
 const galleryStore = useGalleryStore();
 const { theImage } = storeToRefs(galleryStore);
+
+const componentsStore = useComponentsStore();
+const { playerHeight } = storeToRefs(componentsStore);
 
 const refMediaContainer = ref<HTMLDivElement>();
 const refMedia = ref<HTMLImageElement>();
@@ -35,13 +39,8 @@ const { x, y, style } = useDraggable(refMediaContainer, { preventDefault: true, 
 
 const fullStyles = computed(() => [style.value, { opacity: Number(isMediaVisible.value) }]);
 
-watch(theImage, () => {
-  if (!theImage.value) {
-    isMediaVisible.value = false;
-  }
-});
-
 const withPx = (value: number | string) => `${value}px`;
+
 const woPx = (value: string) => {
   const result = Number(value.replace('px', ''));
   return Number.isNaN(result) ? undefined : result;
@@ -55,18 +54,22 @@ const onImgLoad = () => {
   const MEDIA_OVER_SCREEN_SIZE = 0.9;
 
   const freeSpace = {
-    height: window.innerHeight - (document.getElementById('the-player')?.clientHeight ?? 0),
+    height: window.innerHeight - playerHeight.value,
     width: document.body.clientWidth,
   };
+
   const maxSafeFreeSpace = {
     height: Math.floor(freeSpace.height * MEDIA_OVER_SCREEN_SIZE),
     width: Math.floor(freeSpace.width * MEDIA_OVER_SCREEN_SIZE),
   };
+
   const windowToImageScaleFactors = {
     height: refMedia.value.clientHeight / maxSafeFreeSpace.height,
     width: refMedia.value.clientWidth / maxSafeFreeSpace.width,
   };
+
   const imageAspectRatio = refMedia.value.clientWidth / refMedia.value.clientHeight;
+
   if (windowToImageScaleFactors.height > 1 || windowToImageScaleFactors.width > 1) {
     if (windowToImageScaleFactors.height > windowToImageScaleFactors.width) {
       refMedia.value.style.height = withPx(maxSafeFreeSpace.height);
@@ -76,20 +79,23 @@ const onImgLoad = () => {
       refMedia.value.style.height = withPx(Math.floor(refMedia.value.clientWidth / imageAspectRatio));
     }
   }
+
   const newSizes = { width: refMediaContainer.value.offsetWidth, height: refMediaContainer.value.offsetHeight };
+
   x.value = Math.floor(freeSpace.width - newSizes.width) / 2;
   y.value = Math.floor(freeSpace.height - newSizes.height) / 2;
+
   isMediaVisible.value = true;
 };
 
 const onWheel = (e: WheelEvent) => {
-  e.preventDefault();
-  if (!refMedia.value || !refMediaContainer.value || !e.target) {
+  if (!(refMedia.value && refMediaContainer.value)) {
     return;
   }
-  const refMediaRect = refMedia.value.getBoundingClientRect();
 
   const SCALE_FACTOR = 1.15;
+
+  const { left, top } = refMedia.value.getBoundingClientRect();
 
   const isZoomingIn = e.deltaY < 0;
 
@@ -98,15 +104,23 @@ const onWheel = (e: WheelEvent) => {
   refMedia.value.style.width = isZoomingIn
     ? withPx(refMedia.value.clientWidth * SCALE_FACTOR)
     : withPx(refMedia.value.clientWidth / SCALE_FACTOR);
+
   refMedia.value.style.height = 'auto';
 
   refMediaContainer.value.style.left = withPx(
-    (woPx(refMediaContainer.value.style.left) ?? 0) - (e.clientX - refMediaRect.left) * multiplier,
+    (woPx(refMediaContainer.value.style.left) ?? 0) - (e.clientX - left) * multiplier,
   );
+
   refMediaContainer.value.style.top = withPx(
-    (woPx(refMediaContainer.value.style.top) ?? 0) - (e.clientY - refMediaRect.top) * multiplier,
+    (woPx(refMediaContainer.value.style.top) ?? 0) - (e.clientY - top) * multiplier,
   );
 };
+
+watch(theImage, () => {
+  if (!theImage.value) {
+    isMediaVisible.value = false;
+  }
+});
 </script>
 
 <style lang="scss" module>

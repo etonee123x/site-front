@@ -15,11 +15,11 @@ import { to0To1Borders } from '@/utils';
 const props = withDefaults(
   defineProps<{
     modelValue: number;
-    multiplicator?: number;
+    multiplier?: number;
     isLazy?: boolean;
   }>(),
   {
-    multiplicator: 1,
+    multiplier: 1,
   },
 );
 
@@ -28,13 +28,9 @@ const isUsingPosition = ref(false);
 
 const model = defineModel<number>();
 
-const style = computed(() => {
-  const _position = isUsingPosition.value ? position.value : props.modelValue;
-
-  return {
-    width: `${Number((_position * 100) / props.multiplicator).toFixed(2)}%`,
-  };
-});
+const style = computed(() => ({
+  width: `${Number((isUsingPosition.value ? position.value : props.modelValue * 100) / props.multiplier).toFixed(2)}%`,
+}));
 
 const refSlider = ref<HTMLDivElement>();
 
@@ -45,7 +41,7 @@ watch(isPressed, () => (props.isLazy ? onIsPressedChangeLazy() : onIsPressedChan
 
 const getPosition = () =>
   new Promise<number>((resolve) =>
-    setTimeout(() => resolve(to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplicator), 0),
+    setTimeout(() => resolve(to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplier), 0),
   );
 
 const onIsPressedChange = async () => {
