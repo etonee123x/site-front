@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { shallowRef, computed } from 'vue';
-import type { ItemPicture } from '@types';
+import { type ItemPicture } from '@types';
 
 export const useGalleryStore = defineStore('gallery', () => {
   const theImage = shallowRef<ItemPicture | null>(null);

@@ -2,8 +2,10 @@
   <BaseSwipable v-if="theTrack" :class="$style.player" @swiped="onSwiped">
     <div :class="[$style.container, 'l-container']">
       <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
-      <div :class="$style.title">
-        {{ theTrack.name }}
+      <div :class="$style.header">
+        <span :class="$style.title" title="Copy link" @click="onClickTitle">
+          {{ theTrack.name }}
+        </span>
       </div>
       <audio ref="refAudio" :src="theTrack.src" autoplay @ended="onEnded" />
       <div :class="$style.timeline">
@@ -17,19 +19,20 @@
       </div>
       <div :class="$style.controls">
         <div :class="$style.controlsLeft">
-          <BaseButton :class="$style.controlsButton" @click="onCopyLinkClick">
-            <BaseIcon size="20" :path="mdiLinkVariant" />
-          </BaseButton>
+          <BaseToggler v-model="isShuffleModeEnabled" :class="$style.controlsButton">
+            <BaseIcon size="20" :path="mdiShuffleVariant" />
+          </BaseToggler>
         </div>
         <div :class="$style.controlsCenter">
-          <BaseButton
-            v-for="controlButton in controlButtons"
-            :key="controlButton.id"
-            :class="[$style.controlsButton, $style.controlsButton_main]"
-            @click="controlButton.onClick"
-          >
-            <BaseIcon :path="controlButton.icon" />
-          </BaseButton>
+          <template v-for="controlButton in controlButtons" :key="controlButton.id">
+            <BaseButton
+              :is-disabled="controlButton.isDisabled"
+              :class="[$style.controlsButton, $style.controlsButton_main]"
+              @click="controlButton.onClick"
+            >
+              <BaseIcon :path="controlButton.icon" />
+            </BaseButton>
+          </template>
         </div>
         <div :class="$style.controlsRight">
           <PlayerSlider v-model="volume" />
@@ -41,7 +44,7 @@
 
 <script lang="ts" setup>
 import { useMediaControls } from '@vueuse/core';
-import { mdiClose, mdiLinkVariant, mdiPause, mdiPlay, mdiSkipBackward, mdiSkipForward } from '@mdi/js';
+import { mdiClose, mdiShuffleVariant, mdiPause, mdiPlay, mdiSkipBackward, mdiSkipForward } from '@mdi/js';
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
@@ -52,9 +55,10 @@ import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 import PlayerSlider from '@/components/ThePlayer/components/PlayerSlider.vue';
 import BaseSwipable from '@/components/BaseSwipable.vue';
+import BaseToggler from '@/components/BaseToggler.vue';
 
 const playerStore = usePlayerStore();
-const { theTrack } = storeToRefs(playerStore);
+const { theTrack, isShuffleModeEnabled, isNotEmptyHistory } = storeToRefs(playerStore);
 
 const toastsStore = useToastsStore();
 
@@ -69,6 +73,7 @@ const controlButtons = computed(() =>
     {
       icon: mdiSkipBackward,
       onClick: playerStore.loadPrev,
+      isDisabled: isShuffleModeEnabled.value && !isNotEmptyHistory.value,
     },
     {
       icon: isPlaying.value ? mdiPause : mdiPlay,
@@ -88,7 +93,7 @@ const onClickPlayPause = () => {
   isPlaying.value = !isPlaying.value;
 };
 
-const onCopyLinkClick = async () => {
+const onClickCopyLink = async () => {
   if (!theTrack.value) {
     return;
   }
@@ -103,7 +108,7 @@ const onCopyLinkClick = async () => {
 
   await window.navigator.clipboard?.writeText(url);
 
-  toastsStore.toastSuccess('Copied!');
+  toastsStore.toastSuccess('Link copied!');
 };
 
 const onEnded = playerStore.loadNext;
@@ -111,6 +116,8 @@ const onEnded = playerStore.loadNext;
 const onClickClose = playerStore.unloadTrack;
 
 const onSwiped = playerStore.unloadTrack;
+
+const onClickTitle = onClickCopyLink;
 </script>
 
 <style lang="scss" module>
@@ -120,6 +127,7 @@ const onSwiped = playerStore.unloadTrack;
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;
   width: 100%;
+  position: relative;
 }
 
 .container {
@@ -140,8 +148,13 @@ const onSwiped = playerStore.unloadTrack;
   }
 }
 
-.title {
+.header {
   text-align: center;
+}
+
+.title {
+  cursor: pointer;
+  border-bottom: 1px var(--color-dark) dashed;
 }
 
 .controls {

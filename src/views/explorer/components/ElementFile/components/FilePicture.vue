@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ItemPicture } from '@types';
+import { type ItemPicture } from '@types';
 
 import { useGalleryStore } from '@/stores/gallery';
 import ElementFile from '@/views/explorer/components/ElementFile';

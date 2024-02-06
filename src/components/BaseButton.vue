@@ -1,8 +1,15 @@
 <template>
-  <button :class="$style.button">
+  <button :class="[$style.button, isActive && $style.button_active]" :disabled="isDisabled">
     <slot />
   </button>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  isActive?: boolean;
+  isDisabled?: boolean;
+}>();
+</script>
 
 <style lang="scss" module>
 .button {
@@ -19,13 +26,22 @@
   align-items: center;
 
   @include withHover {
-    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+    &:not(&[disabled]) {
+      background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+    }
   }
 
-  &:active {
-    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+  &:is(&:active, &_active):not(&[disabled]) {
     color: var(--color-details);
     border-color: var(--color-details);
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: default;
+
+    background-color: var(--color-dark);
+    color: var(--color-items);
   }
 }
 </style>

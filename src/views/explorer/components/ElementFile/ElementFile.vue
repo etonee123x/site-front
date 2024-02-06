@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { format } from 'date-fns';
-import { ItemFile } from '@types';
+import { type ItemFile } from '@types';
 
 const props = defineProps<{
   element: ItemFile;

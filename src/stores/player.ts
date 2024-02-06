@@ -1,25 +1,36 @@
-import { ItemAudio } from '@types';
+import { type ItemAudio, isNotEmptyArray } from '@types';
 import { defineStore } from 'pinia';
-import { computed, shallowRef } from 'vue';
+import { computed, ref, shallowRef } from 'vue';
 
-let realPlaylistHref = window.location.href;
-let currentPlayingNumber = 0;
-
-let potentialPlaylist: ItemAudio[] = [];
-let realPlaylist: ItemAudio[] = [];
+import { getRandomExceptCurrentIndex } from '@/utils';
 
 export const usePlayerStore = defineStore('player', () => {
   const theTrack = shallowRef<ItemAudio | null>(null);
 
+  const currentPlayingNumber = ref(0);
+
+  const playlistReal = ref<Array<ItemAudio>>([]);
+  const playlistPotential = ref<Array<ItemAudio>>([]);
+
+  const playlistRealHref = ref(window.location.href);
+
   const isTrackLoaded = computed(() => Boolean(theTrack.value));
 
+  const historyItems = ref<Array<number>>([]);
+
+  const isNotEmptyHistory = computed(() => isNotEmptyArray(historyItems.value));
+
+  const isShuffleModeEnabled = ref(false);
+
   const loadTrack = (track: ItemAudio) => {
-    if (window.location.href !== realPlaylistHref || !theTrack.value) {
-      realPlaylist = potentialPlaylist;
-      realPlaylistHref = window.location.href;
+    if (window.location.href !== playlistRealHref.value || !theTrack.value) {
+      playlistReal.value = playlistPotential.value;
+      playlistRealHref.value = window.location.href;
+      historyItems.value = [];
     }
+
     theTrack.value = track;
-    currentPlayingNumber = realPlaylist.findIndex(({ name }) => name === theTrack.value?.name);
+    currentPlayingNumber.value = playlistReal.value.findIndex(({ name }) => name === theTrack.value?.name);
   };
 
   const unloadTrack = () => {
@@ -27,27 +38,37 @@ export const usePlayerStore = defineStore('player', () => {
   };
 
   const loadRealPlaylist = (playlist: ItemAudio[]) => {
-    realPlaylistHref = window.location.href;
-    realPlaylist = playlist;
+    playlistReal.value = playlist;
+    playlistRealHref.value = window.location.href;
   };
 
   const loadPotentialPlaylist = (playlist: ItemAudio[]) => {
-    potentialPlaylist = playlist;
+    playlistPotential.value = playlist;
   };
 
   const loadNext = () => {
-    currentPlayingNumber = (currentPlayingNumber + 1) % realPlaylist.length;
-    theTrack.value = realPlaylist[currentPlayingNumber];
+    historyItems.value.push(currentPlayingNumber.value);
+
+    currentPlayingNumber.value = isShuffleModeEnabled.value
+      ? getRandomExceptCurrentIndex(playlistReal.value.length, currentPlayingNumber.value)
+      : (currentPlayingNumber.value + 1) % playlistReal.value.length;
+
+    theTrack.value = playlistReal.value[currentPlayingNumber.value];
   };
 
   const loadPrev = () => {
-    currentPlayingNumber = (currentPlayingNumber - 1 + realPlaylist.length) % realPlaylist.length;
-    theTrack.value = realPlaylist[currentPlayingNumber];
+    currentPlayingNumber.value = isNotEmptyHistory.value
+      ? historyItems.value.pop() ?? 0
+      : (currentPlayingNumber.value - 1 + playlistReal.value.length) % playlistReal.value.length;
+
+    theTrack.value = playlistReal.value[currentPlayingNumber.value];
   };
 
   return {
     theTrack,
     isTrackLoaded,
+    isShuffleModeEnabled,
+    isNotEmptyHistory,
 
     loadTrack,
     unloadTrack,

@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { ItemFolder } from '@types';
+import { type ItemFolder } from '@types';
 
 defineProps<{
   element: ItemFolder;
