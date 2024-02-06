@@ -29,7 +29,7 @@ const isUsingPosition = ref(false);
 const model = defineModel<number>();
 
 const style = computed(() => ({
-  width: `${Number((isUsingPosition.value ? position.value : props.modelValue * 100) / props.multiplier).toFixed(2)}%`,
+  width: `${Number(((isUsingPosition.value ? position.value : props.modelValue) * 100) / props.multiplier).toFixed(2)}%`,
 }));
 
 const refSlider = ref<HTMLDivElement>();
