@@ -3,10 +3,10 @@
     <div :class="[$style.container, 'l-container']">
       <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
       <div :class="$style.header">
-        <span :class="$style.title" title="Copy link" @click="onClickTitle">
+        <BaseAlwaysScrollable :class="$style.title" title="Copy link" @click="onClickTitle">
           <span>{{ theTrack.name }}</span>
           <BaseIcon size="16" :path="mdiLinkVariant" />
-        </span>
+        </BaseAlwaysScrollable>
       </div>
       <audio ref="refAudio" :src="theTrack.src" autoplay @ended="onEnded" />
       <div :class="$style.timeline">
@@ -65,6 +65,7 @@ import BaseIcon from '@/components/BaseIcon.vue';
 import PlayerSlider from '@/components/ThePlayer/components/PlayerSlider.vue';
 import BaseSwipable from '@/components/BaseSwipable.vue';
 import BaseToggler from '@/components/BaseToggler.vue';
+import BaseAlwaysScrollable from '@/components/BaseAlwaysScrollable.vue';
 
 const playerStore = usePlayerStore();
 const { theTrack, isShuffleModeEnabled, isNotEmptyHistory } = storeToRefs(playerStore);
@@ -167,6 +168,7 @@ const onClickTitle = onClickCopyLink;
   display: inline-flex;
   align-items: flex-start;
   gap: 0.25rem;
+  max-width: 100%;
 }
 
 .controls {
