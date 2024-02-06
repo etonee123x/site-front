@@ -23,5 +23,6 @@ withDefaults(
 <style lang="scss" module>
 .icon {
   font-size: 0;
+  display: inline-block;
 }
 </style>

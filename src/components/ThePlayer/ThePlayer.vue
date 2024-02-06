@@ -4,7 +4,8 @@
       <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
       <div :class="$style.header">
         <span :class="$style.title" title="Copy link" @click="onClickTitle">
-          {{ theTrack.name }}
+          <span>{{ theTrack.name }}</span>
+          <BaseIcon size="16" :path="mdiLinkVariant" />
         </span>
       </div>
       <audio ref="refAudio" :src="theTrack.src" autoplay @ended="onEnded" />
@@ -44,7 +45,15 @@
 
 <script lang="ts" setup>
 import { useMediaControls } from '@vueuse/core';
-import { mdiClose, mdiShuffleVariant, mdiPause, mdiPlay, mdiSkipBackward, mdiSkipForward } from '@mdi/js';
+import {
+  mdiClose,
+  mdiShuffleVariant,
+  mdiLinkVariant,
+  mdiPause,
+  mdiPlay,
+  mdiSkipBackward,
+  mdiSkipForward,
+} from '@mdi/js';
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
@@ -155,6 +164,9 @@ const onClickTitle = onClickCopyLink;
 .title {
   cursor: pointer;
   border-bottom: 1px var(--color-dark) dashed;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.25rem;
 }
 
 .controls {
