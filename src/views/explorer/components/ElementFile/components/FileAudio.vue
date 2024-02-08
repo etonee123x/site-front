@@ -1,8 +1,8 @@
 <template>
   <ElementFile :element="element" @click="onClick">
     <div :class="$style.metadataList">
-      <div v-for="metadata in metadataList" :key="metadata.id" :class="$style.metadata" :title="metadata.title">
-        <img :class="$style.metadataIcon" :alt="metadata.title" :src="metadata.iconSrc" />
+      <div v-for="metadata in metadataList" :key="metadata.id" :title="metadata.title" :class="$style.metadata">
+        <BaseIcon :class="$style.metadataIcon" :path="metadata.path" />
         <div :class="$style.metadataValue">
           {{ metadata.value }}
         </div>
@@ -14,10 +14,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { isNotEmptyArray, isTruthy, ItemAudio } from '@types';
+import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
 import { formatDuration, addId } from '@/utils';
 import { usePlayerStore } from '@/stores/player';
 import ElementFile from '@/views/explorer/components/ElementFile';
+import BaseIcon from '@/components/BaseIcon.vue';
 
 const props = defineProps<{
   element: ItemAudio;
@@ -31,27 +33,27 @@ const metadataList = computed(() =>
   [
     {
       title: 'Duration',
-      iconSrc: 'https://img.icons8.com/material-outlined/48/000000/clock--v1.png',
+      path: mdiClockOutline,
       value: formatDuration(props.element.metadata.duration * 1000),
     },
     isNotEmptyArray(props.element.metadata.artists) && {
       title: 'Artist(-s)',
-      iconSrc: 'https://img.icons8.com/material-outlined/48/000000/user--v1.png',
+      path: mdiAccountOutline,
       value: props.element.metadata.artists.join(' & '),
     },
     props.element.metadata.album && {
       title: 'Album',
-      iconSrc: 'https://img.icons8.com/ios-glyphs/60/000000/music-record.png',
+      path: mdiAlbum,
       value: props.element.metadata.album,
     },
     props.element.metadata.year && {
       title: 'Release year',
-      iconSrc: 'https://img.icons8.com/material-outlined/48/000000/calendar--v1.png',
+      path: mdiCalendarBlankOutline,
       value: String(props.element.metadata.year),
     },
     props.element.metadata.bpm && {
       title: 'BPM',
-      iconSrc: 'https://img.icons8.com/ios/60/000000/metronome.png',
+      path: mdiMetronome,
       value: String(props.element.metadata.bpm),
     },
   ]
