@@ -45,26 +45,32 @@ const getPosition = () =>
   );
 
 const onIsPressedChange = async () => {
-  while (isPressed.value) {
-    model.value = await getPosition();
+  if (!isPressed.value) {
+    return;
   }
+
+  getPosition().then((position) => {
+    model.value = position;
+
+    onIsPressedChange();
+  });
 };
 
 const onIsPressedChangeLazy = async () => {
   if (!isPressed.value) {
+    model.value = position.value;
+    isUsingPosition.value = false;
+
     return;
   }
 
   isUsingPosition.value = true;
 
-  while (isPressed.value) {
-    position.value = await getPosition();
+  getPosition().then((_position) => {
+    position.value = _position;
 
-    if (!isPressed.value) {
-      model.value = position.value;
-      isUsingPosition.value = false;
-    }
-  }
+    onIsPressedChangeLazy();
+  });
 };
 </script>
 

@@ -50,9 +50,10 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const lvlUp = computed(() => folderData.value?.lvlUp && moduleURLResolver(folderData.value.lvlUp));
 
-  const getFolderData = async (url: string) => {
-    folderData.value = await _getFolderData(url);
-  };
+  const getFolderData = async (url: string) =>
+    _getFolderData(url).then((_folderData) => {
+      folderData.value = _folderData;
+    });
 
   watch(folderData, handlePlayer);
 

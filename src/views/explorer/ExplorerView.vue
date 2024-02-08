@@ -54,9 +54,9 @@ const getComponent = (item: Item) => {
 };
 
 const fetchData = (route: RouteLocationNormalizedLoaded) =>
-  explorerStore
-    .getFolderData(route.fullPath.replace('/explorer', ''))
-    .catch(() => router.push({ name: ROUTE_NAME.EXPLORER }));
+  explorerStore.getFolderData(route.fullPath.replace('/explorer', '')).catch(() => {
+    router.push({ name: ROUTE_NAME.EXPLORER });
+  });
 
 fetchData(route);
 
