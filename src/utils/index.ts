@@ -27,16 +27,16 @@ export const addId = <T>(el: T, id = Number(crypto.randomUUID().match(/[\d]/g)?.
   id,
 });
 
-export const getRandomExceptCurrentIndex = (to: number, currentValue: number) => {
+export const getRandomExceptCurrentIndex = (to: number, currentValue: number): number => {
   if (to < 2) {
     return currentValue;
   }
 
-  let newValue: number;
+  const newValue = Math.floor(Math.random() * to);
 
-  do {
-    newValue = Math.floor(Math.random() * to);
-  } while (newValue === currentValue);
+  if (newValue !== currentValue) {
+    return newValue;
+  }
 
-  return newValue;
+  return getRandomExceptCurrentIndex(to, currentValue);
 };
