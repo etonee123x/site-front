@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useMousePressed, useMouseInElement } from '@vueuse/core';
+import { useMousePressed, useMouseInElement, promiseTimeout } from '@vueuse/core';
 
 import { to0To1Borders } from '@/utils';
 
@@ -40,9 +40,7 @@ const { elementWidth, elementX } = useMouseInElement(refSlider);
 watch(isPressed, () => (props.isLazy ? onIsPressedChangeLazy() : onIsPressedChange()));
 
 const getPosition = () =>
-  new Promise<number>((resolve) =>
-    setTimeout(() => resolve(to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplier), 0),
-  );
+  promiseTimeout(0).then(() => to0To1Borders(elementX.value, [, elementWidth.value]) * props.multiplier);
 
 const onIsPressedChange = async () => {
   if (!isPressed.value) {

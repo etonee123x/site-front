@@ -24,7 +24,7 @@ export const usePlayerStore = defineStore('player', () => {
 
   const url = computed(() => theTrack.value?.url);
   const src = computed(() => theTrack.value?.src);
-  const name = computed(() => theTrack.value?.src);
+  const name = computed(() => theTrack.value?.name);
 
   const loadTrack = (track: ItemAudio) => {
     if (window.location.href !== playlistRealHref.value || !theTrack.value) {
