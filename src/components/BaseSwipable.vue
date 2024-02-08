@@ -12,10 +12,12 @@ import { isTruthy } from '@types';
 import type { Numberable } from '@/types';
 
 const props = withDefaults(
-  defineProps<{
-    threshold?: Numberable;
-    disapearDelay?: Numberable;
-  }>(),
+  defineProps<
+    Partial<{
+      threshold: Numberable;
+      disapearDelay: Numberable;
+    }>
+  >(),
   {
     threshold: 0.25,
     disapearDelay: 300,

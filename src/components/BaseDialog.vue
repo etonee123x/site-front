@@ -32,13 +32,15 @@ const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
 
 const props = withDefaults(
-  defineProps<{
-    title?: string;
-    width?: string;
-    height?: string;
-    buttonTextConfirm?: string;
-    buttonTextCancel?: string;
-  }>(),
+  defineProps<
+    Partial<{
+      title: string;
+      width: string;
+      height: string;
+      buttonTextConfirm: string;
+      buttonTextCancel: string;
+    }>
+  >(),
   {
     title: undefined,
     width: 'auto',
@@ -74,7 +76,9 @@ const onClickButtonConfirm = () => {
   close();
 };
 
-defineExpose({ refDialog });
+defineExpose({
+  refDialog,
+});
 </script>
 
 <style lang="scss" module>

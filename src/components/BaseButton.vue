@@ -5,10 +5,12 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  isActive?: boolean;
-  isDisabled?: boolean;
-}>();
+defineProps<
+  Partial<{
+    isActive: boolean;
+    isDisabled: boolean;
+  }>
+>();
 </script>
 
 <style lang="scss" module>

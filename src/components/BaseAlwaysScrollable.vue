@@ -13,9 +13,11 @@ import { computed, ref } from 'vue';
 import type { Numberable } from '@/types';
 
 const props = withDefaults(
-  defineProps<{
-    speed?: Numberable;
-  }>(),
+  defineProps<
+    Partial<{
+      speed: Numberable;
+    }>
+  >(),
   {
     speed: 5000,
   },
