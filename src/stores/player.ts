@@ -22,6 +22,10 @@ export const usePlayerStore = defineStore('player', () => {
 
   const isShuffleModeEnabled = ref(false);
 
+  const url = computed(() => theTrack.value?.url);
+  const src = computed(() => theTrack.value?.src);
+  const name = computed(() => theTrack.value?.src);
+
   const loadTrack = (track: ItemAudio) => {
     if (window.location.href !== playlistRealHref.value || !theTrack.value) {
       playlistReal.value = playlistPotential.value;
@@ -69,6 +73,9 @@ export const usePlayerStore = defineStore('player', () => {
     isTrackLoaded,
     isShuffleModeEnabled,
     isNotEmptyHistory,
+    url,
+    src,
+    name,
 
     loadTrack,
     unloadTrack,

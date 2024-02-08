@@ -2,7 +2,7 @@
   <div>
     <NavBar />
     <div :class="$style.content">
-      <LazyElementSystem v-if="explorerStore.lvlUp" @click="navigate(explorerStore.lvlUp)">...</LazyElementSystem>
+      <LazyElementSystem v-if="lvlUp" @click="onClickLvlUp(lvlUp)">...</LazyElementSystem>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"
@@ -17,6 +17,7 @@
 import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
 import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
+import { storeToRefs } from 'pinia';
 
 import { useExplorerStore } from '@/stores/explorer';
 import { ROUTE_NAME } from '@/router';
@@ -32,12 +33,12 @@ const LazyFilePicture = defineAsyncComponent(
 );
 
 const explorerStore = useExplorerStore();
+const { lvlUp } = storeToRefs(explorerStore);
+
 const route = useRoute();
 const router = useRouter();
 
-const navigate = async (url: string) => {
-  await router.push(url);
-};
+const onClickLvlUp = router.push;
 
 const getComponent = (item: Item) => {
   switch (true) {

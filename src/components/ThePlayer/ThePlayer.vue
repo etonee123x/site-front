@@ -1,22 +1,23 @@
 <template>
-  <BaseSwipable v-if="theTrack" :class="$style.player" @swiped="onSwiped">
+  <BaseSwipable :class="$style.player" @swiped="onSwiped">
     <div :class="[$style.container, 'l-container']">
       <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
       <div :class="$style.header">
-        <BaseAlwaysScrollable :class="$style.title" title="Copy link" @click="onClickTitle">
-          <span>{{ theTrack.name }}</span>
+        <LazyBaseAlwaysScrollable v-if="isSupported" :class="$style.title" title="Copy link" @click="onClickTitle">
+          <span>{{ name }}</span>
           <BaseIcon size="16" :path="mdiLinkVariant" />
-        </BaseAlwaysScrollable>
+        </LazyBaseAlwaysScrollable>
+        <span v-else :class="$style.title">{{ name }}</span>
       </div>
-      <audio ref="refAudio" :src="theTrack.src" autoplay @ended="onEnded" />
+      <audio ref="refAudio" :src="src" autoplay @ended="onEnded" />
       <div :class="$style.timeline">
-        <div>
+        <span>
           {{ formattedCurrentTime }}
-        </div>
+        </span>
         <PlayerSlider v-model="currentTime" :multiplier="duration" is-lazy />
-        <div>
+        <span>
           {{ formatedDuration }}
-        </div>
+        </span>
       </div>
       <div :class="$style.controls">
         <div :class="$style.controlsLeft">
@@ -25,15 +26,15 @@
           </BaseToggler>
         </div>
         <div :class="$style.controlsCenter">
-          <template v-for="controlButton in controlButtons" :key="controlButton.id">
-            <BaseButton
-              :is-disabled="controlButton.isDisabled"
-              :class="[$style.controlsButton, $style.controlsButton_main]"
-              @click="controlButton.onClick"
-            >
-              <BaseIcon :path="controlButton.icon" />
-            </BaseButton>
-          </template>
+          <BaseButton
+            v-for="controlButton in controlButtons"
+            :key="controlButton.id"
+            :is-disabled="controlButton.isDisabled"
+            :class="[$style.controlsButton, $style.controlsButton_main]"
+            @click="controlButton.onClick"
+          >
+            <BaseIcon :path="controlButton.icon" />
+          </BaseButton>
         </div>
         <div :class="$style.controlsRight">
           <PlayerSlider v-model="volume" />
@@ -44,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useMediaControls } from '@vueuse/core';
+import { useClipboard, useMediaControls } from '@vueuse/core';
 import {
   mdiClose,
   mdiShuffleVariant,
@@ -54,7 +55,7 @@ import {
   mdiSkipBackward,
   mdiSkipForward,
 } from '@mdi/js';
-import { ref, computed } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { usePlayerStore } from '@/stores/player';
@@ -65,10 +66,11 @@ import BaseIcon from '@/components/BaseIcon.vue';
 import PlayerSlider from '@/components/ThePlayer/components/PlayerSlider.vue';
 import BaseSwipable from '@/components/BaseSwipable.vue';
 import BaseToggler from '@/components/BaseToggler.vue';
-import BaseAlwaysScrollable from '@/components/BaseAlwaysScrollable.vue';
+
+const LazyBaseAlwaysScrollable = defineAsyncComponent(() => import('@/components/BaseAlwaysScrollable.vue'));
 
 const playerStore = usePlayerStore();
-const { theTrack, isShuffleModeEnabled, isNotEmptyHistory } = storeToRefs(playerStore);
+const { name, src, url, isShuffleModeEnabled, isNotEmptyHistory } = storeToRefs(playerStore);
 
 const toastsStore = useToastsStore();
 
@@ -103,31 +105,27 @@ const onClickPlayPause = () => {
   isPlaying.value = !isPlaying.value;
 };
 
-const onClickCopyLink = async () => {
-  if (!theTrack.value) {
-    return;
-  }
-
-  let url = [window.location.origin, theTrack.value.url].join('');
-
-  try {
-    url = decodeURI(url);
-  } catch (e) {
-    console.error(e);
-  }
-
-  await window.navigator.clipboard?.writeText(url);
-
-  toastsStore.toastSuccess('Link copied!');
-};
-
 const onEnded = playerStore.loadNext;
 
 const onClickClose = playerStore.unloadTrack;
 
 const onSwiped = playerStore.unloadTrack;
 
-const onClickTitle = onClickCopyLink;
+const urlFull = computed(() => {
+  let _url = [window.location.origin, url.value].join('');
+
+  try {
+    _url = decodeURI(_url);
+  } catch (e) {
+    console.error(e);
+  }
+
+  return _url;
+});
+
+const { copy, isSupported } = useClipboard({ source: urlFull, legacy: true });
+
+const onClickTitle = () => copy().then(() => toastsStore.toastSuccess('Copied!'));
 </script>
 
 <style lang="scss" module>
