@@ -87,8 +87,6 @@ const onOptionClick = (option: Option) => {
 }
 
 .option {
-  text-transform: var(--select__option--text-transform);
-
   padding: 0.25rem;
 
   @include withHover {
