@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { usePreferredDark } from '@vueuse/core';
 import { toLowerCase } from '@types';
 
-import { i18n, setLocale } from '@/i18n';
+import { i18n } from '@/i18n';
 import { type Settings, ThemeColor, ThemeMode, Language } from '@/types';
 
 const CLASS_TITLES = Object.freeze({
@@ -99,7 +99,9 @@ export const useSettingsStore = defineStore('settings', () => {
     _settings.value.themeColor = color;
   };
 
-  const setLanguage = (language: Language) => setLocale(toLowerCase(language));
+  const setLanguage = (language: Language) => {
+    i18n.global.locale.value = toLowerCase(language);
+  };
 
   const themeModeSystem = computed(() => (isPreferredDark.value ? ThemeMode.Dark : ThemeMode.Light));
 
