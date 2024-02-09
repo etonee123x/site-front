@@ -1,7 +1,7 @@
 <template>
   <div ref="refSelect" :class="[$style.select, isOpened && $style.select_opened]" @click="onWrapClick">
     <div :class="[$style.option, $style.option_selected]">
-      <span v-if="_modelValue">{{ _modelValue }}</span>
+      <span>{{ text }}</span>
       <BaseIcon size="20" :path="path" />
     </div>
     <div v-if="isOpened" :class="$style.options">
@@ -37,7 +37,7 @@ const [isOpened, toggle] = useToggle();
 
 const path = computed(() => (isOpened.value ? mdiChevronUp : mdiChevronDown));
 
-const _modelValue = computed(() => (isString(props.modelValue) ? props.modelValue : props.modelValue?.text ?? null));
+const text = computed(() => (isString(props.modelValue) ? props.modelValue : props.modelValue?.text ?? null));
 
 const onWrapClick = () => toggle();
 
