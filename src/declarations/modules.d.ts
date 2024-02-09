@@ -6,7 +6,10 @@ declare module '*.vue' {
 }
 
 declare module '*.yaml' {
-  type Obj = Record<string, string>;
-  const content: Record<string, string | Obj>;
+  type Value = string | number | boolean | null | undefined | Record<string, Value> | Value[];
+
+  type ObjectValue = Record<string, Value>;
+
+  const content: ObjectValue;
   export default content;
 }
