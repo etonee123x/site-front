@@ -138,7 +138,5 @@ const onClickResetSettings = () => {
 
 .select {
   width: 8rem;
-
-  --select__option--text-transform: capitalize;
 }
 </style>
