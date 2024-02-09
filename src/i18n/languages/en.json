@@ -1,0 +1,16 @@
+{
+  "themeColor": {
+    "blue": "Blue",
+    "cyan": "Cyan",
+    "green": "Green",
+    "magenta": "Magenta",
+    "orange": "Orange",
+    "random": "Random",
+    "red": "Red"
+  },
+  "themeMode": {
+    "system": "System",
+    "dark": "Dark",
+    "light": "Light"
+  }
+}

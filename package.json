@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^2.0.0",
-    "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@rushstack/eslint-patch": "^1.7.2",
     "@types/node": "^20.11.16",
     "@typescript-eslint/eslint-plugin": "^6.20.0",

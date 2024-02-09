@@ -1,7 +1,7 @@
 import { createI18n } from 'vue-i18n';
 
-import en from '@/i18n/languages/en.yaml';
-import ru from '@/i18n/languages/ru.yaml';
+import en from '@/i18n/languages/en.json';
+import ru from '@/i18n/languages/ru.json';
 
 export const i18n = createI18n({
   locale: 'en',
