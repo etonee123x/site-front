@@ -44,6 +44,13 @@
   </BaseSwipable>
 </template>
 
+<i18n lang="yaml">
+en:
+  copied: 'Copied!'
+ru:
+  copied: 'Скопировано!'
+</i18n>
+
 <script lang="ts" setup>
 import { useClipboard, useMediaControls } from '@vueuse/core';
 import {
@@ -57,6 +64,7 @@ import {
 } from '@mdi/js';
 import { ref, computed, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
 import { usePlayerStore } from '@/stores/player';
 import { formatDuration, addId } from '@/utils';
@@ -68,6 +76,8 @@ import BaseSwipable from '@/components/BaseSwipable.vue';
 import BaseToggler from '@/components/BaseToggler.vue';
 
 const LazyBaseAlwaysScrollable = defineAsyncComponent(() => import('@/components/BaseAlwaysScrollable.vue'));
+
+const { t } = useI18n({ useScope: 'local' });
 
 const playerStore = usePlayerStore();
 const { name, src, url, isShuffleModeEnabled, isNotEmptyHistory } = storeToRefs(playerStore);
@@ -125,7 +135,7 @@ const urlFull = computed(() => {
 
 const { copy, isSupported } = useClipboard({ source: urlFull, legacy: true });
 
-const onClickTitle = () => copy().then(() => toastsStore.toastSuccess('Copied!'));
+const onClickTitle = () => copy().then(() => toastsStore.toastSuccess(t('copied')));
 </script>
 
 <style lang="scss" module>

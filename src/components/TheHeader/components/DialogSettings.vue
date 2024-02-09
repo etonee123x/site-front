@@ -1,70 +1,116 @@
 <template>
   <BaseDialog
-    ref="refDialog"
-    title="Settings"
+    v-model="isOpened"
+    :title="title"
     width="20rem"
     height="20rem"
     @close="onDialogClose"
     @confirm="onDialogConfirm"
   >
     <div :class="$style.content">
-      <div :class="$style.row">
-        <span>Color:</span>
-        <BaseSelect v-model="themeColor" :class="[$style.select, $style.select_colors]" :options="themeColorOptions" />
+      <div v-for="option in options" :key="option.id" :class="$style.row">
+        <span>{{ option.text }}</span>
+        <BaseSelect
+          :model-value="option.modelValue"
+          :class="$style.select"
+          :options="option.options"
+          @update:model-value="option.onUpdate"
+        />
       </div>
-      <div :class="$style.row">
-        <span>Mode:</span>
-        <BaseSelect v-model="themeMode" :class="$style.select" :options="themeModeOptions" />
-      </div>
-      <BaseButton @click="onClickResetSettings">Reset Settings</BaseButton>
+      <BaseButton @click="onClickResetSettings">{{ resetSettings }}</BaseButton>
     </div>
   </BaseDialog>
 </template>
 
+<i18n lang="yaml">
+en:
+  settings: 'Settings'
+  color: 'Color:'
+  mode: 'Mode:'
+  language: 'Language:'
+  resetSettings: 'Reset settings'
+ru:
+  settings: 'Настройки'
+  color: 'Цвет:'
+  mode: 'Режим:'
+  language: 'Язык:'
+  resetSettings: 'Сбросить настройки'
+</i18n>
+
 <script setup lang="ts">
-import { watch, ref, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
+import { useToggle } from '@vueuse/core';
 
 import { useSettingsStore } from '@/stores/settings';
 import { addId } from '@/utils';
 import BaseDialog from '@/components/BaseDialog.vue';
-import BaseSelect from '@/components/BaseSelect';
+import BaseSelect, { type Option } from '@/components/BaseSelect';
 import BaseButton from '@/components/BaseButton.vue';
-import { THEME_COLOR, THEME_MODE } from '@/types';
+import { Language, ThemeColor, ThemeMode } from '@/types';
 
 const isOpened = defineModel<boolean>();
 
+const toggle = useToggle(isOpened);
+
 const settingsStore = useSettingsStore();
-const { settings } = storeToRefs(settingsStore);
+const { settings, themeColorToThemeColorTranslation, themeModeToThemeModeTranslation } = storeToRefs(settingsStore);
 
-const refDialog = ref<InstanceType<typeof BaseDialog>>();
-
-const themeColorOptions = Object.values(THEME_COLOR).map((color) => addId({ text: color, value: color }));
-
-const themeModeOptions = Object.values(THEME_MODE).map((mode) => addId({ text: mode, value: mode }));
+const { t } = useI18n({ useScope: 'local' });
 
 const model = ref(settings.value);
 
-const themeColor = computed({
-  get: () => themeColorOptions.find(({ value }) => value === model.value.themeColor) || themeColorOptions[0],
-  set: (v) => {
-    model.value.themeColor = v.value;
-  },
-});
+const options = computed(() =>
+  [
+    {
+      text: t('color'),
+      options: Object.values(ThemeColor).map((color) =>
+        addId({ text: themeColorToThemeColorTranslation.value[color], value: color }),
+      ),
+      modelValue: {
+        text: themeColorToThemeColorTranslation.value[model.value.themeColor],
+        value: model.value.themeColor,
+      },
+      onUpdate: (option: Option<ThemeColor>) => {
+        model.value.themeColor = option.value;
+      },
+    },
+    {
+      text: t('mode'),
+      options: Object.values(ThemeMode).map((mode) =>
+        addId({ text: themeModeToThemeModeTranslation.value[mode], value: mode }),
+      ),
+      modelValue: {
+        text: themeModeToThemeModeTranslation.value[model.value.themeMode],
+        value: model.value.themeMode,
+      },
+      onUpdate: (option: Option<ThemeMode>) => {
+        model.value.themeMode = option.value;
+      },
+    },
+    {
+      text: t('language'),
+      options: Object.values(Language).map((language) => addId({ text: language.toUpperCase(), value: language })),
+      modelValue: {
+        text: model.value.language.toUpperCase(),
+        value: model.value.language,
+      },
+      onUpdate: (option: Option<Language>) => {
+        model.value.language = option.value;
+      },
+    },
+  ].map(addId),
+);
 
-const themeMode = computed({
-  get: () => themeModeOptions.find(({ value }) => value === model.value.themeMode) || themeModeOptions[0],
-  set: (v) => {
-    model.value.themeMode = v.value;
-  },
-});
+const title = computed(() => t('settings'));
+const resetSettings = computed(() => t('resetSettings'));
 
-const onDialogClose = () => {
-  isOpened.value = false;
-};
+const onDialogClose = () => toggle(false);
 
 const onDialogConfirm = () => {
-  settingsStore.setSettings(model.value);
+  settings.value = model.value;
+
   settingsStore.saveSettings();
 
   onDialogClose();
@@ -72,18 +118,9 @@ const onDialogConfirm = () => {
 
 const onClickResetSettings = () => {
   settingsStore.resetSettings();
+
   model.value = settings.value;
-
-  onDialogClose();
 };
-
-watch(isOpened, (value) => {
-  if (!value) {
-    return;
-  }
-
-  refDialog.value?.refDialog?.showModal();
-});
 </script>
 
 <style lang="scss" module>

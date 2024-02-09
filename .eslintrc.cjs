@@ -22,6 +22,7 @@ module.exports = {
     '@typescript-eslint/member-delimiter-style': 'error',
     'vue/max-attributes-per-line': 'off',
     '@typescript-eslint/no-unsafe-declaration-merging': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     'no-sparse-arrays': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vue/html-self-closing': 'off',

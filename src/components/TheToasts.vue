@@ -16,7 +16,7 @@ import { storeToRefs } from 'pinia';
 import { useCssModule, computed } from 'vue';
 
 import { useToastsStore } from '@/stores/toasts';
-import { TOAST_TYPE, type Toast } from '@/types';
+import { ToastType, type Toast } from '@/types';
 import BaseIcon from '@/components/BaseIcon.vue';
 import { useComponentsStore } from '@/stores/components';
 
@@ -30,7 +30,7 @@ const $style = useCssModule();
 
 const getClassesToast = (toast: Toast) => [$style.toast, $style[`toast_${toast.type}`]];
 
-const getIconPath = (toast: Toast) => (toast.type === TOAST_TYPE.SUCCESS ? mdiCheck : mdiClose);
+const getIconPath = (toast: Toast) => (toast.type === ToastType.Success ? mdiCheck : mdiClose);
 
 const onClickClose = (toast: Toast) => toastsStore.closeToast(toast.id);
 

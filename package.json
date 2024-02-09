@@ -17,10 +17,13 @@
     "pinia": "^2.1.6",
     "sass": "^1.70.0",
     "vue": "^3.4.15",
+    "vue-i18n": "^9.9.1",
     "vue-router": "^4.2.4",
     "vue3-touch-events": "^4.1.8"
   },
   "devDependencies": {
+    "@intlify/unplugin-vue-i18n": "^2.0.0",
+    "@modyfi/vite-plugin-yaml": "^1.1.0",
     "@rushstack/eslint-patch": "^1.7.2",
     "@types/node": "^20.11.16",
     "@typescript-eslint/eslint-plugin": "^6.20.0",

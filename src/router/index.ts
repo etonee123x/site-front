@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-export enum ROUTE_NAME {
-  EXPLORER = 'EXPLORER',
-  HOME = 'HOME',
+export enum RouteName {
+  Explorer = 'Explorer',
+  Home = 'Home',
 }
 
 export const router = createRouter({
   routes: [
     {
-      name: ROUTE_NAME.EXPLORER,
+      name: RouteName.Explorer,
       path: '/explorer/:links*',
       component: () => import('@/views/explorer'),
     },
     {
-      name: ROUTE_NAME.HOME,
+      name: RouteName.Home,
       path: '/',
       redirect: '/explorer/',
     },

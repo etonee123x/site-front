@@ -1,8 +1,8 @@
 import type { WithId } from '@/types';
 
-export enum TOAST_TYPE {
-  ERROR = 'error',
-  SUCCESS = 'success',
+export enum ToastType {
+  Error = 'Error',
+  Success = 'Success',
 }
 
-export type Toast = WithId<{ text: string; type: TOAST_TYPE }>;
+export type Toast = WithId<{ text: string; type: ToastType }>;

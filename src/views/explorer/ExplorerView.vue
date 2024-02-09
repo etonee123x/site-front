@@ -20,7 +20,7 @@ import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
 import { storeToRefs } from 'pinia';
 
 import { useExplorerStore } from '@/stores/explorer';
-import { ROUTE_NAME } from '@/router';
+import { RouteName } from '@/router';
 import NavBar from '@/views/explorer/components/NavBar.vue';
 
 const LazyElementSystem = defineAsyncComponent(() => import('@/views/explorer/components/ElementSystem.vue'));
@@ -55,7 +55,7 @@ const getComponent = (item: Item) => {
 
 const fetchData = (route: RouteLocationNormalizedLoaded) =>
   explorerStore.getFolderData(route.fullPath.replace('/explorer', '')).catch(() => {
-    router.push({ name: ROUTE_NAME.EXPLORER });
+    router.push({ name: RouteName.Explorer });
   });
 
 fetchData(route);

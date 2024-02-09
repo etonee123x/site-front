@@ -18,15 +18,16 @@
 </template>
 
 <script setup lang="ts">
-import { onClickOutside } from '@vueuse/core';
+import { onClickOutside, useToggle } from '@vueuse/core';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { computed, ref } from 'vue';
+import { isString } from '@types';
 
 import { type Option } from '@/components/BaseSelect/types';
 import BaseIcon from '@/components/BaseIcon.vue';
 
 const props = defineProps<{
-  modelValue?: Option;
+  modelValue?: Omit<Option, 'id'> | string;
   options: Array<Option>;
 }>();
 
@@ -37,15 +38,13 @@ const emit = defineEmits<{
 
 const refSelect = ref<HTMLDivElement>();
 
-const isOpened = ref(false);
+const [isOpened, toggle] = useToggle();
 
 const path = computed(() => (isOpened.value ? mdiChevronUp : mdiChevronDown));
 
-const _modelValue = computed(() => props.modelValue?.text ?? null);
+const _modelValue = computed(() => (isString(props.modelValue) ? props.modelValue : props.modelValue?.text ?? null));
 
-const onWrapClick = () => {
-  isOpened.value = !isOpened.value;
-};
+const onWrapClick = () => toggle();
 
 const close = () => {
   if (!isOpened.value) {

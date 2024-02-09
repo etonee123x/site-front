@@ -1,20 +1,26 @@
-export enum THEME_COLOR {
-  RANDOM = 'random',
-  RED = 'red',
-  GREEN = 'green',
-  BLUE = 'blue',
-  CYAN = 'cyan',
-  MAGENTA = 'magenta',
-  ORANGE = 'orange',
+export enum ThemeColor {
+  Random = 'Random',
+  Red = 'Red',
+  Green = 'Green',
+  Blue = 'Blue',
+  Cyan = 'Cyan',
+  Magenta = 'Magenta',
+  Orange = 'Orange',
 }
 
-export enum THEME_MODE {
-  SYSTEM = 'system',
-  DARK = 'dark',
-  LIGHT = 'light',
+export enum ThemeMode {
+  System = 'System',
+  Dark = 'Dark',
+  Light = 'Light',
+}
+
+export enum Language {
+  Ru = 'Ru',
+  En = 'En',
 }
 
 export interface Settings {
-  themeColor: THEME_COLOR;
-  themeMode: THEME_MODE;
+  themeColor: ThemeColor;
+  themeMode: ThemeMode;
+  language: Language;
 }

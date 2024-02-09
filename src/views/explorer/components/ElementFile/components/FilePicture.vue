@@ -1,7 +1,7 @@
 <template>
   <ElementFile :element="element" @click="onClick">
     <div :class="$style.wrapper">
-      <img :class="$style.thePicture" alt="Картинка" :src="element.src" />
+      <img :class="$style.thePicture" :src="element.src" />
     </div>
   </ElementFile>
 </template>

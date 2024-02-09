@@ -5,11 +5,13 @@
 </template>
 
 <script setup lang="ts">
+import { useToggle } from '@vueuse/core';
+
 import BaseButton from '@/components/BaseButton.vue';
 
 const model = defineModel<boolean>();
 
-const onClick = () => {
-  model.value = !model.value;
-};
+const toggle = useToggle(model);
+
+const onClick = () => toggle();
 </script>

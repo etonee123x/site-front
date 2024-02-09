@@ -9,17 +9,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
 import { mdiCog } from '@mdi/js';
+import { useToggle } from '@vueuse/core';
 
 import BaseIcon from '@/components/BaseIcon.vue';
 import DialogSettings from '@/components/TheHeader/components/DialogSettings.vue';
 
-const isDialogSettingsOpened = ref(false);
+const [isDialogSettingsOpened, toggle] = useToggle();
 
-const onIconSettingsClick = () => {
-  isDialogSettingsOpened.value = true;
-};
+const onIconSettingsClick = () => toggle(true);
 </script>
 
 <style lang="scss" module>

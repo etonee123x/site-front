@@ -1,7 +1,7 @@
 import type { VueClass, WithId } from '@/types';
 
-export type Option = WithId<{
+export type Option<Value = Record<string, unknown> | unknown> = WithId<{
   text: string;
-  value: Record<string, unknown> | unknown;
+  value: Value;
   class?: VueClass;
 }>;

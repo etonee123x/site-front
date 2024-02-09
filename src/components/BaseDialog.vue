@@ -9,24 +9,33 @@
         <slot v-bind="{ close }" />
       </div>
       <div :class="$style.footer">
-        <BaseButton @click="onClickButtonCancel">
-          {{ buttonTextCancel }}
-        </BaseButton>
-        <BaseButton @click="onClickButtonConfirm">
-          {{ buttonTextConfirm }}
+        <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
+          {{ button.text }}
         </BaseButton>
       </div>
     </div>
   </dialog>
 </template>
 
+<i18n lang="yaml">
+en:
+  confirm: 'Confirm'
+  cancel: 'Cancel'
+ru:
+  confirm: 'Подтвердить'
+  cancel: 'Отмена'
+</i18n>
+
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
+import { useI18n } from 'vue-i18n';
+import { watch } from 'vue';
 
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
+import { addId } from '@/utils';
 
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
@@ -55,10 +64,30 @@ const emit = defineEmits<{
   confirm: [];
 }>();
 
+const model = defineModel<boolean>();
+
+const { t } = useI18n({ useScope: 'local' });
+
 const style = computed(() => ({
   width: props.width,
   height: props.height,
 }));
+
+const buttons = computed(() =>
+  [
+    {
+      text: t('cancel'),
+      onClick: close,
+    },
+    {
+      text: t('confirm'),
+      onClick: () => {
+        emit('confirm');
+        close();
+      },
+    },
+  ].map(addId),
+);
 
 const close = () => {
   refDialog.value?.close();
@@ -69,16 +98,7 @@ onClickOutside(refDialogInner, close);
 
 const onClickCloseIcon = close;
 
-const onClickButtonCancel = close;
-
-const onClickButtonConfirm = () => {
-  emit('confirm');
-  close();
-};
-
-defineExpose({
-  refDialog,
-});
+watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()));
 </script>
 
 <style lang="scss" module>

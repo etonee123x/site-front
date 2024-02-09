@@ -11,7 +11,23 @@
   </ElementFile>
 </template>
 
+<i18n lang="yaml">
+en:
+  duration: 'Duration'
+  artists: 'Artist(-s)'
+  album: 'Album'
+  year: 'Release year'
+  bpm: 'BPM'
+ru:
+  duration: 'Длительность'
+  artists: 'Исполнитель(-и)'
+  album: 'Альбом'
+  year: 'Год выхода'
+  bpm: 'Темп'
+</i18n>
+
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 import { isNotEmptyArray, isTruthy, ItemAudio } from '@types';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
@@ -27,32 +43,34 @@ const props = defineProps<{
 
 const playerStore = usePlayerStore();
 
+const { t } = useI18n({ useScope: 'local' });
+
 const onClick = () => playerStore.loadTrack(props.element);
 
 const metadataList = computed(() =>
   [
     {
-      title: 'Duration',
+      title: t('duration'),
       path: mdiClockOutline,
       value: formatDuration(props.element.metadata.duration * 1000),
     },
     isNotEmptyArray(props.element.metadata.artists) && {
-      title: 'Artist(-s)',
+      title: t('artists'),
       path: mdiAccountOutline,
       value: props.element.metadata.artists.join(' & '),
     },
     props.element.metadata.album && {
-      title: 'Album',
+      title: t('album'),
       path: mdiAlbum,
       value: props.element.metadata.album,
     },
     props.element.metadata.year && {
-      title: 'Release year',
+      title: t('year'),
       path: mdiCalendarBlankOutline,
       value: String(props.element.metadata.year),
     },
     props.element.metadata.bpm && {
-      title: 'BPM',
+      title: t('bpm'),
       path: mdiMetronome,
       value: String(props.element.metadata.bpm),
     },
