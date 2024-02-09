@@ -5,12 +5,7 @@
       <BaseIcon size="20" :path="path" />
     </div>
     <div v-if="isOpened" :class="$style.options">
-      <div
-        v-for="option in options"
-        :key="option.id"
-        :class="[$style.option, option.class]"
-        @click="() => onOptionClick(option)"
-      >
+      <div v-for="option in options" :key="option.id" :class="$style.option" @click="() => onOptionClick(option)">
         {{ option.text }}
       </div>
     </div>
