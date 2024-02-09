@@ -7,7 +7,6 @@ import { i18n, setLocale } from '@/i18n';
 import { type Settings, ThemeColor, ThemeMode, Language } from '@/types';
 
 const CLASS_TITLES = Object.freeze({
-  THEME: 'theme',
   THEME_COLOR: 'theme_color',
   THEME_MODE: 'theme_mode',
 });
