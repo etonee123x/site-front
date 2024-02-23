@@ -1,4 +1,4 @@
-import type { WithId } from '@/types';
+import type { WithId } from '@shared/src/types';
 
 export enum ToastType {
   Error = 'Error',
