@@ -1,6 +1,6 @@
 import type { WithId } from '@/types';
 
-export type Option<Value = Record<string, unknown> | unknown> = WithId<{
+export interface Option<Value = Record<string, unknown> | unknown> extends WithId {
   text: string;
   value: Value;
-}>;
+}

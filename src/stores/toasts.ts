@@ -2,7 +2,7 @@ import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
 import { isNotEmptyArray } from '@types';
 
-import { type Toast, ToastType } from '@/types';
+import { type Toast, ToastType, toId, type Id } from '@/types';
 
 interface Options {
   ttl?: number;
@@ -17,7 +17,7 @@ export const useToastsStore = defineStore('toasts', () => {
   const toasts = reactive<Array<Toast>>([]);
 
   const toast = (text: string, { ttl = DEFAULT_OPTIONS.ttl, ...options }: Options) => {
-    const id = Date.now();
+    const id = toId(Date.now());
 
     toasts.push({ text, id, ...options });
 
@@ -30,7 +30,7 @@ export const useToastsStore = defineStore('toasts', () => {
 
   const toastError = (text: string, options?: Options) => toast(text, { type: ToastType.Error, ...options });
 
-  const closeToast = (id: number) => {
+  const closeToast = (id: Id) => {
     const index = toasts.findIndex(({ id: _id }) => _id === id);
     if (index === -1) {
       return;

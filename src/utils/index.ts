@@ -1,6 +1,6 @@
 import { intervalToDuration } from 'date-fns';
 
-import type { WithId } from '@/types';
+import { toId, type WithId } from '@/types';
 
 export const formatDuration = (end: number): string => {
   const { minutes = 0, seconds = 0 } = intervalToDuration({ start: 0, end });
@@ -22,9 +22,9 @@ export const to0To1Borders = (currentValue: number, [minValue = 0, maxValue]: [n
   return result;
 };
 
-export const addId = <T>(el: T, id = Number(crypto.randomUUID().match(/[\d]/g)?.join(''))): WithId<T> => ({
+export const addId = <T>(el: T, id = Number(crypto.randomUUID().match(/[\d]/g)?.join(''))): WithId & T => ({
   ...el,
-  id,
+  id: toId(id),
 });
 
 export const getRandomExceptCurrentIndex = (to: number, currentValue: number): number => {

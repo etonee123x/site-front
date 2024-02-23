@@ -1,16 +1,28 @@
 <template>
-  <button :class="[$style.button, isActive && $style.button_active]" :disabled="isDisabled">
+  <button :class="[$style.button, isActive && $style.button_active]" :disabled="isDisabled" @click="onCLick">
     <slot />
   </button>
 </template>
 
 <script setup lang="ts">
-defineProps<
+const props = defineProps<
   Partial<{
     isActive: boolean;
     isDisabled: boolean;
   }>
 >();
+
+const emit = defineEmits<{
+  click: [];
+}>();
+
+const onCLick = () => {
+  if (props.isDisabled) {
+    return;
+  }
+
+  emit('click');
+};
 </script>
 
 <style lang="scss" module>
