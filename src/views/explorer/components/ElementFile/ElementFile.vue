@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { format } from 'date-fns';
-import { type ItemFile } from '@types';
+import { type ItemFile } from '@shared/src/types';
 
 const props = defineProps<{
   element: ItemFile;
@@ -35,5 +35,5 @@ const birthTimeFormatted = computed(() => format(new Date(props.element.birthtim
 </script>
 
 <style lang="scss" module>
-@import '@/views/explorer/assets/styles/directory-element.scss';
+@import '@/views/Explorer/assets/styles/directory-element.scss';
 </style>

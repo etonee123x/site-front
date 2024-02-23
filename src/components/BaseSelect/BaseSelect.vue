@@ -16,7 +16,7 @@
 import { onClickOutside, useToggle } from '@vueuse/core';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { computed, ref } from 'vue';
-import { isString } from '@types';
+import { isString } from '@shared/src/utils';
 
 import { type Option } from '@/components/BaseSelect/types';
 import BaseIcon from '@/components/BaseIcon.vue';

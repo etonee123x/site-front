@@ -1,4 +1,4 @@
-import { isTruthy } from '@types';
+import { isTruthy } from '@shared/src/utils';
 
 type Options = Parameters<typeof fetch>[1] & { isRelative?: boolean };
 

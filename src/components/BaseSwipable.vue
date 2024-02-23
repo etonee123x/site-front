@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { type CSSProperties, reactive, ref, computed } from 'vue';
 import { useElementSize } from '@vueuse/core';
-import { isTruthy } from '@types';
+import { isTruthy } from '@shared/src/utils';
 
 import type { Numberable } from '@/types';
 

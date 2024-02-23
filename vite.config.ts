@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@types': resolve(__dirname, './submodules/types'),
+      '@shared': resolve(__dirname, './submodules/shared'),
     },
   },
   css: {

@@ -7,10 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import { type ItemPicture } from '@types';
+import { type ItemPicture } from '@shared/src/types';
 
 import { useGalleryStore } from '@/stores/gallery';
-import ElementFile from '@/views/explorer/components/ElementFile';
+import ElementFile from '@/views/Explorer/components/ElementFile';
 
 const props = defineProps<{
   element: ItemPicture;

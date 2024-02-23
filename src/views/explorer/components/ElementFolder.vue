@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { type ItemFolder } from '@types';
+import { type ItemFolder } from '@shared/src/types';
 
 defineProps<{
   element: ItemFolder;
@@ -17,7 +17,7 @@ defineProps<{
 </script>
 
 <style module lang="scss">
-@import '@/views/explorer/assets/styles/directory-element.scss';
+@import '@/views/Explorer/assets/styles/directory-element.scss';
 
 .directoryElement {
   &_folder {

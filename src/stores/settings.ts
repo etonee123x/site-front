@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { usePreferredDark } from '@vueuse/core';
-import { toLowerCase } from '@types';
+import { toLowerCase } from '@shared/src/utils';
 
 import { i18n } from '@/i18n';
 import { type Settings, ThemeColor, ThemeMode, Language } from '@/types';

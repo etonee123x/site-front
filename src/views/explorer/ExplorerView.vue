@@ -16,20 +16,20 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
-import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@types';
+import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@shared/src/types';
 import { storeToRefs } from 'pinia';
 
 import { useExplorerStore } from '@/stores/explorer';
 import { RouteName } from '@/router';
-import NavBar from '@/views/explorer/components/NavBar.vue';
+import NavBar from '@/views/Explorer/components/NavBar.vue';
 
-const LazyElementSystem = defineAsyncComponent(() => import('@/views/explorer/components/ElementSystem.vue'));
-const LazyElementFolder = defineAsyncComponent(() => import('@/views/explorer/components/ElementFolder.vue'));
+const LazyElementSystem = defineAsyncComponent(() => import('@/views/Explorer/components/ElementSystem.vue'));
+const LazyElementFolder = defineAsyncComponent(() => import('@/views/Explorer/components/ElementFolder.vue'));
 const LazyFileAudio = defineAsyncComponent(
-  () => import('@/views/explorer/components/ElementFile/components/FileAudio.vue'),
+  () => import('@/views/Explorer/components/ElementFile/components/FileAudio.vue'),
 );
 const LazyFilePicture = defineAsyncComponent(
-  () => import('@/views/explorer/components/ElementFile/components/FilePicture.vue'),
+  () => import('@/views/Explorer/components/ElementFile/components/FilePicture.vue'),
 );
 
 const explorerStore = useExplorerStore();

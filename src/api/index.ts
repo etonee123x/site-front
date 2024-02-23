@@ -1,4 +1,4 @@
-import type { FolderData } from '@types';
+import type { FolderData } from '@shared/src/types';
 
 import { get } from '@/api/client';
 import type { Settings } from '@/types';

@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
-import { isNotEmptyArray } from '@types';
+import { isNotEmptyArray } from '@shared/src/utils';
 
 import { type Toast, ToastType, toId, type Id } from '@/types';
 

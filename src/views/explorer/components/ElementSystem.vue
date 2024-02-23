@@ -7,5 +7,5 @@
 </template>
 
 <style lang="scss" module>
-@import '@/views/explorer/assets/styles/directory-element.scss';
+@import '@/views/Explorer/assets/styles/directory-element.scss';
 </style>

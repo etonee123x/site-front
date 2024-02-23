@@ -10,7 +10,7 @@ export const router = createRouter({
     {
       name: RouteName.Explorer,
       path: '/explorer/:links*',
-      component: () => import('@/views/explorer'),
+      component: () => import('@/views/Explorer'),
     },
     {
       name: RouteName.Home,

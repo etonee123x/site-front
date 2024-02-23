@@ -21,8 +21,8 @@
       "@/*": [
         "src/*"
       ],
-      "@types": [
-        "submodules/types/index.ts"
+      "@shared/*": [
+        "submodules/shared/*"
       ]
     }
   },
@@ -37,6 +37,7 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "submodules"
   ]
 }

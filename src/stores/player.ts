@@ -1,4 +1,5 @@
-import { type ItemAudio, isNotEmptyArray } from '@types';
+import { type ItemAudio } from '@shared/src/types';
+import { isNotEmptyArray } from '@shared/src/utils';
 import { defineStore } from 'pinia';
 import { computed, ref, shallowRef } from 'vue';
 

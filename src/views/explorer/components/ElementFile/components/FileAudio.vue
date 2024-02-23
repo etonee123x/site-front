@@ -29,12 +29,13 @@ ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
-import { isNotEmptyArray, isTruthy, ItemAudio } from '@types';
+import { ItemAudio } from '@shared/src/types';
+import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
 import { formatDuration, addId } from '@/utils';
 import { usePlayerStore } from '@/stores/player';
-import ElementFile from '@/views/explorer/components/ElementFile';
+import ElementFile from '@/views/Explorer/components/ElementFile';
 import BaseIcon from '@/components/BaseIcon.vue';
 
 const props = defineProps<{
