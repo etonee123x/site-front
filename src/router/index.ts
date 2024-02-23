@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 export enum RouteName {
   Explorer = 'Explorer',
   Home = 'Home',
+  Blog = 'Blog',
 }
 
 export const router = createRouter({
@@ -16,6 +17,11 @@ export const router = createRouter({
       name: RouteName.Home,
       path: '/',
       redirect: '/explorer/',
+    },
+    {
+      name: RouteName.Blog,
+      path: '/blog',
+      component: () => import('@/views/Blog'),
     },
   ],
   history: createWebHistory('/'),
