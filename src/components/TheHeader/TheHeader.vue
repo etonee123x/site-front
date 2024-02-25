@@ -1,23 +1,52 @@
 <template>
   <header :class="$style.header">
-    <div :class="[$style.inner, 'l-container']">
-      <span :class="[$style.logo, 'f-h1']">eto-ne-e123x</span>
-      <BaseIcon :path="mdiCog" :class="$style.settings" @click="onIconSettingsClick" />
+    <div class="l-container" :class="$style.inner">
+      <span class="f-h1" :class="$style.logo">eto-ne-e123x</span>
+      <ul :class="$style.links">
+        <li v-for="link in links" :key="link.id">
+          <RouterLink :class="$style.link" :to="link.to" :active-class="$style.link_active">
+            {{ link.text }}
+          </RouterLink>
+        </li>
+      </ul>
+      <BaseIcon :path="mdiCog" :class="$style.iconSettings" @click="onIconSettingsClick" />
     </div>
     <DialogSettings v-model="isDialogSettingsOpened" />
   </header>
 </template>
 
+<i18n lang="yaml">
+ru:
+  content: 'Контент'
+  blog: 'Блог'
+en:
+  content: 'Content'
+  blog: 'Blog'
+</i18n>
+
 <script setup lang="ts">
 import { mdiCog } from '@mdi/js';
 import { useToggle } from '@vueuse/core';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import BaseIcon from '@/components/BaseIcon.vue';
 import DialogSettings from '@/components/TheHeader/components/DialogSettings.vue';
+import { addId } from '@/utils';
+import { RouteName } from '@/router';
+
+const { t } = useI18n({ useScope: 'local' });
 
 const [isDialogSettingsOpened, toggle] = useToggle();
 
 const onIconSettingsClick = () => toggle(true);
+
+const links = computed(() =>
+  [
+    { text: t('content'), to: { name: RouteName.Explorer } },
+    { text: t('blog'), to: { name: RouteName.Blog } },
+  ].map(addId),
+);
 </script>
 
 <style lang="scss" module>
@@ -28,14 +57,27 @@ const onIconSettingsClick = () => toggle(true);
 .inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0.5rem 0;
+  gap: 1rem;
 }
 
-.settings {
+.iconSettings {
+  margin-inline-start: auto;
   display: flex;
   align-items: center;
   justify-items: center;
   cursor: pointer;
+}
+
+.links {
+  display: flex;
+  gap: 0.5rem;
+  align-self: flex-end;
+}
+
+.link {
+  &_active {
+    color: var(--color-details);
+  }
 }
 </style>

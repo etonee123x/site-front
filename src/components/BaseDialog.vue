@@ -2,7 +2,7 @@
   <dialog ref="refDialog" :style="style" :class="$style.dialog">
     <div ref="refDialogInner" :class="$style.inner">
       <div :class="$style.header">
-        <span :class="[$style.title, 'f-h2']">{{ title }}</span>
+        <span class="f-h2" :class="$style.title">{{ title }}</span>
         <BaseIcon size="20" :path="mdiClose" :class="$style.closeIcon" @click="onClickCloseIcon" />
       </div>
       <div :class="$style.main">
