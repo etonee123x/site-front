@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { usePreferredDark } from '@vueuse/core';
-import { toLowerCase } from '@shared/src/utils';
+import { stringToLowerCase } from '@shared/src/utils';
 
 import { i18n } from '@/i18n';
 import { type Settings, ThemeColor, ThemeMode, Language } from '@/types';
@@ -100,7 +100,7 @@ export const useSettingsStore = defineStore('settings', () => {
   };
 
   const setLanguage = (language: Language) => {
-    i18n.global.locale.value = toLowerCase(language);
+    i18n.global.locale.value = stringToLowerCase(language);
   };
 
   const themeModeSystem = computed(() => (isPreferredDark.value ? ThemeMode.Dark : ThemeMode.Light));

@@ -14,6 +14,7 @@
 import { mdiCheck, mdiClose } from '@mdi/js';
 import { storeToRefs } from 'pinia';
 import { useCssModule, computed } from 'vue';
+import { stringToLowerCase } from '@shared/src/utils';
 
 import { useToastsStore } from '@/stores/toasts';
 import { ToastType, type Toast } from '@/types';
@@ -28,7 +29,7 @@ const { playerHeight } = storeToRefs(componentsStore);
 
 const $style = useCssModule();
 
-const getClassesToast = (toast: Toast) => [$style.toast, $style[`toast_${toast.type}`]];
+const getClassesToast = (toast: Toast) => [$style.toast, $style[`toast_${stringToLowerCase(toast.type)}`]];
 
 const getIconPath = (toast: Toast) => (toast.type === ToastType.Success ? mdiCheck : mdiClose);
 
