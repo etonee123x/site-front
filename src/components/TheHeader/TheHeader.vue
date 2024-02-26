@@ -1,7 +1,7 @@
 <template>
   <header :class="$style.header">
     <div class="l-container" :class="$style.inner">
-      <span class="f-h1" :class="$style.logo">eto-ne-e123x</span>
+      <span class="text-xl" :class="$style.logo">eto-ne-e123x</span>
       <ul :class="$style.links">
         <li v-for="link in links" :key="link.id">
           <RouterLink :class="$style.link" :to="link.to" :active-class="$style.link_active">

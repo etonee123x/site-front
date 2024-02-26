@@ -1,8 +1,13 @@
 <template>
-  <div :class="$style.blogForm">
-    <BaseTextarea v-model="post.text" :placeholder="t('textareaPlaceholder')" />
-    <BaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">{{ t('buttonLabel') }}</BaseButton>
-  </div>
+  <BaseForm :class="$style.blogForm" @submit.prevent="onSubmit">
+    <BaseTextarea
+      v-model="post.text"
+      :placeholder="t('textareaPlaceholder')"
+      :errors="v$.text.$errors"
+      @submit="onSubmit"
+    />
+    <BaseButton :is-loading="isLoading[IsLoadingAction.Post]">{{ t('buttonLabel') }}</BaseButton>
+  </BaseForm>
 </template>
 
 <i18n lang="yaml">
@@ -19,17 +24,14 @@ import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useVuelidate } from '@vuelidate/core';
-import { required } from '@vuelidate/validators';
-import { toValue } from 'vue';
 
+import { required } from '@/utils';
 import BaseTextarea from '@/components/BaseTextarea.vue';
 import BaseButton from '@/components/BaseButton.vue';
+import BaseForm from '@/components/BaseForm.vue';
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
-import { useToastsStore } from '@/stores/toasts';
 
 const { t } = useI18n({ useScope: 'local' });
-
-const toastsStore = useToastsStore();
 
 const rules = {
   text: { required },
@@ -41,19 +43,19 @@ const getInitialValuePost = () => ({
 
 const post = ref(getInitialValuePost());
 
-const v$ = useVuelidate(rules, post);
+const v$ = useVuelidate(rules, post, { $lazy: true });
 
 const blogStore = useBlogStore();
 const { isLoading } = storeToRefs(blogStore);
 
-const onClickButton = async () => {
-  const isValid = await v$.value.$validate();
-
-  if (!isValid) {
-    return toastsStore.toastError([v$.value.$errors[0].$property, toValue(v$.value.$errors[0]?.$message)].join(' — '));
+const onSubmit = async () => {
+  if (!(await v$.value.$validate())) {
+    return;
   }
 
   blogStore.postPost(post.value);
+
+  v$.value.$reset();
 
   post.value = getInitialValuePost();
 };

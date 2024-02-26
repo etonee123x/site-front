@@ -1,25 +1,56 @@
 <template>
-  <div class="f-body-2" :class="$style.textarea">
-    <textarea ref="textarea" v-model="model" :class="$style.theTextarea" :placeholder="placeholder" />
+  <div :class="$style.textarea">
+    <div class="f-body-2" :class="$style.textareaContainer">
+      <textarea
+        ref="textarea"
+        v-model="model"
+        :class="$style.theTextarea"
+        :placeholder="placeholder"
+        @keydown.enter="onEnter"
+      />
+    </div>
+    <ul v-if="isNotEmptyArray(errors)" class="text-sm" :class="$style.errors">
+      <li v-for="error in errors" :key="error.$uid">{{ error.$message }}</li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import { isNotEmptyArray } from '@shared/src/utils';
+import type { ErrorObject } from '@vuelidate/core';
 import { useTextareaAutosize } from '@vueuse/core';
 
-defineProps<{
-  placeholder?: string;
+withDefaults(
+  defineProps<{
+    placeholder?: string;
+    errors?: Array<ErrorObject>;
+  }>(),
+  {
+    placeholder: undefined,
+    errors: () => [],
+  },
+);
+
+const emit = defineEmits<{
+  submit: [];
 }>();
 
-const model = defineModel<string>({
-  required: true,
-});
+const onEnter = (e: KeyboardEvent) => {
+  if (e.shiftKey) {
+    return;
+  }
+
+  e.preventDefault();
+  emit('submit');
+};
+
+const model = defineModel<string>();
 
 const { textarea } = useTextareaAutosize({ input: model });
 </script>
 
 <style lang="scss" module>
-.textarea {
+.textareaContainer {
   border-radius: 0.5rem;
   border: var(--border-default);
   cursor: text;
@@ -38,5 +69,16 @@ const { textarea } = useTextareaAutosize({ input: model });
   &::placeholder {
     color: var(--color-dark);
   }
+}
+
+.textarea,
+.errors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.errors {
+  color: var(--color-error);
 }
 </style>
