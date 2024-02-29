@@ -47,9 +47,9 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   copied: 'Copied!'
-ru:
+Ru:
   copied: 'Скопировано!'
 </i18n>
 
@@ -127,7 +127,7 @@ const urlFull = computed(() => {
   let _url = [window.location.origin, url.value].join('');
 
   try {
-    _url = decodeURI(_url);
+    _url = encodeURI(_url);
   } catch (e) {
     console.error(e);
   }

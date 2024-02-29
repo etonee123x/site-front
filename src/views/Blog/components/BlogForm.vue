@@ -11,10 +11,10 @@
 </template>
 
 <i18n lang="yaml">
-ru:
+Ru:
   textareaPlaceholder: 'Сообщение'
   buttonLabel: 'Отправить'
-en:
+En:
   textareaPlaceholder: 'Message'
   buttonLabel: 'Post'
 </i18n>
@@ -66,6 +66,5 @@ const onSubmit = async () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
 }
 </style>

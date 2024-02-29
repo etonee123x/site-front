@@ -2,6 +2,8 @@ import type { Id, Post, PostData } from '@shared/src/types';
 import { defineStore } from 'pinia';
 import { ref, computed, reactive } from 'vue';
 import { useRoute } from 'vue-router';
+import { useCounter } from '@vueuse/core';
+import { isNotEmptyArray } from '@shared/src/utils';
 
 import { getPosts as _getPosts, postPost as _postPost, deletePost as _deletePost } from '@/api';
 
@@ -17,6 +19,8 @@ export const useBlogStore = defineStore('blog', () => {
 
   const posts = ref<Array<Post>>([]);
 
+  const hasPosts = computed(() => isNotEmptyArray(posts.value));
+
   const isLoading = reactive({
     [IsLoadingAction.Get]: false,
     [IsLoadingAction.Post]: false,
@@ -26,12 +30,20 @@ export const useBlogStore = defineStore('blog', () => {
 
   const isLoadingAny = computed(() => Object.values(IsLoadingAction).some(Boolean));
 
+  const { inc, reset: _reset, count: page } = useCounter();
+
+  const reset = () => {
+    posts.value = [];
+    _reset();
+  };
+
   const getPosts = async () => {
     isLoading[IsLoadingAction.Get] = true;
 
-    return _getPosts()
+    return _getPosts(page.value)
       .then((_posts) => {
-        posts.value = _posts;
+        posts.value = posts.value.concat(_posts);
+        inc();
 
         return posts.value;
       })
@@ -45,6 +57,7 @@ export const useBlogStore = defineStore('blog', () => {
 
     return _postPost(postData)
       .then(() => {
+        reset();
         getPosts();
       })
       .finally(() => {
@@ -57,6 +70,7 @@ export const useBlogStore = defineStore('blog', () => {
 
     return _deletePost(id)
       .then(() => {
+        reset();
         getPosts();
       })
       .finally(() => {
@@ -68,6 +82,7 @@ export const useBlogStore = defineStore('blog', () => {
 
   return {
     posts,
+    hasPosts,
     isAdmin,
     isLoading,
     isLoadingAny,

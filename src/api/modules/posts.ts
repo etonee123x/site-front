@@ -2,7 +2,9 @@ import type { Post, ForPost, Id, ForPut, ForPatch } from '@shared/src/types';
 
 import { Client } from '@/api/client';
 
-export const getPosts = () => Client.get<Array<Post>>('/posts');
+const PER_PAGE = 10;
+
+export const getPosts = (page: number) => Client.get<Array<Post>>(`/posts?perPage=${PER_PAGE}&page=${page}`);
 
 export const getPostById = (id: Id) => Client.get<Post>(`/posts/${id}`);
 

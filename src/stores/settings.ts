@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { usePreferredDark } from '@vueuse/core';
-import { stringToLowerCase } from '@shared/src/utils';
+import { enGB, ru } from 'date-fns/locale';
 
 import { i18n } from '@/i18n';
 import { type Settings, ThemeColor, ThemeMode, Language } from '@/types';
@@ -28,6 +28,11 @@ const getLocalStorageSettings = () => {
 
   return result;
 };
+
+const LANGUAGE_TO_DATE_FNS_LOCALE = Object.freeze({
+  [Language.En]: enGB,
+  [Language.Ru]: ru,
+});
 
 export const useSettingsStore = defineStore('settings', () => {
   const { t } = i18n.global;
@@ -100,8 +105,10 @@ export const useSettingsStore = defineStore('settings', () => {
   };
 
   const setLanguage = (language: Language) => {
-    i18n.global.locale.value = stringToLowerCase(language);
+    i18n.global.locale.value = language;
   };
+
+  const dateFnsLocale = computed(() => LANGUAGE_TO_DATE_FNS_LOCALE[i18n.global.locale.value]);
 
   const themeModeSystem = computed(() => (isPreferredDark.value ? ThemeMode.Dark : ThemeMode.Light));
 
@@ -143,6 +150,7 @@ export const useSettingsStore = defineStore('settings', () => {
     settings,
     themeColor,
     themeMode,
+    dateFnsLocale,
 
     themeColorToThemeColorTranslation,
     themeModeToThemeModeTranslation,

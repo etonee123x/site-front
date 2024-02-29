@@ -52,7 +52,7 @@ const { textarea } = useTextareaAutosize({ input: model });
 <style lang="scss" module>
 .textareaContainer {
   border-radius: 0.5rem;
-  border: var(--border-default);
+  border: 1px solid var(--color-dark);
   cursor: text;
   overflow: hidden;
 }
@@ -65,6 +65,7 @@ const { textarea } = useTextareaAutosize({ input: model });
   outline: unset;
   resize: none;
   display: flex;
+  background-color: unset;
 
   &::placeholder {
     color: var(--color-dark);

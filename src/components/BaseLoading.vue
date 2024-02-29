@@ -6,9 +6,9 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   loading: 'Loading'
-ru:
+Ru:
   loading: 'Загрузка'
 </i18n>
 

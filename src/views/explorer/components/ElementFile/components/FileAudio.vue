@@ -12,13 +12,13 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   duration: 'Duration'
   artists: 'Artist(-s)'
   album: 'Album'
   year: 'Release year'
   bpm: 'BPM'
-ru:
+Ru:
   duration: 'Длительность'
   artists: 'Исполнитель(-и)'
   album: 'Альбом'

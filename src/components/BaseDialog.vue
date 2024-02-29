@@ -18,10 +18,10 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   confirm: 'Confirm'
   cancel: 'Cancel'
-ru:
+Ru:
   confirm: 'Подтвердить'
   cancel: 'Отмена'
 </i18n>

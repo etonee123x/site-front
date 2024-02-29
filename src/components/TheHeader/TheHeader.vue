@@ -1,7 +1,7 @@
 <template>
   <header :class="$style.header">
     <div class="l-container" :class="$style.inner">
-      <span class="text-xl" :class="$style.logo">eto-ne-e123x</span>
+      <RouterLink :to="to" class="text-xl" :class="$style.logo">eto-ne-e123x</RouterLink>
       <ul :class="$style.links">
         <li v-for="link in links" :key="link.id">
           <RouterLink :class="$style.link" :to="link.to" :active-class="$style.link_active">
@@ -16,10 +16,10 @@
 </template>
 
 <i18n lang="yaml">
-ru:
+Ru:
   content: 'Контент'
   blog: 'Блог'
-en:
+En:
   content: 'Content'
   blog: 'Blog'
 </i18n>
@@ -40,6 +40,8 @@ const { t } = useI18n({ useScope: 'local' });
 const [isDialogSettingsOpened, toggle] = useToggle();
 
 const onIconSettingsClick = () => toggle(true);
+
+const to = { name: RouteName.Home };
 
 const links = computed(() =>
   [

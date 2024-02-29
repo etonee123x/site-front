@@ -23,13 +23,13 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   settings: 'Settings'
   color: 'Color:'
   mode: 'Mode:'
   language: 'Language:'
   resetSettings: 'Reset settings'
-ru:
+Ru:
   settings: 'Настройки'
   color: 'Цвет:'
   mode: 'Режим:'

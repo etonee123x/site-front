@@ -1,14 +1,14 @@
 import { createI18n } from 'vue-i18n';
 
-import en from '@/i18n/languages/en.json';
-import ru from '@/i18n/languages/ru.json';
+import En from '@/i18n/languages/En.json';
+import Ru from '@/i18n/languages/Ru.json';
 
 export const i18n = createI18n({
-  locale: 'en',
-  fallbackLocale: 'en',
+  locale: 'En',
+  fallbackLocale: 'En',
   legacy: false,
   messages: {
-    en,
-    ru,
+    En,
+    Ru,
   },
 });
