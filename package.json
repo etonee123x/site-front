@@ -15,6 +15,7 @@
     "@vuelidate/validators": "^2.0.4",
     "@vueuse/core": "^10.7.2",
     "date-fns": "^3.3.1",
+    "deep-equal": "^2.2.3",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.6",
     "sass": "^1.70.0",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^2.0.0",
     "@rushstack/eslint-patch": "^1.7.2",
+    "@types/deep-equal": "^1.0.4",
     "@types/node": "^20.11.16",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@vitejs/plugin-vue": "^5.0.3",

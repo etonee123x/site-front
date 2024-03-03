@@ -8,13 +8,7 @@
           <BaseIcon v-if="wasEdited" is-font-size :path="mdiPencil" />
         </span>
       </template>
-      <BlogEditPost
-        v-else
-        ref="refBlogEditPost"
-        v-model="postDataNew.text"
-        :errors="v$.text.$errors"
-        @submit="onSubmit"
-      />
+      <BlogEditPost v-else ref="refBlogEditPost" v-model="postNew.text" :errors="v$.text.$errors" @submit="onSubmit" />
     </div>
     <div v-if="isAdmin" :class="$style.controls">
       <BaseButton
@@ -22,6 +16,7 @@
         :key="control.id"
         :class="$style.control"
         :is-loading="control.isLoading"
+        :is-disabled="control.isDisabled"
         @click="control.onClick"
       >
         <BaseIcon :path="control.iconPath" />
@@ -40,6 +35,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
+import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick } from 'vue';
@@ -52,7 +48,7 @@ import BlogEditPost from '@/views/Blog/components/BlogEditPost.vue';
 import { useDateFns } from '@/composables';
 import { useToastsStore } from '@/stores/toasts';
 import BaseHtml from '@/components/BaseHtml.vue';
-import { parseContent, clone } from '@/utils';
+import { parseContent, clone, addId } from '@/utils';
 import BaseButton from '@/components/BaseButton.vue';
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
 import BaseIcon from '@/components/BaseIcon.vue';
@@ -80,7 +76,7 @@ const { isAdmin, isLoading, editModeFor } = storeToRefs(blogStore);
 
 const { t } = useI18n({ useScope: 'local' });
 
-const postDataNew = ref(getInitialPostNew());
+const postNew = ref(getInitialPostNew());
 
 const toastsStore = useToastsStore();
 
@@ -89,9 +85,12 @@ const { intlFormatDistance } = useDateFns();
 const html = computed(() => parseContent(props.post.text));
 
 const { v$, handle } = useVuelidateBlogPostData(async () => {
-  blogStore.putPost(props.post.id, postDataNew.value);
+  if (hasChanges.value) {
+    blogStore.putPost(props.post.id, postNew.value);
+  }
+
   closeEditMode();
-}, postDataNew);
+}, postNew);
 
 const dateExact = computed(() =>
   [
@@ -118,6 +117,8 @@ const onClickDate = () => {
 
 const onSubmit = handle;
 
+const hasChanges = computed(() => !deepEqual(props.post, postNew.value));
+
 const closeEditMode = () => {
   editModeFor.value = null;
 };
@@ -127,36 +128,36 @@ const controls = computed(() =>
     ...(isInEditMode.value
       ? [
           {
-            id: 0,
             iconPath: mdiCancel,
             isLoading: false,
             onClick: closeEditMode,
           },
           {
-            id: 1,
             iconPath: mdiContentSave,
+            isDisabled: !hasChanges.value,
             isLoading: isLoading.value[IsLoadingAction.Put],
             onClick: handle,
           },
         ]
       : [
           {
-            id: 2,
             iconPath: mdiPencil,
             isLoading: isLoading.value[IsLoadingAction.Put],
             onClick: () => {
               editModeFor.value = props.post.id;
+
               nextTick(() => refBlogEditPost.value?.focus());
             },
           },
         ]),
     {
-      id: 3,
       iconPath: mdiDelete,
       isLoading: isLoading.value[IsLoadingAction.Delete],
       onClick: () => blogStore.deletePost(props.post.id),
     },
-  ].filter(isTruthy),
+  ]
+    .map(addId)
+    .filter(isTruthy),
 );
 </script>
 
