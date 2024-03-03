@@ -4,3 +4,4 @@ export * from '@/utils/addId';
 export * from '@/utils/getRandomExceptCurrentIndex';
 export * from '@/utils/i18n';
 export * from '@/utils/parseContent';
+export * from '@/utils/clone';

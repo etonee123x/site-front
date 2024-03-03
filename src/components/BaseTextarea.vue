@@ -47,6 +47,10 @@ const onEnter = (e: KeyboardEvent) => {
 const model = defineModel<string>();
 
 const { textarea } = useTextareaAutosize({ input: model });
+
+defineExpose({
+  focus: () => textarea.value?.focus(),
+});
 </script>
 
 <style lang="scss" module>

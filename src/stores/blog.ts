@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router';
 import { useCounter } from '@vueuse/core';
 import { isNotEmptyArray } from '@shared/src/utils';
 
-import { getPosts as _getPosts, postPost as _postPost, deletePost as _deletePost } from '@/api';
+import { getPosts as _getPosts, postPost as _postPost, deletePost as _deletePost, putPost as _putPost } from '@/api';
 
 export enum IsLoadingAction {
   Get = 'Get',
@@ -18,6 +18,8 @@ export const useBlogStore = defineStore('blog', () => {
   const route = useRoute();
 
   const posts = ref<Array<Post>>([]);
+
+  const isEnd = ref(false);
 
   const hasPosts = computed(() => isNotEmptyArray(posts.value));
 
@@ -34,15 +36,19 @@ export const useBlogStore = defineStore('blog', () => {
 
   const reset = () => {
     posts.value = [];
+    isEnd.value = false;
     _reset();
   };
+
+  const editModeFor = ref<Id | null>(null);
 
   const getPosts = async () => {
     isLoading[IsLoadingAction.Get] = true;
 
     return _getPosts(page.value)
-      .then((_posts) => {
+      .then(({ meta: { isEnd: _isEnd }, data: _posts }) => {
         posts.value = posts.value.concat(_posts);
+        isEnd.value = _isEnd;
         inc();
 
         return posts.value;
@@ -62,6 +68,19 @@ export const useBlogStore = defineStore('blog', () => {
       })
       .finally(() => {
         isLoading[IsLoadingAction.Post] = false;
+      });
+  };
+
+  const putPost = async (id: Id, post: Post) => {
+    isLoading[IsLoadingAction.Put] = true;
+
+    return _putPost(id, post)
+      .then(() => {
+        reset();
+        getPosts();
+      })
+      .finally(() => {
+        isLoading[IsLoadingAction.Put] = false;
       });
   };
 
@@ -86,9 +105,12 @@ export const useBlogStore = defineStore('blog', () => {
     isAdmin,
     isLoading,
     isLoadingAny,
+    isEnd,
+    editModeFor,
 
     getPosts,
     postPost,
+    putPost,
     deletePost,
   };
 });

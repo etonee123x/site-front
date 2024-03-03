@@ -27,11 +27,10 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { watch } from 'vue';
 
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';

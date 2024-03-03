@@ -26,5 +26,6 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off',
     'vue/html-self-closing': 'off',
     'import/order': ['error', { 'newlines-between': 'always' }],
+    'no-duplicate-imports': 'error',
   },
 };

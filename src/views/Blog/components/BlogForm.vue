@@ -1,21 +1,14 @@
 <template>
   <BaseForm :class="$style.blogForm" @submit.prevent="onSubmit">
-    <BaseTextarea
-      v-model="post.text"
-      :placeholder="t('textareaPlaceholder')"
-      :errors="v$.text.$errors"
-      @submit="onSubmit"
-    />
+    <BlogEditPost v-model="postData.text" :errors="v$.text.$errors" @submit="onSubmit" />
     <BaseButton :is-loading="isLoading[IsLoadingAction.Post]">{{ t('buttonLabel') }}</BaseButton>
   </BaseForm>
 </template>
 
 <i18n lang="yaml">
 Ru:
-  textareaPlaceholder: 'Сообщение'
   buttonLabel: 'Отправить'
 En:
-  textareaPlaceholder: 'Message'
   buttonLabel: 'Post'
 </i18n>
 
@@ -23,42 +16,33 @@ En:
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { useVuelidate } from '@vuelidate/core';
 
-import { required } from '@/utils';
-import BaseTextarea from '@/components/BaseTextarea.vue';
+import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import BaseButton from '@/components/BaseButton.vue';
 import BaseForm from '@/components/BaseForm.vue';
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
+import BlogEditPost from '@/views/Blog/components/BlogEditPost.vue';
 
 const { t } = useI18n({ useScope: 'local' });
 
-const rules = {
-  text: { required },
-};
-
-const getInitialValuePost = () => ({
+const getInitialPostData = () => ({
   text: '',
 });
 
-const post = ref(getInitialValuePost());
+const postData = ref(getInitialPostData());
 
-const v$ = useVuelidate(rules, post, { $lazy: true });
+const { v$, handle } = useVuelidateBlogPostData(async () => {
+  blogStore.postPost(postData.value);
+
+  v$.value.$reset();
+
+  postData.value = getInitialPostData();
+}, postData);
 
 const blogStore = useBlogStore();
 const { isLoading } = storeToRefs(blogStore);
 
-const onSubmit = async () => {
-  if (!(await v$.value.$validate())) {
-    return;
-  }
-
-  blogStore.postPost(post.value);
-
-  v$.value.$reset();
-
-  post.value = getInitialValuePost();
-};
+const onSubmit = handle;
 </script>
 
 <style lang="scss" module>

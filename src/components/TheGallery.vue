@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import { onClickOutside, useDraggable } from '@vueuse/core';
+import { onClickOutside, useDraggable, useToggle } from '@vueuse/core';
 
 import { useGalleryStore } from '@/stores/gallery';
 import { useComponentsStore } from '@/stores/components';
@@ -32,7 +32,7 @@ const { playerHeight } = storeToRefs(componentsStore);
 
 const refMediaContainer = ref<HTMLDivElement>();
 const refMedia = ref<HTMLImageElement>();
-const isMediaVisible = ref(false);
+const [isMediaVisible, setIsMediaVisible] = useToggle();
 
 onClickOutside(refMediaContainer, galleryStore.unloadImage);
 const { x, y, style } = useDraggable(refMediaContainer, { preventDefault: true, stopPropagation: true });
@@ -85,7 +85,7 @@ const onImgLoad = () => {
   x.value = Math.floor(freeSpace.width - newSizes.width) / 2;
   y.value = Math.floor(freeSpace.height - newSizes.height) / 2;
 
-  isMediaVisible.value = true;
+  setIsMediaVisible(true);
 };
 
 const onWheel = (e: WheelEvent) => {
@@ -117,9 +117,11 @@ const onWheel = (e: WheelEvent) => {
 };
 
 watch(theImage, () => {
-  if (!theImage.value) {
-    isMediaVisible.value = false;
+  if (theImage.value) {
+    return;
   }
+
+  setIsMediaVisible(false);
 });
 </script>
 

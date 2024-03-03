@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useMousePressed, useMouseInElement, promiseTimeout } from '@vueuse/core';
+import { useMousePressed, useMouseInElement, promiseTimeout, useToggle } from '@vueuse/core';
 
 import { to0To1Borders } from '@/utils';
 
@@ -24,7 +24,7 @@ const props = withDefaults(
 );
 
 const position = ref(0);
-const isUsingPosition = ref(false);
+const [isUsingPosition, setIsUsingPosition] = useToggle();
 
 const model = defineModel<number>();
 
@@ -57,12 +57,12 @@ const onIsPressedChange = async () => {
 const onIsPressedChangeLazy = async () => {
   if (!isPressed.value) {
     model.value = position.value;
-    isUsingPosition.value = false;
+    setIsUsingPosition(false);
 
     return;
   }
 
-  isUsingPosition.value = true;
+  setIsUsingPosition(true);
 
   getPosition().then((_position) => {
     position.value = _position;

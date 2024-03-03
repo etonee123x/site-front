@@ -1,30 +1,17 @@
 <template>
   <div class="l-container" :class="$style.blogView">
-    <template v-if="isAdmin">
-      <BlogForm />
-      <BaseHr :class="$style.hr" />
-    </template>
+    <BlogForm v-if="isAdmin" />
+    <BaseHr v-if="isAdmin && hasPosts" :class="$style.hr" />
     <BaseLoading v-if="isLoading[IsLoadingAction.Get] && !hasPosts" is-full :class="$style.notPosts" />
     <template v-else>
-      <ul v-if="hasPosts" :class="$style.posts">
-        <li v-for="post in posts" :key="post.id" :class="$style.post">
-          <div :class="$style.postInner">
-            <BaseHtml :class="$style.postContent" :html="parseContent(post.text)" />
-            <span class="text-sm" :class="$style.createdAt" :title="getCreatedAtExact(post)">{{
-              getCreatedAtHumanReadable(post)
-            }}</span>
-          </div>
-          <div v-if="isAdmin" :class="$style.controls">
-            <BaseButton
-              :class="$style.iconDelete"
-              :is-loading="isLoading[IsLoadingAction.Delete]"
-              @click="() => onClickDelete(post.id)"
-            >
-              <BaseIcon :path="mdiDelete" />
-            </BaseButton>
-          </div>
-        </li>
-      </ul>
+      <template v-if="hasPosts">
+        <ul :class="$style.posts">
+          <li v-for="post in posts" :key="post.id">
+            <BlogPost :post="post" />
+          </li>
+        </ul>
+        <BaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full :class="$style.loadingWithPosts" />
+      </template>
       <div v-else class="text-lg" :class="$style.notPosts">
         {{ t('nothingFound') }}
       </div>
@@ -40,40 +27,29 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { mdiDelete } from '@mdi/js';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import type { Post } from '@shared/src/types';
 import { useInfiniteScroll } from '@vueuse/core';
 
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
 import BlogForm from '@/views/Blog/components/BlogForm.vue';
 import BaseLoading from '@/components/BaseLoading.vue';
-import BaseButton from '@/components/BaseButton.vue';
-import BaseIcon from '@/components/BaseIcon.vue';
 import BaseHr from '@/components/BaseHr.vue';
-import { useDateFns } from '@/composables';
-import BaseHtml from '@/components/BaseHtml.vue';
-import { parseContent } from '@/utils';
 import { useComponentsStore } from '@/stores/components';
+import BlogPost from '@/views/Blog/components/BlogPost.vue';
 
 const { t } = useI18n({ useScope: 'local' });
 
 const blogStore = useBlogStore();
-const { posts, hasPosts, isAdmin, isLoading } = storeToRefs(blogStore);
+const { posts, hasPosts, isEnd, isAdmin, isLoading } = storeToRefs(blogStore);
 
 const componentsStore = useComponentsStore();
 const { main } = storeToRefs(componentsStore);
 
-useInfiniteScroll(main, () => new Promise((resolve) => blogStore.getPosts().then(() => resolve())));
-
-const { intlFormatDistance } = useDateFns();
-
-const getCreatedAtExact = ({ createdAt }: Post) => String(new Date(createdAt));
-
-const getCreatedAtHumanReadable = ({ createdAt }: Post) => intlFormatDistance.value(createdAt, new Date());
-
-const onClickDelete = blogStore.deletePost;
+useInfiniteScroll(main, () => new Promise((resolve) => blogStore.getPosts().then(() => resolve())), {
+  canLoadMore: () => !isEnd.value,
+  distance: 100,
+});
 </script>
 
 <style lang="scss" module>
@@ -91,39 +67,23 @@ const onClickDelete = blogStore.deletePost;
   flex: 1;
 }
 
-.post {
-  margin-bottom: 1rem;
-  width: 100%;
-  border: 1px solid var(--color-dark);
-  border-radius: 0.25rem;
-}
-
-.postInner {
-  padding: 1rem;
+.posts {
   display: flex;
   flex-direction: column;
-}
+  gap: 1rem;
 
-.createdAt {
-  color: var(--color-dark);
-  align-self: flex-end;
-  cursor: default;
-}
-
-.controls {
-  display: flex;
-  justify-content: end;
-  border-top: 1px solid var(--color-dark);
-  padding: 0.25rem;
-  gap: 0.25rem;
+  &:last-child {
+    padding-bottom: 1rem;
+  }
 }
 
 .hr {
   margin: 0.75rem 0;
 }
 
-.postContent {
-  white-space: break-spaces;
-  word-wrap: break-word;
+.loadingWithPosts {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
 }
 </style>

@@ -1,10 +1,11 @@
-import type { Post, ForPost, Id, ForPut, ForPatch } from '@shared/src/types';
+import type { Post, ForPost, Id, ForPut, ForPatch, WithMeta, WithIsEnd } from '@shared/src/types';
 
 import { Client } from '@/api/client';
 
 const PER_PAGE = 10;
 
-export const getPosts = (page: number) => Client.get<Array<Post>>(`/posts?perPage=${PER_PAGE}&page=${page}`);
+export const getPosts = (page: number) =>
+  Client.get<WithMeta<WithIsEnd> & { data: Array<Post> }>(`/posts?perPage=${PER_PAGE}&page=${page}`);
 
 export const getPostById = (id: Id) => Client.get<Post>(`/posts/${id}`);
 
