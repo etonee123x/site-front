@@ -1,20 +1,10 @@
 <template>
   <ul :class="$style.navbar">
-    <RouterLink
-      v-for="(navigationItem, idx) in navigationItems"
-      :key="idx"
-      v-slot="{ href, isActive, isExactActive, navigate }"
-      :to="navigationItem.link"
-      custom
-    >
-      <li
-        :class="[$style.navigationItem, isActive && 'router-link-active', isExactActive && 'router-link-exact-active']"
-      >
-        <a :href="href" @click="navigate">
-          {{ navigationItem.text }}
-        </a>
-      </li>
-    </RouterLink>
+    <li v-for="(navigationItem, idx) in navigationItems" :key="idx" :class="$style.navigationItem">
+      <RouterLink :to="navigationItem.link">
+        {{ navigationItem.text }}
+      </RouterLink>
+    </li>
   </ul>
 </template>
 

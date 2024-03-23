@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.app">
     <TheHeader />
-    <main :class="$style.main">
+    <main ref="refMain" :class="$style.main">
       <RouterView class="l-container" />
       <LazyTheToasts v-if="hasToasts" />
       <LazyTheGallery v-if="isImageLoaded" />
@@ -34,12 +34,17 @@ const toastsStore = useToastsStore();
 const { hasToasts } = storeToRefs(toastsStore);
 
 const componentsStore = useComponentsStore();
-const { thePlayer } = storeToRefs(componentsStore);
+const { thePlayer, main } = storeToRefs(componentsStore);
 
-const refThePlayer = ref<InstanceType<typeof LazyThePlayer> | null>(null);
+const refThePlayer: typeof thePlayer = ref(null);
+const refMain: typeof main = ref(null);
 
 watch(refThePlayer, (v) => {
   thePlayer.value = v;
+});
+
+watch(refMain, (v) => {
+  main.value = v;
 });
 </script>
 

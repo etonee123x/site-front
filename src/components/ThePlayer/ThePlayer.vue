@@ -1,11 +1,13 @@
 <template>
   <BaseSwipable :class="$style.player" @swiped="onSwiped">
-    <div :class="[$style.container, 'l-container']">
+    <div class="l-container" :class="$style.container">
       <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
       <div :class="$style.header">
-        <LazyBaseAlwaysScrollable v-if="isSupported" :class="$style.title" title="Copy link" @click="onClickTitle">
-          <span>{{ name }}</span>
-          <BaseIcon size="16" :path="mdiLinkVariant" />
+        <LazyBaseAlwaysScrollable v-if="isSupported" title="Copy link" @click="onClickTitle">
+          <span :class="$style.title">
+            <span>{{ name }}</span>
+            <BaseIcon size="16" :path="mdiLinkVariant" />
+          </span>
         </LazyBaseAlwaysScrollable>
         <span v-else :class="$style.title">{{ name }}</span>
       </div>
@@ -45,9 +47,9 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   copied: 'Copied!'
-ru:
+Ru:
   copied: 'Скопировано!'
 </i18n>
 
@@ -125,7 +127,7 @@ const urlFull = computed(() => {
   let _url = [window.location.origin, url.value].join('');
 
   try {
-    _url = decodeURI(_url);
+    _url = encodeURI(_url);
   } catch (e) {
     console.error(e);
   }

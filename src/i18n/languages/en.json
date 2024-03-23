@@ -12,5 +12,8 @@
     "system": "System",
     "dark": "Dark",
     "light": "Light"
+  },
+  "validations": {
+    "required": "Value is required"
   }
 }

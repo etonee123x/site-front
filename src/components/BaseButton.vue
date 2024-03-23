@@ -1,27 +1,39 @@
 <template>
   <button :class="[$style.button, isActive && $style.button_active]" :disabled="isDisabled" @click="onCLick">
-    <slot />
+    <span :class="$style.inner">
+      <span :class="[$style.slot, isLoading && $style.slot_hidden]">
+        <slot />
+      </span>
+      <BaseLoading v-if="isLoading" :class="$style.loading" />
+    </span>
   </button>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+
+import BaseLoading from '@/components/BaseLoading.vue';
+
 const props = defineProps<
   Partial<{
     isActive: boolean;
     isDisabled: boolean;
+    isLoading: boolean;
   }>
 >();
 
 const emit = defineEmits<{
-  click: [];
+  click: [Event];
 }>();
 
-const onCLick = () => {
-  if (props.isDisabled) {
+const isDisabled = computed(() => props.isDisabled || props.isLoading);
+
+const onCLick = (e: Event) => {
+  if (isDisabled.value) {
     return;
   }
 
-  emit('click');
+  emit('click', e);
 };
 </script>
 
@@ -51,11 +63,29 @@ const onCLick = () => {
   }
 
   &[disabled] {
-    opacity: 0.5;
     cursor: default;
 
     background-color: var(--color-dark);
     color: var(--color-items);
   }
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slot {
+  display: flex;
+  justify-content: space-between;
+
+  &_hidden {
+    opacity: 33%;
+  }
+}
+
+.loading {
+  position: absolute;
+  left: 50%;
 }
 </style>
