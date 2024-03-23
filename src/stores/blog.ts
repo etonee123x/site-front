@@ -1,11 +1,17 @@
 import type { Id, Post, PostData } from '@shared/src/types';
 import { defineStore } from 'pinia';
-import { ref, computed, reactive } from 'vue';
+import { ref, computed, reactive, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCounter } from '@vueuse/core';
 import { isNotEmptyArray } from '@shared/src/utils';
 
-import { getPosts as _getPosts, postPost as _postPost, deletePost as _deletePost, putPost as _putPost } from '@/api';
+import {
+  getPosts as _getPosts,
+  postPost as _postPost,
+  deletePost as _deletePost,
+  putPost as _putPost,
+  getPostById as _getPostById,
+} from '@/api';
 
 export enum IsLoadingAction {
   Get = 'Get',
@@ -18,6 +24,8 @@ export const useBlogStore = defineStore('blog', () => {
   const route = useRoute();
 
   const posts = ref<Array<Post>>([]);
+
+  const postSelected = shallowRef<Post | null>(null);
 
   const isEnd = ref(false);
 
@@ -97,10 +105,23 @@ export const useBlogStore = defineStore('blog', () => {
       });
   };
 
+  const getPostById = async (id: Id) => {
+    isLoading[IsLoadingAction.Get] = true;
+
+    return _getPostById(id)
+      .then((_post) => {
+        postSelected.value = _post;
+      })
+      .finally(() => {
+        isLoading[IsLoadingAction.Get] = false;
+      });
+  };
+
   const isAdmin = computed(() => route.query['admin'] === 'true');
 
   return {
     posts,
+    postSelected,
     hasPosts,
     isAdmin,
     isLoading,
@@ -112,5 +133,6 @@ export const useBlogStore = defineStore('blog', () => {
     postPost,
     putPost,
     deletePost,
+    getPostById,
   };
 });

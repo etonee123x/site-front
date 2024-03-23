@@ -39,5 +39,8 @@ onMounted(() =>
   a {
     text-decoration: underline;
   }
+
+  white-space: break-spaces;
+  word-wrap: break-word;
 }
 </style>

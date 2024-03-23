@@ -1,5 +1,6 @@
 <template>
   <div class="l-container" :class="$style.blogView">
+    <DialogPostVue />
     <BlogForm v-if="isAdmin" />
     <BaseHr v-if="isAdmin && hasPosts" :class="$style.hr" />
     <BaseLoading v-if="isLoading[IsLoadingAction.Get] && !hasPosts" is-full :class="$style.notPosts" />
@@ -31,6 +32,7 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
 
+import DialogPostVue from '@/views/Blog/components/DialogPost.vue';
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
 import BlogForm from '@/views/Blog/components/BlogForm.vue';
 import BaseLoading from '@/components/BaseLoading.vue';

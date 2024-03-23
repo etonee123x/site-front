@@ -7,16 +7,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-
-import type { Numberable } from '@/types';
+import { ref, computed, type CSSProperties } from 'vue';
 
 const props = withDefaults(
-  defineProps<{
-    path: string;
-    size?: Numberable;
-    isFontSize?: boolean;
-  }>(),
+  defineProps<
+    {
+      path: string;
+    } & Partial<{
+      size?: CSSProperties['width'];
+      isFontSize?: boolean;
+    }>
+  >(),
   {
     size: 24,
   },
@@ -24,9 +25,11 @@ const props = withDefaults(
 
 const refRoot = ref<HTMLSpanElement>();
 
-const size = computed(() =>
-  props.isFontSize && refRoot.value ? window.getComputedStyle(refRoot.value).getPropertyValue('font-size') : props.size,
+const currentFontSize = computed(() =>
+  refRoot.value ? window.getComputedStyle(refRoot.value).getPropertyValue('font-size') : undefined,
 );
+
+const size = computed(() => (props.isFontSize && refRoot.value ? currentFontSize.value : props.size));
 </script>
 
 <style lang="scss" module>

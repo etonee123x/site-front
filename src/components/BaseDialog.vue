@@ -1,18 +1,20 @@
 <template>
-  <dialog ref="refDialog" :style="style" :class="$style.dialog">
+  <dialog ref="refDialog" :style="style" class="l-container" :class="$style.dialog">
     <div ref="refDialogInner" :class="$style.inner">
-      <div :class="$style.header">
-        <span class="text-lg" :class="$style.title">{{ title }}</span>
-        <BaseIcon size="20" :path="mdiClose" :class="$style.closeIcon" @click="onClickCloseIcon" />
-      </div>
-      <div :class="$style.main">
-        <slot v-bind="{ close }" />
-      </div>
-      <div :class="$style.footer">
-        <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
-          {{ button.text }}
-        </BaseButton>
-      </div>
+      <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
+        <div :class="$style.header">
+          <span v-if="isNotNil(title)" class="text-lg" :class="$style.title">{{ title }}</span>
+          <BaseIcon size="20" :path="mdiClose" :class="$style.closeIcon" @click="onClickCloseIcon" />
+        </div>
+      </slot>
+      <slot v-bind="{ close }" />
+      <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
+        <div v-if="isNotEmptyArray(buttons)" :class="$style.footer">
+          <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
+            {{ button.text }}
+          </BaseButton>
+        </div>
+      </slot>
     </div>
   </dialog>
 </template>
@@ -27,10 +29,12 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, type CSSProperties } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
+import { isNotEmptyArray, isNotNil, pick } from '@shared/src/utils';
+import type { FunctionCallback, WithId } from '@shared/src/types';
 
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
@@ -39,22 +43,24 @@ import { addId } from '@/utils';
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
 
+interface Button extends WithId {
+  text: string;
+  onClick: FunctionCallback;
+}
+
 const props = withDefaults(
   defineProps<
     Partial<{
       title: string;
-      width: string;
-      height: string;
-      buttonTextConfirm: string;
-      buttonTextCancel: string;
+      width: CSSProperties['width'];
+      height: CSSProperties['height'];
+      buttons: Array<Button>;
+      isHiddenHeader: boolean;
+      isHiddenFooter: boolean;
     }>
   >(),
   {
-    title: undefined,
-    width: 'auto',
     height: 'auto',
-    buttonTextConfirm: 'Confirm',
-    buttonTextCancel: 'Cancel',
   },
 );
 
@@ -67,25 +73,24 @@ const model = defineModel<boolean>();
 
 const { t } = useI18n({ useScope: 'local' });
 
-const style = computed(() => ({
-  width: props.width,
-  height: props.height,
-}));
+const style = computed(() => pick(props, ['height', 'width']));
 
-const buttons = computed(() =>
-  [
-    {
-      text: t('cancel'),
-      onClick: close,
-    },
-    {
-      text: t('confirm'),
-      onClick: () => {
-        emit('confirm');
-        close();
+const buttons = computed(
+  () =>
+    props.buttons ??
+    [
+      {
+        text: t('cancel'),
+        onClick: close,
       },
-    },
-  ].map(addId),
+      {
+        text: t('confirm'),
+        onClick: () => {
+          emit('confirm');
+          close();
+        },
+      },
+    ].map(addId),
 );
 
 const close = () => {
@@ -107,16 +112,16 @@ watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?
   outline: none;
   border-radius: 0.5rem;
   background-color: var(--color-bg);
+  margin: auto;
 
   &::backdrop {
-    background: rgba(0, 0, 0, 50%);
+    background: rgba(0, 0, 0, 33.33%);
   }
 }
 
 .inner {
   padding: 1rem;
   display: flex;
-  gap: 1.5rem;
   flex-direction: column;
   height: 100%;
   width: 100%;
@@ -126,16 +131,18 @@ watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 1.5rem;
 }
 
 .footer {
-  margin-top: auto;
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
+  margin-top: auto;
 }
 
 .closeIcon {
   cursor: pointer;
+  margin-inline-start: auto;
 }
 </style>

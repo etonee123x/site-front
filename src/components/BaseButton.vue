@@ -23,17 +23,17 @@ const props = defineProps<
 >();
 
 const emit = defineEmits<{
-  click: [];
+  click: [Event];
 }>();
 
 const isDisabled = computed(() => props.isDisabled || props.isLoading);
 
-const onCLick = () => {
+const onCLick = (e: Event) => {
   if (isDisabled.value) {
     return;
   }
 
-  emit('click');
+  emit('click', e);
 };
 </script>
 

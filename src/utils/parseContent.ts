@@ -1,4 +1,4 @@
-export const parseContent = (content: string): string => {
+export const parseContent = (content: string | undefined): string => {
   type FunctionReplacer = (content: string) => string;
 
   const replaceLinks: FunctionReplacer = (content) => {
@@ -10,5 +10,5 @@ export const parseContent = (content: string): string => {
     );
   };
 
-  return [replaceLinks].reduce((acc, _function) => _function(acc), content);
+  return [replaceLinks].reduce((acc, _function) => _function(acc), content ?? '');
 };

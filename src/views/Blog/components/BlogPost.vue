@@ -1,8 +1,8 @@
 <template>
-  <div ref="refRoot" :class="$style.post">
+  <div ref="refRoot" :class="$style.post" @click="onClick">
     <div :class="$style.postInner">
       <template v-if="!isInEditMode">
-        <BaseHtml :class="$style.postContent" :html="html" />
+        <BaseHtml :html="html" />
         <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
           <span>{{ createdAtHumanReadable }}</span>
           <BaseIcon v-if="wasEdited" is-font-size :path="mdiPencil" />
@@ -17,7 +17,7 @@
         :class="$style.control"
         :is-loading="control.isLoading"
         :is-disabled="control.isDisabled"
-        @click="control.onClick"
+        @click.stop="control.onClick"
       >
         <BaseIcon :path="control.iconPath" />
       </BaseButton>
@@ -28,10 +28,10 @@
 <i18n lang="yaml">
 En:
   copied: 'Copied!'
-  updatedAt: 'Edited at {date}'
+  updatedAt: 'Edited at: { date }'
 Ru:
   copied: 'Скопировано!'
-  updatedAt: 'Изменено в {date}'
+  updatedAt: 'Изменено: { date }'
 </i18n>
 
 <script setup lang="ts">
@@ -48,7 +48,7 @@ import BlogEditPost from '@/views/Blog/components/BlogEditPost.vue';
 import { useDateFns } from '@/composables';
 import { useToastsStore } from '@/stores/toasts';
 import BaseHtml from '@/components/BaseHtml.vue';
-import { parseContent, clone, addId } from '@/utils';
+import { parseContent, clone, addId, wasEdited as _wasEdited } from '@/utils';
 import BaseButton from '@/components/BaseButton.vue';
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
 import BaseIcon from '@/components/BaseIcon.vue';
@@ -72,7 +72,7 @@ onClickOutside(refRoot, () => {
 });
 
 const blogStore = useBlogStore();
-const { isAdmin, isLoading, editModeFor } = storeToRefs(blogStore);
+const { isAdmin, isLoading, editModeFor, postSelected } = storeToRefs(blogStore);
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -104,7 +104,7 @@ const createdAtHumanReadable = computed(() => intlFormatDistance.value(props.pos
 
 const isInEditMode = computed(() => areIdsEqual(editModeFor.value, props.post.id));
 
-const wasEdited = computed(() => props.post.createdAt !== props.post.updatedAt);
+const wasEdited = computed(() => _wasEdited(props.post));
 
 const source = ref<string>('');
 
@@ -155,10 +155,16 @@ const controls = computed(() =>
       isLoading: isLoading.value[IsLoadingAction.Delete],
       onClick: () => blogStore.deletePost(props.post.id),
     },
-  ]
-    .map(addId)
-    .filter(isTruthy),
+  ].map(addId),
 );
+
+const onClick = () => {
+  if (isInEditMode.value) {
+    return;
+  }
+
+  postSelected.value = props.post;
+};
 </script>
 
 <style lang="scss" module>
@@ -166,6 +172,7 @@ const controls = computed(() =>
   width: 100%;
   border: 1px solid var(--color-dark);
   border-radius: 0.25rem;
+  cursor: pointer;
 }
 
 .postInner {
@@ -189,10 +196,5 @@ const controls = computed(() =>
   border-top: 1px solid var(--color-dark);
   padding: 0.25rem;
   gap: 0.5rem;
-}
-
-.postContent {
-  white-space: break-spaces;
-  word-wrap: break-word;
 }
 </style>
