@@ -1,6 +1,5 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import Vue3TouchEvents from 'vue3-touch-events';
 
 import { router } from '@/router';
 import { i18n } from '@/i18n';
@@ -14,7 +13,7 @@ getConfig()
   })
   .catch(console.error)
   .finally(() => {
-    createApp(App).use(createPinia()).use<[]>(Vue3TouchEvents).use(router).use(i18n).mount('#app');
+    createApp(App).use(createPinia()).use(router).use(i18n).mount('#app');
 
     useSettingsStore().initSettings();
   });
