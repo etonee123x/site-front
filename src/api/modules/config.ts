@@ -1,4 +1,4 @@
-import { Client } from '@/api/client';
+import { client } from '@/api/client';
 import type { Settings } from '@/types';
 
-export const getConfig = () => Client.get<Settings>('/config.json', { isRelative: true });
+export const getConfig = () => client<Settings>('/config.json', { baseURL: '' });

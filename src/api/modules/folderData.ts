@@ -1,5 +1,5 @@
 import type { FolderData } from '@shared/src/types';
 
-import { Client } from '@/api/client';
+import { client } from '@/api/client';
 
-export const getFolderData = (url: string) => Client.get<FolderData>(`/get-folder-data${url}`);
+export const getFolderData = (url: string) => client<FolderData>(`/get-folder-data${url}`);
