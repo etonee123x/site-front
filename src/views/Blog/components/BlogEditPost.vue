@@ -87,9 +87,6 @@ defineExpose({
 }
 
 .inputFile {
-  width: 8rem;
-  height: 8rem;
-
   position: sticky;
   top: 0.5rem;
 }
