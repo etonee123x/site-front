@@ -1,25 +1,29 @@
 <template>
-  <ul v-if="isNotEmptyArray(model)" ref="refUl" :class="$s.files">
-    <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.file">
-      <div>{{ file.name }}</div>
-      <div class="text-2xl" :class="$s.icons">
-        <BaseIcon :class="$s.handle" :path="mdiSync" />
-        <BaseButton :class="$s.buttonDelete">
-          <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
-        </BaseButton>
+  <ol v-if="isNotEmptyArray(model)" ref="refUl" :class="$s.files">
+    <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
+      <div :class="$s.file">
+        <BaseFilePreview :file="file" />
+        <div>{{ file.name }}</div>
+        <div class="text-2xl" :class="$s.icons">
+          <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
+          <BaseButton :class="$s.buttonDelete">
+            <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
+          </BaseButton>
+        </div>
       </div>
     </li>
-  </ul>
+  </ol>
 </template>
 
 <script setup lang="ts">
-import { mdiDelete, mdiSync } from '@mdi/js';
+import { mdiDelete, mdiSwapVertical } from '@mdi/js';
 import { isNil, isNotEmptyArray } from '@shared/src/utils';
 import Sortable from 'sortablejs';
 import { ref, watch, useCssModule } from 'vue';
 
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
+import BaseFilePreview from '@/components/BaseFilePreview.vue';
 
 const model = defineModel<Array<File>>({ required: true });
 
@@ -57,13 +61,14 @@ watch(refUl, (v) => {
 <style lang="scss" module="$s">
 .files {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-direction: column;
 }
 
 .file {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .buttonDelete {
@@ -73,9 +78,19 @@ watch(refUl, (v) => {
 .icons {
   display: flex;
   gap: 1rem;
+  margin-inline-start: auto;
 }
 
 .handle {
   cursor: grab;
+  color: var(--color-dark);
+}
+
+.index {
+  margin-inline-end: 0.25rem;
+}
+
+.fileWrapper {
+  list-style-type: inherit;
 }
 </style>
