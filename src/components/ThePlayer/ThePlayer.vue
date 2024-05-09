@@ -1,12 +1,18 @@
 <template>
   <BaseSwipable :class="$style.player" @swiped="onSwiped">
     <div class="l-container" :class="$style.container">
-      <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
+      <BaseIcon
+        v-if="shouldRenderButtonClose"
+        :class="$style.playerClose"
+        class="text-xl"
+        :path="mdiClose"
+        @click="onClickClose"
+      />
       <div :class="$style.header">
         <LazyBaseAlwaysScrollable v-if="isSupported" title="Copy link" @click="onClickTitle">
           <span :class="$style.title">
             <span>{{ name }}</span>
-            <BaseIcon size="16" :path="mdiLinkVariant" />
+            <BaseIcon :path="mdiLinkVariant" />
           </span>
         </LazyBaseAlwaysScrollable>
         <span v-else :class="$style.title">{{ name }}</span>
@@ -24,7 +30,7 @@
       <div :class="$style.controls">
         <div :class="$style.controlsLeft">
           <BaseToggler v-model="isShuffleModeEnabled" :class="$style.controlsButton">
-            <BaseIcon size="20" :path="mdiShuffleVariant" />
+            <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
           </BaseToggler>
         </div>
         <div :class="$style.controlsCenter">
@@ -35,7 +41,7 @@
             :class="[$style.controlsButton, $style.controlsButton_main]"
             @click="controlButton.onClick"
           >
-            <BaseIcon :path="controlButton.icon" />
+            <BaseIcon class="text-2xl" :path="controlButton.icon" />
           </BaseButton>
         </div>
         <div :class="$style.controlsRight">

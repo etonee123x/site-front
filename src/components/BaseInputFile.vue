@@ -2,7 +2,7 @@
   <div :class="$s.inputFile">
     <div :class="$s.trigger" @click="onClick">
       <input :class="$s.input" type="file" @focus="onFocus" @blur="onBlur" />
-      <BaseIcon :size="32" :path="mdiFilePlusOutline" />
+      <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog ref="refDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
       <BaseFilesPreview v-if="isNotEmptyArray(model)" v-model="model" />

@@ -9,7 +9,7 @@
           </RouterLink>
         </li>
       </ul>
-      <BaseIcon :path="mdiCog" :class="$style.iconSettings" @click="onIconSettingsClick" />
+      <BaseIcon :path="mdiCog" class="text-3xl" :class="$style.iconSettings" @click="onIconSettingsClick" />
     </div>
     <DialogSettings v-model="isDialogSettingsOpened" />
   </header>
@@ -74,7 +74,6 @@ const links = computed(() =>
 .links {
   display: flex;
   gap: 0.5rem;
-  align-self: flex-end;
 }
 
 .link {

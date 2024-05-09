@@ -4,7 +4,7 @@
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div :class="$style.header">
           <span v-if="isNotNil(title)" class="text-lg" :class="$style.title">{{ title }}</span>
-          <BaseIcon size="20" :path="mdiClose" :class="$style.closeIcon" @click="onClickCloseIcon" />
+          <BaseIcon :path="mdiClose" class="text-xl" :class="$style.closeIcon" @click="onClickCloseIcon" />
         </div>
       </slot>
       <slot v-bind="{ close }" />

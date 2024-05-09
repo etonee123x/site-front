@@ -1,10 +1,10 @@
 <template>
   <ul :style="style" :class="$style.toasts">
     <li v-for="toast in toasts.slice(0, 5)" :key="toast.id" :class="getClassesToast(toast)">
-      <span :class="$style.toastInner">
+      <span class="text-lg" :class="$style.toastInner">
         <BaseIcon :path="getIconPath(toast)" :class="$style.toastIcon" />
         <span>{{ toast.text }}</span>
-        <BaseIcon size="20" :path="mdiClose" :class="$style.toastClose" @click="() => onClickClose(toast)" />
+        <BaseIcon :path="mdiClose" :class="$style.toastClose" @click="() => onClickClose(toast)" />
       </span>
     </li>
   </ul>

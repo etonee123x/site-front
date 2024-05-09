@@ -2,7 +2,7 @@
   <div ref="refSelect" :class="[$style.select, isOpened && $style.select_opened]" @click="onWrapClick">
     <div :class="[$style.option, $style.option_selected]">
       <span>{{ text }}</span>
-      <BaseIcon size="20" :path="path" />
+      <BaseIcon class="text-2xl" :path="path" />
     </div>
     <div v-if="isOpened" :class="$style.options">
       <div v-for="option in options" :key="option.id" :class="$style.option" @click="() => onOptionClick(option)">

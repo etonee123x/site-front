@@ -2,7 +2,7 @@
   <ul v-if="isNotEmptyArray(model)" ref="refUl" :class="$s.files">
     <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.file">
       <div>{{ file.name }}</div>
-      <div :class="$s.icons">
+      <div class="text-2xl" :class="$s.icons">
         <BaseIcon :class="$s.handle" :path="mdiSync" />
         <BaseButton :class="$s.buttonDelete">
           <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />

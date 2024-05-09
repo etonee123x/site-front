@@ -19,7 +19,7 @@ const props = withDefaults(
     }>
   >(),
   {
-    size: 24,
+    size: '1em',
   },
 );
 
