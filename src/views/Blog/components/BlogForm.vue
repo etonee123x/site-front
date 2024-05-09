@@ -1,7 +1,7 @@
 <template>
   <BaseForm :class="$style.blogForm" @submit.prevent="onSubmit">
-    <BlogEditPost v-model="postData.text" :errors="v$.text.$errors" @submit="onSubmit" />
-    <BaseButton :is-loading="isLoading[IsLoadingAction.Post]">{{ t('buttonLabel') }}</BaseButton>
+    <BlogEditPost :v$="v$" v-model="postData" @submit="onSubmit" />
+    <BaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">{{ t('buttonLabel') }}</BaseButton>
   </BaseForm>
 </template>
 
@@ -27,11 +27,12 @@ const { t } = useI18n({ useScope: 'local' });
 
 const getInitialPostData = () => ({
   text: '',
+  files: [],
 });
 
 const postData = ref(getInitialPostData());
 
-const { v$, handle } = useVuelidateBlogPostData(async () => {
+const { v$, handle } = useVuelidateBlogPostData(() => {
   blogStore.postPost(postData.value);
 
   v$.value.$reset();
@@ -43,12 +44,13 @@ const blogStore = useBlogStore();
 const { isLoading } = storeToRefs(blogStore);
 
 const onSubmit = handle;
+const onClickButton = handle;
 </script>
 
 <style lang="scss" module>
 .blogForm {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 </style>

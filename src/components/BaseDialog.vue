@@ -48,21 +48,16 @@ interface Button extends WithId {
   onClick: FunctionCallback;
 }
 
-const props = withDefaults(
-  defineProps<
-    Partial<{
-      title: string;
-      width: CSSProperties['width'];
-      height: CSSProperties['height'];
-      buttons: Array<Button>;
-      isHiddenHeader: boolean;
-      isHiddenFooter: boolean;
-    }>
-  >(),
-  {
-    height: 'auto',
-  },
-);
+const props = defineProps<
+  Partial<{
+    title: string;
+    width: CSSProperties['width'];
+    height: CSSProperties['height'];
+    buttons: Array<Button>;
+    isHiddenHeader: boolean;
+    isHiddenFooter: boolean;
+  }>
+>();
 
 const emit = defineEmits<{
   close: [];
@@ -98,11 +93,18 @@ const close = () => {
   emit('close');
 };
 
+const open = () => refDialog.value?.showModal();
+
 onClickOutside(refDialogInner, close);
 
 const onClickCloseIcon = close;
 
 watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()));
+
+defineExpose({
+  open,
+  close,
+});
 </script>
 
 <style lang="scss" module>

@@ -8,7 +8,7 @@
           <BaseIcon v-if="wasEdited" is-font-size :path="mdiPencil" />
         </span>
       </template>
-      <BlogEditPost v-else ref="refBlogEditPost" v-model="postNew.text" :errors="v$.text.$errors" @submit="onSubmit" />
+      <BlogEditPost v-else ref="refBlogEditPost" v-model="postNew" :v$="v$" @submit="onSubmit" />
     </div>
     <div v-if="isAdmin" :class="$style.controls">
       <BaseButton
@@ -39,7 +39,7 @@ import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick } from 'vue';
-import { isTruthy } from '@shared/src/utils';
+import { isTruthy, pick } from '@shared/src/utils';
 import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
@@ -54,7 +54,7 @@ import { useBlogStore, IsLoadingAction } from '@/stores/blog';
 import BaseIcon from '@/components/BaseIcon.vue';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 
-const getInitialPostNew = () => clone(props.post);
+const getInitialPostNew = () => clone(pick(props.post, ['text', 'files']));
 
 const refRoot = ref<HTMLDivElement>();
 const refBlogEditPost = ref<InstanceType<typeof BlogEditPost>>();

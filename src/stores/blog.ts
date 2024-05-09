@@ -20,6 +20,18 @@ export enum IsLoadingAction {
   Delete = 'Delete',
 }
 
+const createFormDataByPostData = (postData: PostData) => {
+  const formData = new FormData();
+
+  formData.append('text', postData.text);
+
+  postData.files.forEach((file) => {
+    formData.append('file', file);
+  });
+
+  return formData;
+};
+
 export const useBlogStore = defineStore('blog', () => {
   const route = useRoute();
 
@@ -69,7 +81,7 @@ export const useBlogStore = defineStore('blog', () => {
   const postPost = async (postData: PostData) => {
     isLoading[IsLoadingAction.Post] = true;
 
-    return _postPost(postData)
+    return _postPost(createFormDataByPostData(postData))
       .then(() => {
         reset();
         getPosts();
@@ -79,10 +91,10 @@ export const useBlogStore = defineStore('blog', () => {
       });
   };
 
-  const putPost = async (id: Id, post: Post) => {
+  const putPost = async (id: Id, postData: PostData) => {
     isLoading[IsLoadingAction.Put] = true;
 
-    return _putPost(id, post)
+    return _putPost(id, createFormDataByPostData(postData))
       .then(() => {
         reset();
         getPosts();

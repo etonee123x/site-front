@@ -1,14 +1,13 @@
 <template>
   <div :class="$style.textarea">
-    <div class="f-body-2" :class="$style.textareaContainer">
-      <textarea
-        ref="textarea"
-        v-model="model"
-        :class="$style.theTextarea"
-        :placeholder="placeholder"
-        @keydown.enter="onEnter"
-      />
-    </div>
+    <textarea
+      ref="textarea"
+      v-model="model"
+      class="f-body-2"
+      :class="$style.theTextarea"
+      :placeholder="placeholder"
+      @keydown.enter="onEnter"
+    />
     <ul v-if="isNotEmptyArray(errors)" class="text-sm" :class="$style.errors">
       <li v-for="error in errors" :key="error.$uid">{{ error.$message }}</li>
     </ul>
@@ -46,7 +45,7 @@ const onEnter = (e: KeyboardEvent) => {
 
 const model = defineModel<string>();
 
-const { textarea } = useTextareaAutosize({ input: model });
+const { textarea } = useTextareaAutosize({ input: model, styleProp: 'minHeight' });
 
 defineExpose({
   focus: () => textarea.value?.focus(),
@@ -54,22 +53,18 @@ defineExpose({
 </script>
 
 <style lang="scss" module>
-.textareaContainer {
+.theTextarea {
   border-radius: 0.5rem;
   border: 1px solid var(--color-dark);
-  cursor: text;
   overflow: hidden;
-}
-
-.theTextarea {
   width: 100%;
   margin: 0;
   padding: 1rem 1rem;
-  border: unset;
   outline: unset;
   resize: none;
   display: flex;
   background-color: unset;
+  flex: 1;
 
   &::placeholder {
     color: var(--color-dark);

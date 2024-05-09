@@ -1,17 +1,33 @@
 <template>
-  <button :class="[$style.button, isActive && $style.button_active]" :disabled="isDisabled" @click="onCLick">
-    <span :class="$style.inner">
-      <span :class="[$style.slot, isLoading && $style.slot_hidden]">
+  <button
+    type="button"
+    :class="[$style.button, isActive && $style.button_active]"
+    :disabled="isDisabled"
+    @click="onCLick"
+  >
+    <div :class="$style.inner">
+      <div :class="[$style.slot, isLoading && $style.slot_hidden]">
+        <div v-if="$slots.prepend || prependIconPath" :class="$style.wrapperPrependAppend">
+          <slot name="prepend">
+            <BaseIcon v-if="prependIconPath" :path="prependIconPath" />
+          </slot>
+        </div>
         <slot />
-      </span>
+        <div v-if="$slots.append || appendIconPath" :class="$style.wrapperPrependAppend">
+          <slot name="append">
+            <BaseIcon v-if="appendIconPath" :path="appendIconPath" />
+          </slot>
+        </div>
+      </div>
       <BaseLoading v-if="isLoading" :class="$style.loading" />
-    </span>
+    </div>
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import BaseIcon from '@/components/BaseIcon.vue';
 import BaseLoading from '@/components/BaseLoading.vue';
 
 const props = defineProps<
@@ -19,6 +35,8 @@ const props = defineProps<
     isActive: boolean;
     isDisabled: boolean;
     isLoading: boolean;
+    prependIconPath: string;
+    appendIconPath: string;
   }>
 >();
 
@@ -43,7 +61,7 @@ const onCLick = (e: Event) => {
   background-color: var(--color-items);
   border: 1px solid var(--color-dark);
   border-radius: 0.25rem;
-  padding: 0.25rem;
+  padding: 0.5rem;
   text-align: center;
   cursor: pointer;
   user-select: none;
@@ -78,6 +96,8 @@ const onCLick = (e: Event) => {
 .slot {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 0.25rem;
 
   &_hidden {
     opacity: 33%;
@@ -87,5 +107,9 @@ const onCLick = (e: Event) => {
 .loading {
   position: absolute;
   left: 50%;
+}
+
+.wrapperPrependAppend {
+  display: flex;
 }
 </style>

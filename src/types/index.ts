@@ -11,3 +11,5 @@ export type ReplaceKeys<TObject, Keys extends keyof TObject, NewType> = {
 export type PartialKeys<TObject, Keys extends keyof TObject> = {
   [_Key in keyof TObject]: _Key extends Keys ? TObject[_Key] | Nil : TObject[_Key];
 };
+
+export type ArrayOrNot<T> = T | Array<T>;

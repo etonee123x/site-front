@@ -80,7 +80,7 @@ useInfiniteScroll(main, () => new Promise((resolve) => blogStore.getPosts().then
 }
 
 .hr {
-  margin: 0.75rem 0;
+  margin: 1rem 0;
 }
 
 .loadingWithPosts {
