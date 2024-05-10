@@ -11,6 +11,7 @@ import {
   deletePost as _deletePost,
   putPost as _putPost,
   getPostById as _getPostById,
+  postUpload,
 } from '@/api';
 
 export enum IsLoadingAction {
@@ -19,18 +20,6 @@ export enum IsLoadingAction {
   Put = 'Put',
   Delete = 'Delete',
 }
-
-const createFormDataByPostData = (postData: PostData) => {
-  const formData = new FormData();
-
-  formData.append('text', postData.text);
-
-  postData.files.forEach((file) => {
-    formData.append('file', file);
-  });
-
-  return formData;
-};
 
 export const useBlogStore = defineStore('blog', () => {
   const route = useRoute();
@@ -78,10 +67,12 @@ export const useBlogStore = defineStore('blog', () => {
       });
   };
 
-  const postPost = async (postData: PostData) => {
+  const postPost = async (postData: PostData, files: Array<File> = []) => {
     isLoading[IsLoadingAction.Post] = true;
 
-    return _postPost(createFormDataByPostData(postData))
+    const filesUrls = await postUpload(files);
+
+    return _postPost({ ...postData, filesUrls })
       .then(() => {
         reset();
         getPosts();
@@ -91,10 +82,12 @@ export const useBlogStore = defineStore('blog', () => {
       });
   };
 
-  const putPost = async (id: Id, postData: PostData) => {
+  const putPost = async (id: Id, post: Post, files: Array<File> = []) => {
     isLoading[IsLoadingAction.Put] = true;
 
-    return _putPost(id, createFormDataByPostData(postData))
+    const filesUrls = await postUpload(files);
+
+    return _putPost(id, { ...post, filesUrls })
       .then(() => {
         reset();
         getPosts();

@@ -3,7 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { mdiTextBoxOutline, mdiFileOutline } from '@mdi/js';
+import { mdiFileOutline } from '@mdi/js';
+import { isExtAudio, isExtPicture } from '@shared/src/types';
 import { defineAsyncComponent, computed } from 'vue';
 
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/BaseIcon.vue'));
@@ -13,23 +14,22 @@ const props = defineProps<{
 }>();
 
 const component = computed(() => {
-  const isMimeImage = (_string: string) => _string.startsWith('image');
-  const isMimeAudio = (_string: string) => _string.startsWith('audio');
-  const isMimeVideo = (_string: string) => _string.startsWith('video');
-  const isMimeText = (_string: string) => _string.startsWith('text');
+  const ext = props.file.type.replace(/.*\//, '.');
 
   switch (true) {
-    case isMimeImage(props.file.type):
+    case isExtPicture(ext):
       return {
         is: 'img',
         binds: {
           src: URL.createObjectURL(props.file),
           style: {
-            maxWidth: '2rem',
+            width: '4rem',
+            height: '4rem',
+            objectFit: 'contain',
           },
         },
       };
-    case isMimeAudio(props.file.type):
+    case isExtAudio(ext):
       return {
         is: 'audio',
         binds: {
@@ -37,22 +37,22 @@ const component = computed(() => {
           controls: true,
         },
       };
-    case isMimeVideo(props.file.type):
-      return {
-        is: 'video',
-        binds: {
-          src: URL.createObjectURL(props.file),
-          controls: true,
-        },
-      };
-    case isMimeText(props.file.type):
-      return {
-        is: LazyBaseIcon,
-        binds: {
-          path: mdiTextBoxOutline,
-          size: '2rem',
-        },
-      };
+    // case isMimeVideo(props.file.type):
+    //   return {
+    //     is: 'video',
+    //     binds: {
+    //       src: URL.createObjectURL(props.file),
+    //       controls: true,
+    //     },
+    //   };
+    // case isMimeText(props.file.type):
+    //   return {
+    //     is: LazyBaseIcon,
+    //     binds: {
+    //       path: mdiTextBoxOutline,
+    //       size: '2rem',
+    //     },
+    //   };
     default:
       return {
         is: LazyBaseIcon,

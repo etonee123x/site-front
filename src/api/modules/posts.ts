@@ -1,4 +1,4 @@
-import type { Post, Id, WithMeta, WithIsEnd } from '@shared/src/types';
+import type { Post, Id, WithMeta, WithIsEnd, ForPost, ForPut, ForPatch } from '@shared/src/types';
 
 import { client } from '@/api/client';
 
@@ -9,10 +9,11 @@ export const getPosts = (page: number) =>
 
 export const getPostById = (id: Id) => client<Post>(`/posts/${id}`);
 
-export const postPost = (post: FormData) => client<Post>('/posts', { method: 'POST', body: post });
+export const postPost = (post: ForPost<Post>) => client<Post>('/posts', { method: 'POST', body: post });
 
-export const putPost = (id: Id, post: FormData) => client<Post>(`/posts/${id}`, { method: 'PUT', body: post });
+export const putPost = (id: Id, post: ForPut<Post>) => client<Post>(`/posts/${id}`, { method: 'PUT', body: post });
 
-export const patchPost = (id: Id, post: FormData) => client<Post>(`/posts/${id}`, { method: 'PATCH', body: post });
+export const patchPost = (id: Id, post: ForPatch<Post>) =>
+  client<Post>(`/posts/${id}`, { method: 'PATCH', body: post });
 
 export const deletePost = (id: Id) => client<Post>(`/posts/${id}`, { method: 'DELETE' });

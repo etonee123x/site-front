@@ -1,5 +1,5 @@
 <template>
-  <span ref="refRoot" :class="$style.icon">
+  <span :class="$style.icon">
     <svg xmlns="http://www.w3.org/2000/svg" :width="size" :viewBox="`0 0 24 24`">
       <path :d="path" fill="currentColor" />
     </svg>
@@ -7,29 +7,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, type CSSProperties } from 'vue';
+import { type CSSProperties } from 'vue';
 
-const props = withDefaults(
+withDefaults(
   defineProps<
     {
       path: string;
     } & Partial<{
       size?: CSSProperties['width'];
-      isFontSize?: boolean;
     }>
   >(),
   {
     size: '1em',
   },
 );
-
-const refRoot = ref<HTMLSpanElement>();
-
-const currentFontSize = computed(() =>
-  refRoot.value ? window.getComputedStyle(refRoot.value).getPropertyValue('font-size') : undefined,
-);
-
-const size = computed(() => (props.isFontSize && refRoot.value ? currentFontSize.value : props.size));
 </script>
 
 <style lang="scss" module>

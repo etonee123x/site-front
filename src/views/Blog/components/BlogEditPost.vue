@@ -9,16 +9,16 @@
         :errors="v$.text.$errors"
         @submit="onSubmit"
       />
-      <BaseInputFile v-model="model.files" :class="$s.inputFile" />
+      <BaseInputFile v-model="files" :class="$s.inputFile" />
     </div>
-    <div v-if="isNotEmptyArray(model.files)">
+    <div v-if="isNotEmptyArray(files)">
       <div :class="$s.filesHeader">
         <div class="text-xl">{{ t('files') }}</div>
         <BaseButton :class="$s.buttonDelete" @click="onClickDeleteFiles">
           <BaseIcon :path="mdiDelete" />
         </BaseButton>
       </div>
-      <BaseFilesPreview v-if="isNotEmptyArray(model.files)" v-model="model.files" />
+      <BaseFilesList v-if="isNotEmptyArray(files)" v-model="files" />
     </div>
   </div>
 </template>
@@ -44,7 +44,7 @@ import BaseTextarea from '@/components/BaseTextarea.vue';
 import BaseInputFile from '@/components/BaseInputFile.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 import BaseButton from '@/components/BaseButton.vue';
-import BaseFilesPreview from '@/components/BaseFilesPreview.vue';
+import BaseFilesList from '@/components/BaseFilesList.vue';
 
 defineProps<{
   v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']>;
@@ -59,11 +59,12 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel<PostData>({ required: true });
+const files = defineModel<Array<File>>('files');
 
 const onSubmit = () => emit('submit');
 
 const onClickDeleteFiles = () => {
-  model.value.files = [];
+  files.value = [];
 };
 
 defineExpose({

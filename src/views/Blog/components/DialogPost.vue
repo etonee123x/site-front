@@ -1,6 +1,6 @@
 <template>
   <BaseDialog is-hidden-header :model-value="Boolean(postSelected)" height="min-content" @close="onDialogClose">
-    <BaseHtml :class="$style.content" :html="html" />
+    <BlogPostData v-if="postSelected" :post="postSelected" />
     <template #footer>
       <div :class="$style.footer">
         <div class="text-sm" :class="$style.dates">
@@ -26,10 +26,11 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import BlogPostData from './BlogPostData.vue';
+
 import BaseDialog from '@/components/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
-import BaseHtml from '@/components/BaseHtml.vue';
-import { parseContent, wasEdited as _wasEdited } from '@/utils';
+import { wasEdited as _wasEdited } from '@/utils';
 import { useDateFns } from '@/composables';
 
 const FORMAT_TEMPALTE = 'PPp';
@@ -46,8 +47,6 @@ const removeSelectedpost = () => {
 const { format } = useDateFns();
 
 const onDialogClose = removeSelectedpost;
-
-const html = computed(() => parseContent(postSelected.value?.text));
 
 const dates = computed(() =>
   postSelected.value

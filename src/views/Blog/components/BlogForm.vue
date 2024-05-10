@@ -1,6 +1,6 @@
 <template>
   <BaseForm :class="$style.blogForm" @submit.prevent="onSubmit">
-    <BlogEditPost :v$="v$" v-model="postData" @submit="onSubmit" />
+    <BlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
     <BaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">{{ t('buttonLabel') }}</BaseButton>
   </BaseForm>
 </template>
@@ -27,15 +27,18 @@ const { t } = useI18n({ useScope: 'local' });
 
 const getInitialPostData = () => ({
   text: '',
-  files: [],
+  filesUrls: [],
 });
+
+const files = ref<Array<File>>([]);
 
 const postData = ref(getInitialPostData());
 
 const { v$, handle } = useVuelidateBlogPostData(() => {
-  blogStore.postPost(postData.value);
+  blogStore.postPost(postData.value, files.value);
 
   v$.value.$reset();
+  files.value = [];
 
   postData.value = getInitialPostData();
 }, postData);

@@ -2,13 +2,13 @@
   <div ref="refRoot" :class="$style.post" @click="onClick">
     <div :class="$style.postInner">
       <template v-if="!isInEditMode">
-        <BaseHtml :html="html" />
+        <BlogPostData :post="post" />
         <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
           <span>{{ createdAtHumanReadable }}</span>
-          <BaseIcon v-if="wasEdited" is-font-size :path="mdiPencil" />
+          <BaseIcon v-if="wasEdited" :path="mdiPencil" />
         </span>
       </template>
-      <BlogEditPost v-else ref="refBlogEditPost" v-model="postNew" :v$="v$" @submit="onSubmit" />
+      <BlogEditPost v-else ref="refBlogEditPost" v-model="postNew" v-model:files="files" :v$="v$" @submit="onSubmit" />
     </div>
     <div v-if="isAdmin" :class="$style.controls">
       <BaseButton
@@ -19,7 +19,7 @@
         :is-disabled="control.isDisabled"
         @click.stop="control.onClick"
       >
-        <BaseIcon :path="control.iconPath" />
+        <BaseIcon class="text-2xl" :path="control.iconPath" />
       </BaseButton>
     </div>
   </div>
@@ -39,22 +39,22 @@ import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick } from 'vue';
-import { isTruthy, pick } from '@shared/src/utils';
+import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
 import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
 import BlogEditPost from '@/views/Blog/components/BlogEditPost.vue';
+import BlogPostData from '@/views/Blog/components/BlogPostData.vue';
 import { useDateFns } from '@/composables';
 import { useToastsStore } from '@/stores/toasts';
-import BaseHtml from '@/components/BaseHtml.vue';
-import { parseContent, clone, addId, wasEdited as _wasEdited } from '@/utils';
+import { clone, addId, wasEdited as _wasEdited } from '@/utils';
 import BaseButton from '@/components/BaseButton.vue';
 import { useBlogStore, IsLoadingAction } from '@/stores/blog';
 import BaseIcon from '@/components/BaseIcon.vue';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 
-const getInitialPostNew = () => clone(pick(props.post, ['text', 'files']));
+const getInitialPostNew = () => clone(props.post);
 
 const refRoot = ref<HTMLDivElement>();
 const refBlogEditPost = ref<InstanceType<typeof BlogEditPost>>();
@@ -76,17 +76,17 @@ const { isAdmin, isLoading, editModeFor, postSelected } = storeToRefs(blogStore)
 
 const { t } = useI18n({ useScope: 'local' });
 
+const files = ref<Array<File>>([]);
+
 const postNew = ref(getInitialPostNew());
 
 const toastsStore = useToastsStore();
 
 const { intlFormatDistance } = useDateFns();
 
-const html = computed(() => parseContent(props.post.text));
-
 const { v$, handle } = useVuelidateBlogPostData(async () => {
   if (hasChanges.value) {
-    blogStore.putPost(props.post.id, postNew.value);
+    blogStore.putPost(props.post.id, postNew.value, files.value);
   }
 
   closeEditMode();
@@ -139,7 +139,10 @@ const controls = computed(() =>
             onClick: handle,
           },
         ]
-      : [
+      : []),
+    // Надо придумать как редактировать посты с вложениями...
+    ...(!(isInEditMode.value || isNotEmptyArray(props.post.filesUrls))
+      ? [
           {
             iconPath: mdiPencil,
             isLoading: isLoading.value[IsLoadingAction.Put],
@@ -149,7 +152,8 @@ const controls = computed(() =>
               nextTick(() => refBlogEditPost.value?.focus());
             },
           },
-        ]),
+        ]
+      : []),
     {
       iconPath: mdiDelete,
       isLoading: isLoading.value[IsLoadingAction.Delete],
@@ -196,5 +200,9 @@ const onClick = () => {
   border-top: 1px solid var(--color-dark);
   padding: 0.25rem;
   gap: 0.5rem;
+}
+
+.control {
+  padding: 0.125rem;
 }
 </style>

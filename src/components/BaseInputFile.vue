@@ -5,7 +5,7 @@
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog ref="refDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
-      <BaseFilesPreview v-if="isNotEmptyArray(model)" v-model="model" />
+      <BaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
       <BaseButton :class="$s.addMore" :prepend-icon-path="mdiPlus" @click="onClickAdd">
         {{ t('add') }}
       </BaseButton>
@@ -30,7 +30,7 @@ import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray } from '@shared/src/utils';
 
 import { useIsUniqueFileCheck } from '@/composables';
-import BaseFilesPreview from '@/components/BaseFilesPreview.vue';
+import BaseFilesList from '@/components/BaseFilesList.vue';
 import BaseButton from '@/components/BaseButton.vue';
 import BaseIcon from '@/components/BaseIcon.vue';
 import BaseDialog from '@/components/BaseDialog.vue';
