@@ -1,5 +1,6 @@
 <template>
   <div class="l-container" :class="$style.blogView">
+    <DialogPost />
     <template v-if="isAdmin">
       <LazyBaseForm :class="$style.form" @submit.prevent="onSubmit">
         <LazyBlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
@@ -23,7 +24,6 @@
         {{ t('nothingWasFound') }}
       </div>
     </template>
-    <DialogPost />
   </div>
 </template>
 
