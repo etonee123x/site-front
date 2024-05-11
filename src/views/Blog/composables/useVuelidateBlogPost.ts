@@ -4,7 +4,7 @@ import { isNotEmptyArray } from '@shared/src/utils';
 import { helpers } from '@vuelidate/validators';
 
 import { i18n } from '@/i18n';
-import { useVuelidateWithHandle } from '@/composables';
+import { useVuelidateWithHandle } from '@/composables/useVuelidateWithHandle';
 
 const validatorText = (filesUrls: Array<string>, files: MaybeRefOrGetter<Array<File>>) =>
   helpers.withMessage(

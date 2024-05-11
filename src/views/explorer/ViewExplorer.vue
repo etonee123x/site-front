@@ -2,7 +2,9 @@
   <div>
     <ExplorerNavbar />
     <div :class="$style.content">
-      <LazyExplorerElementSystem v-if="lvlUp" @click="onClickLvlUp">...</LazyExplorerElementSystem>
+      <LazyExplorerElementSystem v-if="lvlUp" @keydown.enter="onClickLvlUp" @click="onClickLvlUp">
+        ...
+      </LazyExplorerElementSystem>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"

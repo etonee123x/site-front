@@ -29,7 +29,7 @@ import { useI18n } from 'vue-i18n';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
 import { wasEdited as _wasEdited } from '@/utils';
-import { useDateFns } from '@/composables';
+import { useDateFns } from '@/composables/useDateFns';
 
 const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 

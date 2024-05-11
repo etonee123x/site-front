@@ -9,7 +9,9 @@
           </RouterLink>
         </li>
       </ul>
-      <BaseIcon :path="mdiCog" class="text-3xl" :class="$style.iconSettings" @click="onIconSettingsClick" />
+      <BaseButton :class="$style.settings" @click="onIconSettingsClick">
+        <BaseIcon :path="mdiCog" class="text-3xl" />
+      </BaseButton>
     </div>
     <DialogSettings v-model="isDialogSettingsOpened" />
   </header>
@@ -33,6 +35,7 @@ import { useI18n } from 'vue-i18n';
 import { DialogSettings } from './components';
 
 import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 import { addId } from '@/utils';
 import { RouteName } from '@/router';
 
@@ -64,12 +67,9 @@ const links = computed(() =>
   gap: 1rem;
 }
 
-.iconSettings {
+.settings {
   margin-inline-start: auto;
-  display: flex;
-  align-items: center;
-  justify-items: center;
-  cursor: pointer;
+  padding: 0.125rem;
 }
 
 .links {

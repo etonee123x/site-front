@@ -69,6 +69,10 @@ defineExpose({
   &::placeholder {
     color: var(--color-dark);
   }
+
+  &:focus {
+    outline: auto;
+  }
 }
 
 .textarea,

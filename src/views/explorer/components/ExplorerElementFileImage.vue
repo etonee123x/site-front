@@ -1,5 +1,5 @@
 <template>
-  <ElementFileWrapper :element="element" @click="onClick">
+  <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
     <div :class="$style.wrapper">
       <img :class="$style.theImage" :src="element.src" />
     </div>

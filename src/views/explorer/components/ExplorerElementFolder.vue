@@ -1,9 +1,7 @@
 <template>
-  <RouterLink :to="element.url">
-    <div :class="[$style.directoryElement, $style.directoryElement_folder]">
-      <div :class="$style.title">
-        {{ element.name }}
-      </div>
+  <RouterLink :to="element.url" :class="[$style.directoryElement, $style.directoryElement_folder]">
+    <div :class="$style.title">
+      {{ element.name }}
     </div>
   </RouterLink>
 </template>

@@ -4,7 +4,9 @@
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div :class="$style.header">
           <span v-if="isNotNil(title)" class="text-lg" :class="$style.title">{{ title }}</span>
-          <LazyBaseIcon :path="mdiClose" class="text-xl" :class="$style.closeIcon" @click="onClickCloseIcon" />
+          <LazyBaseButton :class="$style.buttonClose" @click="onClickCloseIcon">
+            <LazyBaseIcon :path="mdiClose" class="text-xl" />
+          </LazyBaseButton>
         </div>
       </slot>
       <slot v-bind="{ close }" />
@@ -144,8 +146,8 @@ defineExpose({
   margin-top: auto;
 }
 
-.closeIcon {
-  cursor: pointer;
+.buttonClose {
   margin-inline-start: auto;
+  padding: 0.125rem;
 }
 </style>

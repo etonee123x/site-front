@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.directoryElement">
+  <div tabindex="0" :class="$style.directoryElement">
     <div :class="$style.title">
       <slot />
     </div>

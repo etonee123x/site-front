@@ -1,5 +1,5 @@
 <template>
-  <ElementFileWrapper :element="element" @click="onClick">
+  <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
     <div :class="$style.metadataList">
       <div v-for="metadata in metadataList" :key="metadata.id" :title="metadata.title" :class="$style.metadata">
         <BaseIcon :class="$style.metadataIcon" :path="metadata.path" />

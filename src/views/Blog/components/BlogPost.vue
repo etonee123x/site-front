@@ -51,7 +51,7 @@ import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
-import { useDateFns } from '@/composables';
+import { useDateFns } from '@/composables/useDateFns';
 import { useToastsStore } from '@/stores/toasts';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
