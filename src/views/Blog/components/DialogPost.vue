@@ -1,6 +1,6 @@
 <template>
   <BaseDialog is-hidden-header :model-value="Boolean(postSelected)" height="min-content" @close="onDialogClose">
-    <PostData v-if="postSelected" :post="postSelected" />
+    <LazyPostData v-if="postSelected" :post="postSelected" />
     <template #footer>
       <div :class="$style.footer">
         <div class="text-sm" :class="$style.dates">
@@ -23,15 +23,15 @@ Ru:
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
-
-import PostData from './PostData.vue';
 
 import { BaseDialog } from '@/components/ui';
 import { useBlogStore } from '@/stores';
 import { wasEdited as _wasEdited } from '@/utils';
 import { useDateFns } from '@/composables';
+
+const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 
 const FORMAT_TEMPALTE = 'PPp';
 

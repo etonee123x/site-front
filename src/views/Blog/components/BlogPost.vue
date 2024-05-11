@@ -2,16 +2,23 @@
   <div ref="refRoot" :class="$style.post" @click="onClick">
     <div :class="$style.postInner">
       <template v-if="!isInEditMode">
-        <PostData :post="post" />
+        <LazyPostData :post="post" />
         <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
           <span>{{ createdAtHumanReadable }}</span>
-          <BaseIcon v-if="wasEdited" :path="mdiPencil" />
+          <LazyBaseIcon v-if="wasEdited" :path="mdiPencil" />
         </span>
       </template>
-      <BlogEditPost v-else ref="refBlogEditPost" v-model="postNew" v-model:files="files" :v$="v$" @submit="onSubmit" />
+      <LazyBlogEditPost
+        v-else
+        ref="refBlogEditPost"
+        v-model="postNew"
+        v-model:files="files"
+        :v$="v$"
+        @submit="onSubmit"
+      />
     </div>
     <div v-if="isAdmin" :class="$style.controls">
-      <BaseButton
+      <LazyBaseButton
         v-for="control in controls"
         :key="control.id"
         :class="$style.control"
@@ -19,8 +26,8 @@
         :is-disabled="control.isDisabled"
         @click.stop="control.onClick"
       >
-        <BaseIcon class="text-2xl" :path="control.iconPath" />
-      </BaseButton>
+        <LazyBaseIcon class="text-2xl" :path="control.iconPath" />
+      </LazyBaseButton>
     </div>
   </div>
 </template>
@@ -38,26 +45,27 @@ Ru:
 import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
-import { computed, ref, nextTick } from 'vue';
-import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
+import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
+import { isNotEmptyArray, isTruthy, propFn } from '@shared/src/utils';
 import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
-import PostData from './PostData.vue';
-
-import BlogEditPost from '@/views/Blog/components/BlogEditPost.vue';
 import { useDateFns } from '@/composables';
 import { useToastsStore, useBlogStore } from '@/stores';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
-import { BaseButton, BaseIcon } from '@/components/ui';
 import { IsLoadingAction } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
+
+const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
+const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseIcon')));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseButton')));
 
 const getInitialPostNew = () => clone(props.post);
 
 const refRoot = ref<HTMLDivElement>();
-const refBlogEditPost = ref<InstanceType<typeof BlogEditPost>>();
+const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
 
 const props = defineProps<{
   post: Post;

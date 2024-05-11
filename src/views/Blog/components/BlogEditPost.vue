@@ -14,11 +14,11 @@
     <div v-if="isNotEmptyArray(files)">
       <div :class="$s.filesHeader">
         <div class="text-xl">{{ t('files') }}</div>
-        <BaseButton :class="$s.buttonDelete" @click="onClickDeleteFiles">
-          <BaseIcon :path="mdiDelete" />
-        </BaseButton>
+        <LazyBaseButton :class="$s.buttonDelete" @click="onClickDeleteFiles">
+          <LazyBaseIcon :path="mdiDelete" />
+        </LazyBaseButton>
       </div>
-      <BaseFilesList v-if="isNotEmptyArray(files)" v-model="files" />
+      <LazyBaseFilesList v-model="files" />
     </div>
   </div>
 </template>
@@ -34,13 +34,17 @@ En:
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref, type UnwrapRef } from 'vue';
+import { ref, type UnwrapRef, defineAsyncComponent } from 'vue';
 import type { PostData } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray, propFn } from '@shared/src/utils';
 import { mdiDelete } from '@mdi/js';
 
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
-import { BaseTextarea, BaseInputFile, BaseIcon, BaseButton, BaseFilesList } from '@/components/ui';
+import { BaseTextarea, BaseInputFile } from '@/components/ui';
+
+const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseFilesList')));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseButton')));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseIcon')));
 
 defineProps<{
   v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']>;

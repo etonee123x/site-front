@@ -5,7 +5,7 @@
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog ref="refDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
-      <BaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
+      <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
       <BaseButton :class="$s.addMore" :prepend-icon-path="mdiPlus" @click="onClickAdd">
         {{ t('add') }}
       </BaseButton>
@@ -23,18 +23,19 @@ En:
 </i18n>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
 import { useFileDialog, useToggle } from '@vueuse/core';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray } from '@shared/src/utils';
 
-import BaseFilesList from './BaseFilesList.vue';
 import BaseButton from './BaseButton.vue';
 import BaseIcon from './BaseIcon.vue';
 import BaseDialog from './BaseDialog.vue';
 
 import { useIsUniqueFileCheck } from '@/composables';
+
+const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 

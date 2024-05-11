@@ -1,8 +1,8 @@
 <template>
-  <ol v-if="isNotEmptyArray(model)" ref="refUl" :class="$s.files">
+  <ol ref="refUl" :class="$s.files">
     <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
       <div :class="$s.file">
-        <BaseFilePreview :file="file" />
+        <FilesListFilePreview :file="file" />
         <div>{{ file.name }}</div>
         <div class="text-2xl" :class="$s.icons">
           <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
@@ -17,13 +17,13 @@
 
 <script setup lang="ts">
 import { mdiDelete, mdiSwapVertical } from '@mdi/js';
-import { isNil, isNotEmptyArray } from '@shared/src/utils';
+import { isNil } from '@shared/src/utils';
 import Sortable from 'sortablejs';
 import { ref, watch, useCssModule } from 'vue';
 
 import BaseButton from './BaseButton.vue';
 import BaseIcon from './BaseIcon.vue';
-import BaseFilePreview from './BaseFilePreview.vue';
+import FilesListFilePreview from './FilesListFilePreview.vue';
 
 const model = defineModel<Array<File>>({ required: true });
 

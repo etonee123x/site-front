@@ -4,15 +4,15 @@
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div :class="$style.header">
           <span v-if="isNotNil(title)" class="text-lg" :class="$style.title">{{ title }}</span>
-          <BaseIcon :path="mdiClose" class="text-xl" :class="$style.closeIcon" @click="onClickCloseIcon" />
+          <LazyBaseIcon :path="mdiClose" class="text-xl" :class="$style.closeIcon" @click="onClickCloseIcon" />
         </div>
       </slot>
       <slot v-bind="{ close }" />
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
         <div v-if="isNotEmptyArray(buttons)" :class="$style.footer">
-          <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
+          <LazyBaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
-          </BaseButton>
+          </LazyBaseButton>
         </div>
       </slot>
     </div>
@@ -29,17 +29,17 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, ref, watch, type CSSProperties } from 'vue';
+import { computed, ref, watch, type CSSProperties, defineAsyncComponent } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray, isNotNil, pick } from '@shared/src/utils';
 import type { FunctionCallback, WithId } from '@shared/src/types';
 
-import BaseButton from './BaseButton.vue';
-import BaseIcon from './BaseIcon.vue';
-
 import { addId } from '@/utils';
+
+const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
 
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();

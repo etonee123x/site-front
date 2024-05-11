@@ -1,23 +1,23 @@
 <template>
   <div class="l-container" :class="$style.blogView">
     <template v-if="isAdmin">
-      <BaseForm :class="$style.form" @submit.prevent="onSubmit">
-        <BlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
-        <BaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
+      <LazyBaseForm :class="$style.form" @submit.prevent="onSubmit">
+        <LazyBlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
+        <LazyBaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
           {{ t('send') }}
-        </BaseButton>
-      </BaseForm>
-      <BaseHr v-if="hasPosts" :class="$style.hr" />
+        </LazyBaseButton>
+      </LazyBaseForm>
+      <LazyBaseHr v-if="hasPosts" :class="$style.hr" />
     </template>
-    <BaseLoading v-if="isLoading[IsLoadingAction.Get] && !hasPosts" is-full :class="$style.notPosts" />
+    <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get] && !hasPosts" is-full :class="$style.notPosts" />
     <template v-else>
       <template v-if="hasPosts">
         <ul :class="$style.posts">
           <li v-for="post in posts" :key="post.id">
-            <BlogPost :post="post" />
+            <LazyBlogPost :post="post" />
           </li>
         </ul>
-        <BaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full :class="$style.loadingWithPosts" />
+        <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full :class="$style.loadingWithPosts" />
       </template>
       <div v-else class="text-lg" :class="$style.notPosts">
         {{ t('nothingWasFound') }}
@@ -40,14 +40,22 @@ Ru:
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
-import { ref } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
+import { propFn } from '@shared/src/utils';
 
-import { BlogEditPost, BlogPost, DialogPost } from './components';
+import { DialogPost } from './components';
 
 import { IsLoadingAction } from '@/stores/blog';
-import { BaseLoading, BaseHr, BaseButton, BaseForm } from '@/components/ui';
 import { useComponentsStore, useBlogStore } from '@/stores';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
+
+const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseForm')));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseButton')));
+const LazyBaseHr = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseHr')));
+const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseLoading')));
+
+const LazyBlogEditPost = defineAsyncComponent(() => import('./components').then(propFn('BlogEditPost')));
+const LazyBlogPost = defineAsyncComponent(() => import('./components').then(propFn('BlogPost')));
 
 const { t } = useI18n({ useScope: 'local' });
 

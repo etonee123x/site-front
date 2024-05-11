@@ -9,26 +9,26 @@
       <div :class="[$style.slot, isLoading && $style.slot_hidden]">
         <div v-if="$slots.prepend || prependIconPath" :class="$style.wrapperPrependAppend">
           <slot name="prepend">
-            <BaseIcon v-if="prependIconPath" :path="prependIconPath" />
+            <LazyBaseIcon v-if="prependIconPath" :path="prependIconPath" />
           </slot>
         </div>
         <slot />
         <div v-if="$slots.append || appendIconPath" :class="$style.wrapperPrependAppend">
           <slot name="append">
-            <BaseIcon v-if="appendIconPath" :path="appendIconPath" />
+            <LazyBaseIcon v-if="appendIconPath" :path="appendIconPath" />
           </slot>
         </div>
       </div>
-      <BaseLoading v-if="isLoading" :class="$style.loading" />
+      <LazyBaseLoading v-if="isLoading" :class="$style.loading" />
     </div>
   </button>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 
-import BaseIcon from './BaseIcon.vue';
-import BaseLoading from './BaseLoading.vue';
+const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
+const LazyBaseLoading = defineAsyncComponent(() => import('./BaseLoading.vue'));
 
 const props = defineProps<
   Partial<{
