@@ -92,13 +92,17 @@ const toastsStore = useToastsStore();
 
 const { intlFormatDistance } = useDateFns();
 
-const { v$, handle } = useVuelidateBlogPostData(async () => {
-  if (hasChanges.value) {
-    blogStore.putPost(props.post.id, postNew.value, files.value);
-  }
+const { v$, handle } = useVuelidateBlogPostData(
+  async () => {
+    if (hasChanges.value) {
+      blogStore.putPost(props.post.id, postNew.value, files.value);
+    }
 
-  closeEditMode();
-}, postNew);
+    closeEditMode();
+  },
+  postNew,
+  files,
+);
 
 const dateExact = computed(() =>
   [

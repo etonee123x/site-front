@@ -78,14 +78,18 @@ const files = ref<Array<File>>([]);
 
 const postData = ref(getInitialPostData());
 
-const { v$, handle } = useVuelidateBlogPostData(() => {
-  blogStore.postPost(postData.value, files.value);
+const { v$, handle } = useVuelidateBlogPostData(
+  () => {
+    blogStore.postPost(postData.value, files.value);
 
-  v$.value.$reset();
-  files.value = [];
+    v$.value.$reset();
+    files.value = [];
 
-  postData.value = getInitialPostData();
-}, postData);
+    postData.value = getInitialPostData();
+  },
+  postData,
+  files,
+);
 
 const onSubmit = handle;
 const onClickButton = handle;
