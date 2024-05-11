@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
-import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@shared/src/types';
+import { type Item, isItemFolder, isItemAudio, isItemImage } from '@shared/src/types';
 import { storeToRefs } from 'pinia';
 
 import ExplorerNavbar from './components/ExplorerNavbar.vue';
@@ -27,9 +27,7 @@ import { RouteName } from '@/router';
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
 const LazyExplorerElementFileAudio = defineAsyncComponent(() => import('./components/ExplorerElementFileAudio.vue'));
-const LazyExplorerElementFilePicture = defineAsyncComponent(
-  () => import('./components/ExplorerElementFilePicture.vue'),
-);
+const LazyExplorerElementFileImage = defineAsyncComponent(() => import('./components/ExplorerElementFileImage.vue'));
 
 const explorerStore = useExplorerStore();
 const { lvlUp } = storeToRefs(explorerStore);
@@ -51,8 +49,8 @@ const getComponent = (item: Item) => {
       return LazyExplorerElementFolder;
     case isItemAudio(item):
       return LazyExplorerElementFileAudio;
-    case isItemPicture(item):
-      return LazyExplorerElementFilePicture;
+    case isItemImage(item):
+      return LazyExplorerElementFileImage;
     default:
       return LazyExplorerElementSystem;
   }

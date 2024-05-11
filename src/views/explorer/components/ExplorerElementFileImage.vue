@@ -1,20 +1,20 @@
 <template>
   <ElementFileWrapper :element="element" @click="onClick">
     <div :class="$style.wrapper">
-      <img :class="$style.thePicture" :src="element.src" />
+      <img :class="$style.theImage" :src="element.src" />
     </div>
   </ElementFileWrapper>
 </template>
 
 <script setup lang="ts">
-import { type ItemPicture } from '@shared/src/types';
+import { type ItemImage } from '@shared/src/types';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
 import { useGalleryStore } from '@/stores/gallery';
 
 const props = defineProps<{
-  element: ItemPicture;
+  element: ItemImage;
 }>();
 
 const { loadImage } = useGalleryStore();
@@ -29,7 +29,7 @@ const onClick = () => loadImage(props.element);
   max-width: 100%;
 }
 
-.thePicture {
+.theImage {
   max-width: 100%;
 }
 </style>

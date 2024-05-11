@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { mdiFileOutline } from '@mdi/js';
-import { isExtAudio, isExtPicture } from '@shared/src/types';
+import { isExtAudio, isExtImage } from '@shared/src/types';
 import { defineAsyncComponent, computed } from 'vue';
 
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
@@ -17,7 +17,7 @@ const component = computed(() => {
   const ext = props.file.type.replace(/.*\//, '.');
 
   switch (true) {
-    case isExtPicture(ext):
+    case isExtImage(ext):
       return {
         is: 'img',
         binds: {

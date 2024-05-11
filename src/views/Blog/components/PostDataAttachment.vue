@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { isExtAudio, isExtPicture } from '@shared/src/types';
+import { isExtAudio, isExtImage } from '@shared/src/types';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -14,7 +14,7 @@ const component = computed(() => {
   const ext = props.fileUrl.match(/\.[^.]*$/)?.[0] ?? '';
 
   switch (true) {
-    case isExtPicture(ext):
+    case isExtImage(ext):
       return {
         is: 'img',
         binds: {
