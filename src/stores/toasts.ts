@@ -11,7 +11,7 @@ interface Options {
 }
 
 const DEFAULT_OPTIONS = Object.freeze({
-  ttl: 5000 * 1000,
+  ttl: 5 * 1000,
 });
 
 export const useToastsStore = defineStore('toasts', () => {
