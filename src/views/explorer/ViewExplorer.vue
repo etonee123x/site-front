@@ -1,8 +1,8 @@
 <template>
   <div>
-    <NavBar />
+    <ExplorerNavbar />
     <div :class="$style.content">
-      <LazyElementSystem v-if="lvlUp" @click="onClickLvlUp(lvlUp)">...</LazyElementSystem>
+      <LazyExplorerElementSystem v-if="lvlUp" @click="onClickLvlUp">...</LazyExplorerElementSystem>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"
@@ -18,18 +18,24 @@ import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
 import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@shared/src/types';
 import { storeToRefs } from 'pinia';
+import { propFn } from '@shared/src/utils';
 
-import { useExplorerStore } from '@/stores/explorer';
+import { ExplorerNavbar } from './components';
+
+import { useExplorerStore } from '@/stores';
 import { RouteName } from '@/router';
-import NavBar from '@/views/Explorer/components/NavBar.vue';
 
-const LazyElementSystem = defineAsyncComponent(() => import('@/views/Explorer/components/ElementSystem.vue'));
-const LazyElementFolder = defineAsyncComponent(() => import('@/views/Explorer/components/ElementFolder.vue'));
-const LazyFileAudio = defineAsyncComponent(
-  () => import('@/views/Explorer/components/ElementFile/components/FileAudio.vue'),
+const LazyExplorerElementSystem = defineAsyncComponent(() =>
+  import('./components').then(propFn('ExplorerElementSystem')),
 );
-const LazyFilePicture = defineAsyncComponent(
-  () => import('@/views/Explorer/components/ElementFile/components/FilePicture.vue'),
+const LazyExplorerElementFolder = defineAsyncComponent(() =>
+  import('./components').then(propFn('ExplorerElementFolder')),
+);
+const LazyExplorerElementFileAudio = defineAsyncComponent(() =>
+  import('./components').then(propFn('ExplorerElementFileAudio')),
+);
+const LazyExplorerElementFilePicture = defineAsyncComponent(() =>
+  import('./components').then(propFn('ExplorerElementFilePicture')),
 );
 
 const explorerStore = useExplorerStore();
@@ -38,18 +44,24 @@ const { lvlUp } = storeToRefs(explorerStore);
 const route = useRoute();
 const router = useRouter();
 
-const onClickLvlUp = router.push;
+const onClickLvlUp = () => {
+  if (!lvlUp.value) {
+    return;
+  }
+
+  router.push(lvlUp.value);
+};
 
 const getComponent = (item: Item) => {
   switch (true) {
     case isItemFolder(item):
-      return LazyElementFolder;
+      return LazyExplorerElementFolder;
     case isItemAudio(item):
-      return LazyFileAudio;
+      return LazyExplorerElementFileAudio;
     case isItemPicture(item):
-      return LazyFilePicture;
+      return LazyExplorerElementFilePicture;
     default:
-      return LazyElementSystem;
+      return LazyExplorerElementSystem;
   }
 };
 

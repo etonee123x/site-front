@@ -1,5 +1,5 @@
 <template>
-  <ElementFile :element="element" @click="onClick">
+  <ElementFileWrapper :element="element" @click="onClick">
     <div :class="$style.metadataList">
       <div v-for="metadata in metadataList" :key="metadata.id" :title="metadata.title" :class="$style.metadata">
         <BaseIcon :class="$style.metadataIcon" :path="metadata.path" />
@@ -8,7 +8,7 @@
         </div>
       </div>
     </div>
-  </ElementFile>
+  </ElementFileWrapper>
 </template>
 
 <i18n lang="yaml">
@@ -33,10 +33,11 @@ import { ItemAudio } from '@shared/src/types';
 import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
+import ElementFileWrapper from './_ElementFileWrapper.vue';
+
 import { formatDuration, addId } from '@/utils';
-import { usePlayerStore } from '@/stores/player';
-import ElementFile from '@/views/Explorer/components/ElementFile';
-import BaseIcon from '@/components/BaseIcon.vue';
+import { usePlayerStore } from '@/stores';
+import { BaseIcon } from '@/components/ui';
 
 const props = defineProps<{
   element: ItemAudio;

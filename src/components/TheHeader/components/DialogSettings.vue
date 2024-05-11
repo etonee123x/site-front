@@ -43,11 +43,10 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useToggle } from '@vueuse/core';
 
-import { useSettingsStore } from '@/stores/settings';
+import { useSettingsStore } from '@/stores';
 import { addId } from '@/utils';
-import BaseDialog from '@/components/BaseDialog.vue';
+import { BaseDialog, BaseButton } from '@/components/ui';
 import BaseSelect, { type Option } from '@/components/BaseSelect';
-import BaseButton from '@/components/BaseButton.vue';
 import { Language, ThemeColor, ThemeMode } from '@/types';
 
 const isOpened = defineModel<boolean>();

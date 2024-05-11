@@ -2,7 +2,7 @@
   <div ref="refRoot" :class="$style.post" @click="onClick">
     <div :class="$style.postInner">
       <template v-if="!isInEditMode">
-        <BlogPostData :post="post" />
+        <PostData :post="post" />
         <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
           <span>{{ createdAtHumanReadable }}</span>
           <BaseIcon v-if="wasEdited" :path="mdiPencil" />
@@ -44,14 +44,14 @@ import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
+import PostData from './PostData.vue';
+
 import BlogEditPost from '@/views/Blog/components/BlogEditPost.vue';
-import BlogPostData from '@/views/Blog/components/BlogPostData.vue';
 import { useDateFns } from '@/composables';
-import { useToastsStore } from '@/stores/toasts';
+import { useToastsStore, useBlogStore } from '@/stores';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
-import BaseButton from '@/components/BaseButton.vue';
-import { useBlogStore, IsLoadingAction } from '@/stores/blog';
-import BaseIcon from '@/components/BaseIcon.vue';
+import { BaseButton, BaseIcon } from '@/components/ui';
+import { IsLoadingAction } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 
 const getInitialPostNew = () => clone(props.post);

@@ -1,6 +1,6 @@
 import type { Post, Id, WithMeta, WithIsEnd, ForPost, ForPut, ForPatch } from '@shared/src/types';
 
-import { client } from '@/api/client';
+import { client } from '@/api/_client';
 
 const PER_PAGE = 10;
 

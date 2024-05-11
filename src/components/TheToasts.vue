@@ -16,10 +16,9 @@ import { storeToRefs } from 'pinia';
 import { useCssModule, computed } from 'vue';
 import { stringToLowerCase } from '@shared/src/utils';
 
-import { useToastsStore } from '@/stores/toasts';
+import { useToastsStore, useComponentsStore } from '@/stores';
 import { ToastType, type Toast } from '@/types';
-import BaseIcon from '@/components/BaseIcon.vue';
-import { useComponentsStore } from '@/stores/components';
+import { BaseIcon } from '@/components/ui';
 
 const toastsStore = useToastsStore();
 const { toasts } = storeToRefs(toastsStore);

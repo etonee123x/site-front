@@ -5,9 +5,10 @@
 <script setup lang="ts">
 import { mdiFileOutline } from '@mdi/js';
 import { isExtAudio, isExtPicture } from '@shared/src/types';
+import { propFn } from '@shared/src/utils';
 import { defineAsyncComponent, computed } from 'vue';
 
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/BaseIcon.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseIcon')));
 
 const props = defineProps<{
   file: File;

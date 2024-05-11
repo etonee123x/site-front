@@ -30,8 +30,9 @@ import { useToggle } from '@vueuse/core';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import BaseIcon from '@/components/BaseIcon.vue';
-import DialogSettings from '@/components/TheHeader/components/DialogSettings.vue';
+import { DialogSettings } from './components';
+
+import { BaseIcon } from '@/components/ui';
 import { addId } from '@/utils';
 import { RouteName } from '@/router';
 

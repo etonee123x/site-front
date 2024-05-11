@@ -27,8 +27,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import BaseIcon from '@/components/BaseIcon.vue';
-import BaseLoading from '@/components/BaseLoading.vue';
+import BaseIcon from './BaseIcon.vue';
+import BaseLoading from './BaseLoading.vue';
 
 const props = defineProps<
   Partial<{

@@ -1,6 +1,6 @@
 <template>
   <BaseDialog is-hidden-header :model-value="Boolean(postSelected)" height="min-content" @close="onDialogClose">
-    <BlogPostData v-if="postSelected" :post="postSelected" />
+    <PostData v-if="postSelected" :post="postSelected" />
     <template #footer>
       <div :class="$style.footer">
         <div class="text-sm" :class="$style.dates">
@@ -26,10 +26,10 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import BlogPostData from './BlogPostData.vue';
+import PostData from './PostData.vue';
 
-import BaseDialog from '@/components/BaseDialog.vue';
-import { useBlogStore } from '@/stores/blog';
+import { BaseDialog } from '@/components/ui';
+import { useBlogStore } from '@/stores';
 import { wasEdited as _wasEdited } from '@/utils';
 import { useDateFns } from '@/composables';
 

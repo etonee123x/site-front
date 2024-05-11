@@ -1,8 +1,14 @@
 <template>
   <div class="l-container" :class="$style.blogView">
-    <DialogPostVue />
-    <BlogForm v-if="isAdmin" />
-    <BaseHr v-if="isAdmin && hasPosts" :class="$style.hr" />
+    <template v-if="isAdmin">
+      <BaseForm :class="$style.form" @submit.prevent="onSubmit">
+        <BlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
+        <BaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
+          {{ t('send') }}
+        </BaseButton>
+      </BaseForm>
+      <BaseHr v-if="hasPosts" :class="$style.hr" />
+    </template>
     <BaseLoading v-if="isLoading[IsLoadingAction.Get] && !hasPosts" is-full :class="$style.notPosts" />
     <template v-else>
       <template v-if="hasPosts">
@@ -17,13 +23,16 @@
         {{ t('nothingWasFound') }}
       </div>
     </template>
+    <DialogPost />
   </div>
 </template>
 
 <i18n lang="yaml">
 En:
+  send: 'Send'
   nothingWasFound: 'Nothing was found...'
 Ru:
+  send: 'Отправить'
   nothingWasFound: 'Ничего не найдено...'
 </i18n>
 
@@ -31,14 +40,14 @@ Ru:
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
+import { ref } from 'vue';
 
-import DialogPostVue from '@/views/Blog/components/DialogPost.vue';
-import { useBlogStore, IsLoadingAction } from '@/stores/blog';
-import BlogForm from '@/views/Blog/components/BlogForm.vue';
-import BaseLoading from '@/components/BaseLoading.vue';
-import BaseHr from '@/components/BaseHr.vue';
-import { useComponentsStore } from '@/stores/components';
-import BlogPost from '@/views/Blog/components/BlogPost.vue';
+import { BlogEditPost, BlogPost, DialogPost } from './components';
+
+import { IsLoadingAction } from '@/stores/blog';
+import { BaseLoading, BaseHr, BaseButton, BaseForm } from '@/components/ui';
+import { useComponentsStore, useBlogStore } from '@/stores';
+import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -52,6 +61,27 @@ useInfiniteScroll(main, () => new Promise((resolve) => blogStore.getPosts().then
   canLoadMore: () => !isEnd.value,
   distance: 100,
 });
+
+const getInitialPostData = () => ({
+  text: '',
+  filesUrls: [],
+});
+
+const files = ref<Array<File>>([]);
+
+const postData = ref(getInitialPostData());
+
+const { v$, handle } = useVuelidateBlogPostData(() => {
+  blogStore.postPost(postData.value, files.value);
+
+  v$.value.$reset();
+  files.value = [];
+
+  postData.value = getInitialPostData();
+}, postData);
+
+const onSubmit = handle;
+const onClickButton = handle;
 </script>
 
 <style lang="scss" module>
@@ -87,5 +117,11 @@ useInfiniteScroll(main, () => new Promise((resolve) => blogStore.getPosts().then
   display: flex;
   justify-content: center;
   padding: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 </style>

@@ -2,7 +2,7 @@ import { intlFormatDistance as _intlFormatDistance, format as _format } from 'da
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 
-import { useSettingsStore } from '@/stores/settings';
+import { useSettingsStore } from '@/stores';
 
 export const useDateFns = () => {
   const settingsStore = useSettingsStore();

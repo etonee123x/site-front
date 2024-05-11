@@ -21,9 +21,9 @@ import { isNil, isNotEmptyArray } from '@shared/src/utils';
 import Sortable from 'sortablejs';
 import { ref, watch, useCssModule } from 'vue';
 
-import BaseButton from '@/components/BaseButton.vue';
-import BaseIcon from '@/components/BaseIcon.vue';
-import BaseFilePreview from '@/components/BaseFilePreview.vue';
+import BaseButton from './BaseButton.vue';
+import BaseIcon from './BaseIcon.vue';
+import BaseFilePreview from './BaseFilePreview.vue';
 
 const model = defineModel<Array<File>>({ required: true });
 

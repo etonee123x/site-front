@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, shallowRef, watch } from 'vue';
 import { type FolderData, isItemAudio } from '@shared/src/types';
 
-import { usePlayerStore } from '@/stores/player';
+import { usePlayerStore } from '@/stores';
 import { getFolderData as _getFolderData } from '@/api';
 
 const moduleURLResolver = (url: string) => `/explorer${url}`;

@@ -36,8 +36,9 @@ import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray, isNotNil, pick } from '@shared/src/utils';
 import type { FunctionCallback, WithId } from '@shared/src/types';
 
-import BaseButton from '@/components/BaseButton.vue';
-import BaseIcon from '@/components/BaseIcon.vue';
+import BaseButton from './BaseButton.vue';
+import BaseIcon from './BaseIcon.vue';
+
 import { addId } from '@/utils';
 
 const refDialog = ref<HTMLDialogElement>();

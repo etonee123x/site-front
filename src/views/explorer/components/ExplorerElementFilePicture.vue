@@ -1,16 +1,17 @@
 <template>
-  <ElementFile :element="element" @click="onClick">
+  <ElementFileWrapper :element="element" @click="onClick">
     <div :class="$style.wrapper">
       <img :class="$style.thePicture" :src="element.src" />
     </div>
-  </ElementFile>
+  </ElementFileWrapper>
 </template>
 
 <script setup lang="ts">
 import { type ItemPicture } from '@shared/src/types';
 
-import { useGalleryStore } from '@/stores/gallery';
-import ElementFile from '@/views/Explorer/components/ElementFile';
+import ElementFileWrapper from './_ElementFileWrapper.vue';
+
+import { useGalleryStore } from '@/stores';
 
 const props = defineProps<{
   element: ItemPicture;

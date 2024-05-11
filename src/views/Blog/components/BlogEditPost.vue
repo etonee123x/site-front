@@ -40,11 +40,7 @@ import { isNotEmptyArray } from '@shared/src/utils';
 import { mdiDelete } from '@mdi/js';
 
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
-import BaseTextarea from '@/components/BaseTextarea.vue';
-import BaseInputFile from '@/components/BaseInputFile.vue';
-import BaseIcon from '@/components/BaseIcon.vue';
-import BaseButton from '@/components/BaseButton.vue';
-import BaseFilesList from '@/components/BaseFilesList.vue';
+import { BaseTextarea, BaseInputFile, BaseIcon, BaseButton, BaseFilesList } from '@/components/ui';
 
 defineProps<{
   v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']>;

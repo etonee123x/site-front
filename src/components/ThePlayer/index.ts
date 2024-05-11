@@ -1,1 +1,1 @@
-export { default } from '@/components/ThePlayer/ThePlayer.vue';
+export { default } from './ThePlayer.vue';

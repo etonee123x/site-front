@@ -1,1 +1,1 @@
-export { useVuelidateBlogPostData } from '@/views/Blog/composables/useVuelidateBlogPost';
+export { useVuelidateBlogPostData } from './useVuelidateBlogPost';

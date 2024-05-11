@@ -29,11 +29,12 @@ import { mdiFilePlusOutline, mdiPlus } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray } from '@shared/src/utils';
 
+import BaseFilesList from './BaseFilesList.vue';
+import BaseButton from './BaseButton.vue';
+import BaseIcon from './BaseIcon.vue';
+import BaseDialog from './BaseDialog.vue';
+
 import { useIsUniqueFileCheck } from '@/composables';
-import BaseFilesList from '@/components/BaseFilesList.vue';
-import BaseButton from '@/components/BaseButton.vue';
-import BaseIcon from '@/components/BaseIcon.vue';
-import BaseDialog from '@/components/BaseDialog.vue';
 
 const { t } = useI18n({ useScope: 'local' });
 

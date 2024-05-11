@@ -1,4 +1,4 @@
-import { client } from '@/api/client';
+import { client } from '@/api/_client';
 
 export const postUpload = (files: Array<File>) => {
   const formData = new FormData();
