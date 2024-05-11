@@ -105,8 +105,6 @@ const onClose = () => {
   padding: 1rem;
   border: 1px solid var(--color-dark);
   border-radius: 0.5rem;
-  height: 100%;
-  width: 100%;
 
   @include withHover {
     &:not(&[disabled]) {

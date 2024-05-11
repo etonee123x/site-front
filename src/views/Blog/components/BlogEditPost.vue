@@ -91,6 +91,8 @@ defineExpose({
 .inputFile {
   position: sticky;
   top: 0.5rem;
+  height: min-content;
+  width: min-content;
 }
 
 .files {
