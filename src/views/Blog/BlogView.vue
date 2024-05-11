@@ -14,7 +14,7 @@
         <BaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full :class="$style.loadingWithPosts" />
       </template>
       <div v-else class="text-lg" :class="$style.notPosts">
-        {{ t('nothingFound') }}
+        {{ t('nothingWasFound') }}
       </div>
     </template>
   </div>
@@ -22,9 +22,9 @@
 
 <i18n lang="yaml">
 En:
-  nothingFound: 'Nothing found...'
+  nothingWasFound: 'Nothing was found...'
 Ru:
-  nothingFound: 'Ничего не найдено...'
+  nothingWasFound: 'Ничего не найдено...'
 </i18n>
 
 <script setup lang="ts">
