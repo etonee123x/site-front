@@ -36,15 +36,16 @@ En:
 import { useI18n } from 'vue-i18n';
 import { ref, type UnwrapRef, defineAsyncComponent } from 'vue';
 import type { PostData } from '@shared/src/types';
-import { isNotEmptyArray, propFn } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils';
 import { mdiDelete } from '@mdi/js';
 
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
-import { BaseTextarea, BaseInputFile } from '@/components/ui';
+import BaseTextarea from '@/components/ui/BaseTextarea.vue';
+import BaseInputFile from '@/components/ui/BaseInputFile.vue';
 
-const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseFilesList')));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseButton')));
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseIcon')));
+const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
 
 defineProps<{
   v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']>;

@@ -11,7 +11,7 @@ import { type ItemPicture } from '@shared/src/types';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
-import { useGalleryStore } from '@/stores';
+import { useGalleryStore } from '@/stores/gallery';
 
 const props = defineProps<{
   element: ItemPicture;

@@ -16,7 +16,7 @@ import { computed } from 'vue';
 
 import PostDataAttachment from './PostDataAttachment.vue';
 
-import { BaseHtml } from '@/components/ui';
+import BaseHtml from '@/components/ui/BaseHtml.vue';
 import { parseContent } from '@/utils';
 
 const props = defineProps<{

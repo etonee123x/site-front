@@ -18,24 +18,17 @@ import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
 import { type Item, isItemFolder, isItemAudio, isItemPicture } from '@shared/src/types';
 import { storeToRefs } from 'pinia';
-import { propFn } from '@shared/src/utils';
 
-import { ExplorerNavbar } from './components';
+import ExplorerNavbar from './components/ExplorerNavbar.vue';
 
-import { useExplorerStore } from '@/stores';
+import { useExplorerStore } from '@/stores/explorer';
 import { RouteName } from '@/router';
 
-const LazyExplorerElementSystem = defineAsyncComponent(() =>
-  import('./components').then(propFn('ExplorerElementSystem')),
-);
-const LazyExplorerElementFolder = defineAsyncComponent(() =>
-  import('./components').then(propFn('ExplorerElementFolder')),
-);
-const LazyExplorerElementFileAudio = defineAsyncComponent(() =>
-  import('./components').then(propFn('ExplorerElementFileAudio')),
-);
-const LazyExplorerElementFilePicture = defineAsyncComponent(() =>
-  import('./components').then(propFn('ExplorerElementFilePicture')),
+const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
+const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
+const LazyExplorerElementFileAudio = defineAsyncComponent(() => import('./components/ExplorerElementFileAudio.vue'));
+const LazyExplorerElementFilePicture = defineAsyncComponent(
+  () => import('./components/ExplorerElementFilePicture.vue'),
 );
 
 const explorerStore = useExplorerStore();

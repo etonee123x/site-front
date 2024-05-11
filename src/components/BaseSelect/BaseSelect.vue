@@ -20,7 +20,7 @@ import { computed, ref } from 'vue';
 import { isString } from '@shared/src/utils';
 
 import { type Option } from '@/components/BaseSelect/types';
-import { BaseIcon } from '@/components/ui';
+import BaseIcon from '@/components/ui/BaseIcon.vue';
 
 const props = defineProps<{
   modelValue?: Omit<Option, 'id'> | string;

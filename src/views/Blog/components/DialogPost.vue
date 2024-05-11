@@ -26,8 +26,8 @@ import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { BaseDialog } from '@/components/ui';
-import { useBlogStore } from '@/stores';
+import BaseDialog from '@/components/ui/BaseDialog.vue';
+import { useBlogStore } from '@/stores/blog';
 import { wasEdited as _wasEdited } from '@/utils';
 import { useDateFns } from '@/composables';
 

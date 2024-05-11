@@ -14,3 +14,5 @@ export type PartialKeys<TObject, Keys extends keyof TObject> = {
 };
 
 export type ArrayOrNot<T> = T | Array<T>;
+
+export type Unpromise<T extends Promise<any>> = T extends Promise<infer Result> ? Result : never;

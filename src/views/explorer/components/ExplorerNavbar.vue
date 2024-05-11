@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 
-import { useExplorerStore } from '@/stores';
+import { useExplorerStore } from '@/stores/explorer';
 
 const explorerStore = useExplorerStore();
 const { navigationItems } = storeToRefs(explorerStore);

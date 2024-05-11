@@ -14,7 +14,10 @@
 import { defineAsyncComponent, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { usePlayerStore, useGalleryStore, useToastsStore, useComponentsStore } from '@/stores';
+import { useGalleryStore } from '@/stores/gallery';
+import { usePlayerStore } from '@/stores/player';
+import { useToastsStore } from '@/stores/toasts';
+import { useComponentsStore } from '@/stores/components';
 import TheHeader from '@/components/TheHeader';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));

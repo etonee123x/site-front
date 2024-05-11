@@ -41,21 +41,20 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
 import { ref, defineAsyncComponent } from 'vue';
-import { propFn } from '@shared/src/utils';
 
-import { DialogPost } from './components';
+import DialogPost from './components/DialogPost.vue';
 
-import { IsLoadingAction } from '@/stores/blog';
-import { useComponentsStore, useBlogStore } from '@/stores';
+import { IsLoadingAction, useBlogStore } from '@/stores/blog';
+import { useComponentsStore } from '@/stores/components';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 
-const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseForm')));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseButton')));
-const LazyBaseHr = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseHr')));
-const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseLoading')));
+const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
+const LazyBaseHr = defineAsyncComponent(() => import('@/components/ui/BaseHr.vue'));
+const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
-const LazyBlogEditPost = defineAsyncComponent(() => import('./components').then(propFn('BlogEditPost')));
-const LazyBlogPost = defineAsyncComponent(() => import('./components').then(propFn('BlogPost')));
+const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));
+const LazyBlogPost = defineAsyncComponent(() => import('./components/BlogPost.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 

@@ -46,21 +46,21 @@ import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
-import { isNotEmptyArray, isTruthy, propFn } from '@shared/src/utils';
+import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
 import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
 import { useDateFns } from '@/composables';
-import { useToastsStore, useBlogStore } from '@/stores';
+import { useToastsStore } from '@/stores/toasts';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
-import { IsLoadingAction } from '@/stores/blog';
+import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 
 const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseIcon')));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui').then(propFn('BaseButton')));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
 
 const getInitialPostNew = () => clone(props.post);
 

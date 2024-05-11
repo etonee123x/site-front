@@ -2,10 +2,12 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { useElementSize } from '@vueuse/core';
 
-import ThePlayer from '@/components/ThePlayer';
+import type { Unpromise } from '@/types';
+
+const _importPlayer = () => import('@/components/ThePlayer');
 
 export const useComponentsStore = defineStore('components', () => {
-  const thePlayer = ref<InstanceType<typeof ThePlayer> | null>(null);
+  const thePlayer = ref<InstanceType<Unpromise<ReturnType<typeof _importPlayer>>['default']> | null>(null);
 
   const main = ref<HTMLElement | null>(null);
 

@@ -32,7 +32,7 @@ import { useI18n } from 'vue-i18n';
 
 import { DialogSettings } from './components';
 
-import { BaseIcon } from '@/components/ui';
+import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { addId } from '@/utils';
 import { RouteName } from '@/router';
 

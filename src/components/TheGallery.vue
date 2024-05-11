@@ -21,7 +21,8 @@ import { storeToRefs } from 'pinia';
 import { ref, computed, watch } from 'vue';
 import { onClickOutside, useDraggable, useToggle } from '@vueuse/core';
 
-import { useGalleryStore, useComponentsStore } from '@/stores';
+import { useGalleryStore } from '@/stores/gallery';
+import { useComponentsStore } from '@/stores/components';
 
 const galleryStore = useGalleryStore();
 const { theImage } = storeToRefs(galleryStore);

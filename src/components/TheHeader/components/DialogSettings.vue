@@ -43,9 +43,10 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useToggle } from '@vueuse/core';
 
-import { useSettingsStore } from '@/stores';
+import { useSettingsStore } from '@/stores/settings';
 import { addId } from '@/utils';
-import { BaseDialog, BaseButton } from '@/components/ui';
+import BaseDialog from '@/components/ui/BaseDialog.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseSelect, { type Option } from '@/components/BaseSelect';
 import { Language, ThemeColor, ThemeMode } from '@/types';
 

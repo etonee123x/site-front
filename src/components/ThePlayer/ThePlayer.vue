@@ -73,17 +73,18 @@ import {
 import { ref, computed, defineAsyncComponent } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { propFn } from '@shared/src/utils';
 
 import { PlayerSlider } from './components';
 
-import { usePlayerStore, useToastsStore } from '@/stores';
+import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseSwipable from '@/components/ui/BaseSwipable.vue';
+import BaseToggler from '@/components/ui/BaseToggler.vue';
+import { usePlayerStore } from '@/stores/player';
+import { useToastsStore } from '@/stores/toasts';
 import { formatDuration, addId } from '@/utils';
-import { BaseButton, BaseIcon, BaseSwipable, BaseToggler } from '@/components/ui';
 
-const LazyBaseAlwaysScrollable = defineAsyncComponent(() =>
-  import('@/components/ui').then(propFn('BaseAlwaysScrollabe')),
-);
+const LazyBaseAlwaysScrollable = defineAsyncComponent(() => import('@/components/ui/BaseAlwaysScrollable.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 

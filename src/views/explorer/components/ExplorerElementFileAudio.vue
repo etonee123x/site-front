@@ -36,8 +36,8 @@ import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
 import { formatDuration, addId } from '@/utils';
-import { usePlayerStore } from '@/stores';
-import { BaseIcon } from '@/components/ui';
+import { usePlayerStore } from '@/stores/player';
+import BaseIcon from '@/components/ui/BaseIcon.vue';
 
 const props = defineProps<{
   element: ItemAudio;
