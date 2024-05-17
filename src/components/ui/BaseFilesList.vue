@@ -6,9 +6,7 @@
         <div>{{ file.name }}</div>
         <div class="text-2xl" :class="$s.icons">
           <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
-          <BaseButton :class="$s.buttonDelete">
-            <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
-          </BaseButton>
+          <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
         </div>
       </div>
     </li>
@@ -21,7 +19,6 @@ import { isNil } from '@shared/src/utils';
 import Sortable from 'sortablejs';
 import { ref, watch, useCssModule } from 'vue';
 
-import BaseButton from './BaseButton.vue';
 import BaseIcon from './BaseIcon.vue';
 import FilesListFilePreview from './FilesListFilePreview.vue';
 
@@ -69,10 +66,6 @@ watch(refUl, (v) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.buttonDelete {
-  padding: 0.125rem;
 }
 
 .icons {

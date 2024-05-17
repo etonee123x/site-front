@@ -14,9 +14,7 @@
     <div v-if="isNotEmptyArray(files)">
       <div :class="$s.filesHeader">
         <div class="text-xl">{{ t('files') }}</div>
-        <LazyBaseButton :class="$s.buttonDelete" @click="onClickDeleteFiles">
-          <LazyBaseIcon :path="mdiDelete" />
-        </LazyBaseButton>
+        <LazyBaseIcon :path="mdiDelete" @click="onClickDeleteFiles" />
       </div>
       <LazyBaseFilesList v-model="files" />
     </div>
@@ -44,7 +42,6 @@ import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
 
 defineProps<{
@@ -106,9 +103,5 @@ defineExpose({
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.buttonDelete {
-  padding: 0.125rem;
 }
 </style>
