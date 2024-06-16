@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$s.postData">
     <BaseHtml :html="html" />
     <ul v-if="isNotEmptyArray(post.filesUrls)">
       <li v-for="(fileUrl, index) in post.filesUrls" :key="index">
@@ -25,3 +25,11 @@ const props = defineProps<{
 
 const html = computed(() => parseContent(props.post.text));
 </script>
+
+<style lang="scss" module="$s">
+.postData {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+</style>

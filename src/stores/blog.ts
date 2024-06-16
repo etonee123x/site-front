@@ -1,9 +1,10 @@
 import type { Id, Post, PostData } from '@shared/src/types';
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { ref, computed, reactive, shallowRef } from 'vue';
-import { useRoute } from 'vue-router';
 import { useCounter } from '@vueuse/core';
 import { isNotEmptyArray } from '@shared/src/utils';
+
+import { useAuthStore } from './auth';
 
 import {
   getPosts as _getPosts,
@@ -13,6 +14,7 @@ import {
   getPostById as _getPostById,
   postUpload,
 } from '@/api';
+import { doesQueryParamEqualTrue } from '@/composables/doesQueryParamEqualTrue';
 
 export enum IsLoadingAction {
   Get = 'Get',
@@ -22,7 +24,8 @@ export enum IsLoadingAction {
 }
 
 export const useBlogStore = defineStore('blog', () => {
-  const route = useRoute();
+  const authStore = useAuthStore();
+  const { isAdmin } = storeToRefs(authStore);
 
   const posts = ref<Array<Post>>([]);
 
@@ -122,17 +125,17 @@ export const useBlogStore = defineStore('blog', () => {
       });
   };
 
-  const isAdmin = computed(() => route.query['admin'] === 'true');
+  const shouldRenderAdminStuff = computed(() => doesQueryParamEqualTrue('admin').value && isAdmin.value);
 
   return {
     posts,
     postSelected,
     hasPosts,
-    isAdmin,
     isLoading,
     isLoadingAny,
     isEnd,
     editModeFor,
+    shouldRenderAdminStuff,
 
     getPosts,
     postPost,

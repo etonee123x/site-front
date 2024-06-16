@@ -17,7 +17,7 @@
         @submit="onSubmit"
       />
     </div>
-    <div v-if="isAdmin" :class="$style.controls">
+    <div v-if="shouldRenderAdminStuff" :class="$style.controls">
       <LazyBaseButton
         v-for="control in controls"
         :key="control.id"
@@ -80,7 +80,7 @@ onClickOutside(refRoot, () => {
 });
 
 const blogStore = useBlogStore();
-const { isAdmin, isLoading, editModeFor, postSelected } = storeToRefs(blogStore);
+const { isLoading, editModeFor, postSelected, shouldRenderAdminStuff } = storeToRefs(blogStore);
 
 const { t } = useI18n({ useScope: 'local' });
 

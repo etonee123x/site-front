@@ -1,7 +1,7 @@
 <template>
   <div class="l-container" :class="$style.blogView">
     <DialogPost />
-    <template v-if="isAdmin">
+    <template v-if="shouldRenderAdminStuff">
       <LazyBaseForm :class="$style.form" @submit.prevent="onSubmit">
         <LazyBlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
         <LazyBaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
@@ -59,7 +59,7 @@ const LazyBlogPost = defineAsyncComponent(() => import('./components/BlogPost.vu
 const { t } = useI18n({ useScope: 'local' });
 
 const blogStore = useBlogStore();
-const { posts, hasPosts, isEnd, isAdmin, isLoading } = storeToRefs(blogStore);
+const { posts, hasPosts, isEnd, isLoading, shouldRenderAdminStuff } = storeToRefs(blogStore);
 
 const componentsStore = useComponentsStore();
 const { main } = storeToRefs(componentsStore);
