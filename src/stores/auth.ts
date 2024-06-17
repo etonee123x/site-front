@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 
 import { TOKEN } from '@/constants';
+import { getCheckAuth } from '@/api';
 
 enum Role {
   Admin = 'Admin',
@@ -25,9 +26,13 @@ export const useAuthStore = defineStore('auth', () => {
       return false;
     }
   });
-
+  const setAndVerifyToken = (_token: string) => {
+    token.value = _token;
+    return getCheckAuth();
+  };
   return {
     token,
     isAdmin,
+    setAndVerifyToken,
   };
 });
