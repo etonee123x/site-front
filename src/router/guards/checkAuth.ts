@@ -8,7 +8,7 @@ export const checkAuth: NavigationGuard = async () => {
   const authStore = useAuthStore();
   const { token } = storeToRefs(authStore);
 
-  if (!token) {
+  if (!token.value) {
     return;
   }
 
