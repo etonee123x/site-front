@@ -1,7 +1,7 @@
 <template>
   <div class="l-container" :class="$style.blogView">
     <DialogPost />
-    <template v-if="shouldRenderAdminStuff">
+    <template v-if="isAdmin">
       <LazyBaseForm :class="$style.form" @submit.prevent="onSubmit">
         <LazyBlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
         <LazyBaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
@@ -47,6 +47,7 @@ import DialogPost from './components/DialogPost.vue';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useComponentsStore } from '@/stores/components';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
+import { useAuthStore } from '@/stores/auth';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
@@ -59,7 +60,10 @@ const LazyBlogPost = defineAsyncComponent(() => import('./components/BlogPost.vu
 const { t } = useI18n({ useScope: 'local' });
 
 const blogStore = useBlogStore();
-const { posts, hasPosts, isEnd, isLoading, shouldRenderAdminStuff } = storeToRefs(blogStore);
+const { posts, hasPosts, isEnd, isLoading } = storeToRefs(blogStore);
+
+const authStore = useAuthStore();
+const { isAdmin } = storeToRefs(authStore);
 
 const componentsStore = useComponentsStore();
 const { main } = storeToRefs(componentsStore);

@@ -17,7 +17,7 @@
         @submit="onSubmit"
       />
     </div>
-    <div v-if="shouldRenderAdminStuff" :class="$style.controls">
+    <div v-if="isAdmin" :class="$style.controls">
       <LazyBaseButton
         v-for="control in controls"
         :key="control.id"
@@ -56,6 +56,7 @@ import { useToastsStore } from '@/stores/toasts';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
+import { useAuthStore } from '@/stores/auth';
 
 const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
@@ -80,7 +81,10 @@ onClickOutside(refRoot, () => {
 });
 
 const blogStore = useBlogStore();
-const { isLoading, editModeFor, postSelected, shouldRenderAdminStuff } = storeToRefs(blogStore);
+const { isLoading, editModeFor, postSelected } = storeToRefs(blogStore);
+
+const authStore = useAuthStore();
+const { isAdmin } = storeToRefs(authStore);
 
 const { t } = useI18n({ useScope: 'local' });
 
