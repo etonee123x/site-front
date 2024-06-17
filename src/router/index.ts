@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia';
 
 import { doesQueryParamEqualTrue } from '@/composables/doesQueryParamEqualTrue';
 import { useAuthStore } from '@/stores/auth';
+import { TOKEN } from '@/constants';
 
 export enum RouteName {
   Explorer = 'Explorer',
@@ -40,11 +41,15 @@ export const router = createRouter({
         }
       },
     },
-    {
-      name: RouteName.Auth,
-      path: '/auth',
-      component: () => import('@/views/Auth'),
-    },
   ],
   history: createWebHistory('/'),
+});
+router.beforeEach((to) => {
+  const maybeToken = to.query[TOKEN];
+  if (!maybeToken) {
+    return;
+  }
+  const authStore = useAuthStore();
+  const { token } = storeToRefs(authStore);
+  token.value = String(maybeToken);
 });
