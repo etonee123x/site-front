@@ -1,10 +1,8 @@
 import type { Id, Post, PostData } from '@shared/src/types';
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore } from 'pinia';
 import { ref, computed, reactive, shallowRef } from 'vue';
 import { useCounter } from '@vueuse/core';
 import { isNotEmptyArray } from '@shared/src/utils';
-
-import { useAuthStore } from './auth';
 
 import {
   getPosts as _getPosts,
@@ -14,7 +12,6 @@ import {
   getPostById as _getPostById,
   postUpload,
 } from '@/api';
-import { doesQueryParamEqualTrue } from '@/composables/doesQueryParamEqualTrue';
 
 export enum IsLoadingAction {
   Get = 'Get',
@@ -24,9 +21,6 @@ export enum IsLoadingAction {
 }
 
 export const useBlogStore = defineStore('blog', () => {
-  const authStore = useAuthStore();
-  const { isAdmin } = storeToRefs(authStore);
-
   const posts = ref<Array<Post>>([]);
 
   const postSelected = shallowRef<Post | null>(null);
@@ -125,8 +119,6 @@ export const useBlogStore = defineStore('blog', () => {
       });
   };
 
-  const shouldRenderAdminStuff = computed(() => doesQueryParamEqualTrue('admin').value && isAdmin.value);
-
   return {
     posts,
     postSelected,
@@ -135,7 +127,6 @@ export const useBlogStore = defineStore('blog', () => {
     isLoadingAny,
     isEnd,
     editModeFor,
-    shouldRenderAdminStuff,
 
     getPosts,
     postPost,

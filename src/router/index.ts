@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { storeToRefs } from 'pinia';
 
-import { doesQueryParamEqualTrue } from '@/composables/doesQueryParamEqualTrue';
-import { useAuthStore } from '@/stores/auth';
+import { checkAuth } from './guards/checkAuth';
+
+import { setToken } from '@/router/guards/setToken';
 
 export enum RouteName {
   Explorer = 'Explorer',
@@ -27,24 +27,10 @@ export const router = createRouter({
       name: RouteName.Blog,
       path: '/blog',
       component: () => import('@/views/Blog'),
-      beforeEnter: (...[to, , next]) => {
-        const authStore = useAuthStore();
-        const { isAdmin } = storeToRefs(authStore);
-
-        switch (true) {
-          case !doesQueryParamEqualTrue('admin', to).value:
-          case isAdmin.value:
-            return next();
-          default:
-            return next({ name: RouteName.Auth });
-        }
-      },
-    },
-    {
-      name: RouteName.Auth,
-      path: '/auth',
-      component: () => import('@/views/Auth'),
     },
   ],
   history: createWebHistory('/'),
 });
+
+router.beforeEach(setToken);
+router.beforeEach(checkAuth);

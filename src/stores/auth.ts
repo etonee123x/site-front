@@ -4,16 +4,14 @@ import { computed } from 'vue';
 import { jwtDecode } from 'jwt-decode';
 
 import { TOKEN } from '@/constants';
+import { getCheckAuth } from '@/api';
 
 enum Role {
   Admin = 'Admin',
 }
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = useLocalStorage(
-    TOKEN,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQWRtaW4ifQ.Q3WY2NCNnXnpy2jL4285aA2E0UP8bLye1ra06srvNlk',
-  );
+  const token = useLocalStorage(TOKEN, '');
 
   const isAdmin = computed(() => {
     if (!token.value) {
@@ -28,9 +26,13 @@ export const useAuthStore = defineStore('auth', () => {
       return false;
     }
   });
-
+  const setAndVerifyToken = (_token: string) => {
+    token.value = _token;
+    return getCheckAuth();
+  };
   return {
     token,
     isAdmin,
+    setAndVerifyToken,
   };
 });
