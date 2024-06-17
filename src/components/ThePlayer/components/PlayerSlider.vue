@@ -85,6 +85,10 @@ const onIsPressedChangeLazy = async () => {
   width: 100%;
   padding: 0.25rem 0;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: auto;
+  }
 }
 
 .zone {
