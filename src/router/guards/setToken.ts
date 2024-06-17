@@ -8,7 +8,9 @@ export const setToken: NavigationGuard = async (to) => {
   if (!maybeToken) {
     return;
   }
+
   const authStore = useAuthStore();
   const { setAndVerifyToken } = authStore;
+
   await setAndVerifyToken(String(maybeToken));
 };
