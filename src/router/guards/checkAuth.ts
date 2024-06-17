@@ -7,8 +7,10 @@ import { getCheckAuth } from '@/api';
 export const checkAuth: NavigationGuard = async () => {
   const authStore = useAuthStore();
   const { token } = storeToRefs(authStore);
+
   if (!token) {
     return;
   }
+
   await getCheckAuth();
 };
