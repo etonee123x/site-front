@@ -44,6 +44,9 @@ const { t } = useI18n({ useScope: 'local' });
 
 const [isDialogSettingsOpened, toggle] = useToggle();
 
+const authStore = useAuthStore();
+const { isAdmin } = storeToRefs(authStore);
+
 const onIconSettingsClick = () => {
   toggle(true);
 };
@@ -56,8 +59,6 @@ const links = computed(() =>
     { text: t('blog'), to: { name: RouteName.Blog } },
   ].map(addId),
 );
-const authStore = useAuthStore();
-const { isAdmin } = storeToRefs(authStore);
 </script>
 
 <style lang="scss" module>
