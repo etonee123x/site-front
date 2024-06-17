@@ -2,6 +2,7 @@ import type { Nil } from '@shared/src/types';
 
 export * from './settings';
 export * from './toasts';
+export * from './auth';
 
 export type Numberable = number | `${number}`;
 

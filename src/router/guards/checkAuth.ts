@@ -1,16 +1,15 @@
 import type { NavigationGuard } from 'vue-router';
-import { storeToRefs } from 'pinia';
 
 import { useAuthStore } from '@/stores/auth';
-import { getCheckAuth } from '@/api';
+import { TOKEN } from '@/constants';
 
 export const checkAuth: NavigationGuard = async () => {
-  const authStore = useAuthStore();
-  const { token } = storeToRefs(authStore);
-
-  if (!token.value) {
+  if (!localStorage.getItem(TOKEN)) {
     return;
   }
 
-  await getCheckAuth();
+  const authStore = useAuthStore();
+  const { getAuthData } = authStore;
+
+  await getAuthData();
 };

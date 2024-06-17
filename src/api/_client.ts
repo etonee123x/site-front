@@ -1,6 +1,7 @@
 import { createFetch } from 'ofetch';
 
 import { TOKEN } from '@/constants';
+import { logout } from '@/helpers/logout';
 
 const STATUS_UNAUTHORIZED = 401;
 
@@ -24,8 +25,7 @@ export const client = createFetch({
         return;
       }
 
-      localStorage.removeItem(TOKEN);
-      window.location.href = '/';
+      logout();
     },
   },
 });

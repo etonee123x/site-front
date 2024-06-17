@@ -1,38 +1,26 @@
-import { useLocalStorage } from '@vueuse/core';
 import { defineStore } from 'pinia';
-import { computed } from 'vue';
-import { jwtDecode } from 'jwt-decode';
+import { computed, ref } from 'vue';
 
-import { TOKEN } from '@/constants';
-import { getCheckAuth } from '@/api';
-
-enum Role {
-  Admin = 'Admin',
-}
+import { getAuthData as _getAuthData } from '@/api';
+import { type AuthData, Role } from '@/types';
 
 export const useAuthStore = defineStore('auth', () => {
-  const token = useLocalStorage(TOKEN, '');
+  const authData = ref<AuthData | null>(null);
 
-  const isAdmin = computed(() => {
-    if (!token.value) {
-      return false;
-    }
+  const isAdmin = computed(() => Boolean(authData.value && authData.value.role === Role.Admin));
 
-    try {
-      const jwtDecoded = jwtDecode<{ role: Role }>(token.value);
+  const getAuthData = () =>
+    _getAuthData()
+      .then((_authData) => {
+        authData.value = _authData;
+      })
+      .catch(() => {
+        authData.value = null;
+      });
 
-      return jwtDecoded.role === Role.Admin;
-    } catch (e) {
-      return false;
-    }
-  });
-  const setAndVerifyToken = (_token: string) => {
-    token.value = _token;
-    return getCheckAuth();
-  };
   return {
-    token,
     isAdmin,
-    setAndVerifyToken,
+
+    getAuthData,
   };
 });

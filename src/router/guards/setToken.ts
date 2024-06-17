@@ -1,16 +1,18 @@
 import type { NavigationGuard } from 'vue-router';
+import { omit } from '@shared/src/utils';
 
 import { TOKEN } from '@/constants';
-import { useAuthStore } from '@/stores/auth';
 
-export const setToken: NavigationGuard = async (to) => {
+export const setToken: NavigationGuard = async (...[to, , next]) => {
   const maybeToken = to.query[TOKEN];
   if (!maybeToken) {
     return;
   }
 
-  const authStore = useAuthStore();
-  const { setAndVerifyToken } = authStore;
+  localStorage.setItem(TOKEN, String(maybeToken));
 
-  await setAndVerifyToken(String(maybeToken));
+  next({
+    ...to,
+    query: omit(to.query, [TOKEN]),
+  });
 };

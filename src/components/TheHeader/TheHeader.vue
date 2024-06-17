@@ -1,9 +1,7 @@
 <template>
   <header :class="$style.header">
     <div class="l-container" :class="$style.inner">
-      <RouterLink :to="to" class="text-xl" :class="[$style.logo, isAdmin && $style.logo_underlined]">
-        eto-ne-e123x
-      </RouterLink>
+      <RouterLink :to="to" class="text-xl">eto-ne-e123x</RouterLink>
       <ul :class="$style.links">
         <li v-for="link in links" :key="link.id">
           <RouterLink :class="$style.link" :to="link.to" :active-class="$style.link_active">
@@ -11,7 +9,11 @@
           </RouterLink>
         </li>
       </ul>
-      <BaseIcon :path="mdiCog" class="text-2xl" :class="$style.iconSettings" @click="onIconSettingsClick" />
+      <ul class="text-2xl" :class="$style.icons">
+        <li v-for="icon in icons" :key="icon.id">
+          <BaseIcon :path="icon.path" @click="icon.onClick" />
+        </li>
+      </ul>
     </div>
     <DialogSettings v-model="isDialogSettingsOpened" />
   </header>
@@ -27,7 +29,7 @@ En:
 </i18n>
 
 <script setup lang="ts">
-import { mdiCog } from '@mdi/js';
+import { mdiAccountCircleOutline, mdiCog } from '@mdi/js';
 import { useToggle } from '@vueuse/core';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -35,6 +37,7 @@ import { storeToRefs } from 'pinia';
 
 import { DialogSettings } from './components';
 
+import { logout } from '@/helpers/logout';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { addId } from '@/utils';
 import { RouteName } from '@/router';
@@ -42,14 +45,10 @@ import { useAuthStore } from '@/stores/auth';
 
 const { t } = useI18n({ useScope: 'local' });
 
-const [isDialogSettingsOpened, toggle] = useToggle();
+const [isDialogSettingsOpened, toggleIsDialogSettingsOpened] = useToggle();
 
 const authStore = useAuthStore();
 const { isAdmin } = storeToRefs(authStore);
-
-const onIconSettingsClick = () => {
-  toggle(true);
-};
 
 const to = { name: RouteName.Home };
 
@@ -57,6 +56,23 @@ const links = computed(() =>
   [
     { text: t('content'), to: { name: RouteName.Explorer } },
     { text: t('blog'), to: { name: RouteName.Blog } },
+  ].map(addId),
+);
+
+const icons = computed(() =>
+  [
+    ...(isAdmin.value
+      ? [
+          {
+            path: mdiAccountCircleOutline,
+            onClick: logout,
+          },
+        ]
+      : []),
+    {
+      path: mdiCog,
+      onClick: () => toggleIsDialogSettingsOpened(true),
+    },
   ].map(addId),
 );
 </script>
@@ -73,8 +89,10 @@ const links = computed(() =>
   gap: 1rem;
 }
 
-.iconSettings {
+.icons {
   margin-inline-start: auto;
+  display: flex;
+  gap: 0.25rem;
 }
 
 .links {
@@ -85,12 +103,6 @@ const links = computed(() =>
 .link {
   &_active {
     color: var(--color-details);
-  }
-}
-
-.logo {
-  &_underlined {
-    text-decoration-line: underline;
   }
 }
 </style>
