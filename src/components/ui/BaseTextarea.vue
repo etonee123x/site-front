@@ -7,6 +7,7 @@
       :class="$style.theTextarea"
       :placeholder="placeholder"
       @keydown.enter="onEnter"
+      @paste="onPaste"
     />
     <ul v-if="isNotEmptyArray(errors)" class="text-sm" :class="$style.errors">
       <li v-for="error in errors" :key="error.$uid">{{ error.$message }}</li>
@@ -32,6 +33,7 @@ withDefaults(
 
 const emit = defineEmits<{
   submit: [];
+  pasteFile: [File];
 }>();
 
 const onEnter = (e: KeyboardEvent) => {
@@ -41,6 +43,16 @@ const onEnter = (e: KeyboardEvent) => {
 
   e.preventDefault();
   emit('submit');
+};
+
+const onPaste = (e: ClipboardEvent) => {
+  const maybeFile = e.clipboardData?.files[0];
+
+  if (!maybeFile) {
+    return;
+  }
+
+  emit('pasteFile', maybeFile);
 };
 
 const model = defineModel<string>();

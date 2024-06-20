@@ -8,6 +8,7 @@
         :placeholder="t('textareaPlaceholder')"
         :errors="v$.text.$errors"
         @submit="onSubmit"
+        @paste-file="onPasteFile"
       />
       <BaseInputFile v-model="files" :class="$s.inputFile" />
     </div>
@@ -57,12 +58,16 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel<PostData>({ required: true });
-const files = defineModel<Array<File>>('files');
+const files = defineModel<Array<File>>('files', { default: [] });
 
 const onSubmit = () => emit('submit');
 
 const onClickDeleteFiles = () => {
   files.value = [];
+};
+
+const onPasteFile = (file: File) => {
+  files.value.push(file);
 };
 
 defineExpose({
