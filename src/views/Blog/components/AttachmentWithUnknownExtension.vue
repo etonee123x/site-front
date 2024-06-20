@@ -17,7 +17,7 @@ defineProps<{
 
 <style lang="scss" module="$s">
 .attachmentWithUnknownExtension {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.125rem;
 }
