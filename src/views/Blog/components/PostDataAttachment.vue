@@ -1,14 +1,17 @@
 <template>
-  <component :is="component.is" v-bind="component.binds">{{ fileUrl }}</component>
+  <component :is="component.is" :class="$s.postDataAttachment" v-bind="component.binds" />
 </template>
 
 <script setup lang="ts">
 import { isExtAudio, isExtImage } from '@shared/src/types';
-import { computed } from 'vue';
+import { pick } from '@shared/src/utils';
+import { computed, defineAsyncComponent } from 'vue';
 
 const props = defineProps<{
   fileUrl: string;
 }>();
+
+const LazyAttachmentWithUnknownExtension = defineAsyncComponent(() => import('./AttachmentWithUnknownExtension.vue'));
 
 const component = computed(() => {
   const ext = props.fileUrl.match(/\.[^.]*$/)?.[0] ?? '';
@@ -31,11 +34,15 @@ const component = computed(() => {
       };
     default:
       return {
-        is: 'a',
-        binds: {
-          href: props.fileUrl,
-        },
+        is: LazyAttachmentWithUnknownExtension,
+        binds: pick(props, ['fileUrl']),
       };
   }
 });
 </script>
+
+<style lang="scss" module="$s">
+.postDataAttachment {
+  max-width: 100%;
+}
+</style>
