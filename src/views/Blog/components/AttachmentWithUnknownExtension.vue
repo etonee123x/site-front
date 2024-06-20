@@ -1,5 +1,5 @@
 <template>
-  <a :href="fileUrl" :class="$s.attachmentWithUnknownExtension">
+  <a :href="fileUrl" target="_blank" :class="$s.attachmentWithUnknownExtension">
     <BaseIcon :path="mdiFileQuestionOutline" class="text-2xl" />
     <span>{{ fileUrl }}</span>
   </a>
