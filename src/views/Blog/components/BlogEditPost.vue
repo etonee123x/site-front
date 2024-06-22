@@ -66,7 +66,7 @@ const onClickDeleteFiles = () => {
 };
 
 defineExpose({
-  focus: () => refTextarea.value?.focus(),
+  focusTextarea: () => refTextarea.value?.focus(),
 });
 </script>
 

@@ -3,7 +3,13 @@
     <DialogPost />
     <template v-if="isAdmin">
       <LazyBaseForm :class="$style.form" @submit.prevent="onSubmit">
-        <LazyBlogEditPost v-model="postData" v-model:files="files" :v$="v$" @submit="onSubmit" />
+        <LazyBlogEditPost
+          ref="refLazyBlogEditPost"
+          v-model="postData"
+          v-model:files="files"
+          :v$="v$"
+          @submit="onSubmit"
+        />
         <LazyBaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
           {{ t('send') }}
         </LazyBaseButton>
@@ -82,6 +88,8 @@ const files = ref<Array<File>>([]);
 
 const postData = ref(getInitialPostData());
 
+const refLazyBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
+
 const { v$, handle } = useVuelidateBlogPostData(
   () => {
     blogStore.postPost(postData.value, files.value);
@@ -90,6 +98,7 @@ const { v$, handle } = useVuelidateBlogPostData(
     files.value = [];
 
     postData.value = getInitialPostData();
+    refLazyBlogEditPost.value?.focusTextarea();
   },
   postData,
   files,
