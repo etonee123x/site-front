@@ -1,5 +1,4 @@
 @mixin onFocus {
-  outline: auto;
-  outline-style: solid;
-  outline-width: 1px;
+  outline: var(--color-dark) solid 1px;
+  outline-offset: 0px;
 }

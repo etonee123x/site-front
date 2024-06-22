@@ -2,7 +2,7 @@
   <div :class="$style.app">
     <TheHeader />
     <main ref="refMain" :class="$style.main">
-      <RouterView class="l-container" />
+      <RouterView />
       <LazyTheToasts v-if="hasToasts" />
       <LazyTheGallery v-if="isImageLoaded" />
     </main>

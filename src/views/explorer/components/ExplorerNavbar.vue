@@ -1,11 +1,13 @@
 <template>
-  <ul :class="$style.navbar">
-    <li v-for="(navigationItem, idx) in navigationItems" :key="idx" :class="$style.navigationItem">
-      <RouterLink :to="navigationItem.link">
-        {{ navigationItem.text }}
-      </RouterLink>
-    </li>
-  </ul>
+  <div :class="$style.navbar">
+    <ul class="l-container">
+      <li v-for="(navigationItem, idx) in navigationItems" :key="idx" :class="$style.navigationItem">
+        <RouterLink :to="navigationItem.link">
+          {{ navigationItem.text }}
+        </RouterLink>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">

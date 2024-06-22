@@ -83,11 +83,12 @@ const onIsPressedChangeLazy = async () => {
 <style lang="scss" module>
 .wrapper {
   width: 100%;
-  padding: 0.25rem 0;
+  padding: 0.125rem 0;
   cursor: pointer;
 
-  &:focus-visible {
+  &:focus {
     @include onFocus();
+    outline-width: 2px;
   }
 }
 

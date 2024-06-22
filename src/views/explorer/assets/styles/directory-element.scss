@@ -10,8 +10,9 @@
     background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
   }
 
-  &:focus {
-    @include onFocus()
+  &:focus-visible {
+    @include onFocus();
+    text-decoration: none;
   }
 }
 

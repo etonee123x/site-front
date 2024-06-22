@@ -1,7 +1,7 @@
 <template>
   <div>
     <ExplorerNavbar />
-    <div :class="$style.content">
+    <div class="l-container" :class="$style.content">
       <LazyExplorerElementSystem v-if="lvlUp" @keydown.enter="onClickLvlUp" @click="onClickLvlUp">
         ...
       </LazyExplorerElementSystem>
