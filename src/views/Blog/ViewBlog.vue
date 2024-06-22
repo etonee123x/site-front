@@ -98,6 +98,7 @@ const { v$, handle } = useVuelidateBlogPostData(
     files.value = [];
 
     postData.value = getInitialPostData();
+
     refLazyBlogEditPost.value?.focusTextarea();
   },
   postData,
