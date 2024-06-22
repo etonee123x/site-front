@@ -110,7 +110,7 @@ const onClose = () => {
   }
 
   &_focused {
-    outline: auto;
+    @include onFocus();
   }
 }
 

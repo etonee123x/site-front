@@ -87,7 +87,7 @@ const onIsPressedChangeLazy = async () => {
   cursor: pointer;
 
   &:focus-visible {
-    outline: auto;
+    @include onFocus();
   }
 }
 

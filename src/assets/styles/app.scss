@@ -71,8 +71,13 @@ button {
   }
 
   &:focus {
-    outline: auto;
+    @include onFocus()
   }
+}
+
+a:focus-visible {
+  outline: none;
+  text-decoration: underline;
 }
 
 :root {

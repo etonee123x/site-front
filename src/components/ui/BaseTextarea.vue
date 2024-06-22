@@ -83,7 +83,7 @@ defineExpose({
   }
 
   &:focus {
-    outline: auto;
+    @include onFocus();
   }
 }
 
