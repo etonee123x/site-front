@@ -2,7 +2,7 @@
   <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
     <div :class="$style.metadataList">
       <div v-for="metadata in metadataList" :key="metadata.id" :title="metadata.title" :class="$style.metadata">
-        <BaseIcon :class="$style.metadataIcon" :path="metadata.path" />
+        <BaseIcon class="text-2xl" :class="$style.metadataIcon" :path="metadata.path" />
         <div :class="$style.metadataValue">
           {{ metadata.value }}
         </div>
