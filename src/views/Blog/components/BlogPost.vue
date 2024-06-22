@@ -166,7 +166,7 @@ const controls = computed(() =>
             onClick: () => {
               editModeFor.value = props.post.id;
 
-              nextTick(() => refBlogEditPost.value?.focus());
+              nextTick(() => refBlogEditPost.value?.focusTextarea());
             },
           },
         ]
