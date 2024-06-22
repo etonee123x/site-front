@@ -15,7 +15,7 @@
       <template v-if="hasPosts">
         <ul :class="$style.posts">
           <li v-for="post in posts" :key="post.id">
-            <LazyBlogPost :post="post" />
+            <BlogPost :post="post" />
           </li>
         </ul>
         <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full :class="$style.loadingWithPosts" />
@@ -43,6 +43,7 @@ import { useInfiniteScroll } from '@vueuse/core';
 import { ref, defineAsyncComponent } from 'vue';
 
 import DialogPost from './components/DialogPost.vue';
+import BlogPost from './components/BlogPost.vue';
 
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useComponentsStore } from '@/stores/components';
@@ -55,7 +56,6 @@ const LazyBaseHr = defineAsyncComponent(() => import('@/components/ui/BaseHr.vue
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));
-const LazyBlogPost = defineAsyncComponent(() => import('./components/BlogPost.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 

@@ -1,21 +1,21 @@
 <template>
   <div ref="refRoot" :class="$style.post" @click="onClick">
     <div :class="$style.postInner">
-      <template v-if="!isInEditMode">
-        <LazyPostData :post="post" />
-        <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
-          <span>{{ createdAtHumanReadable }}</span>
-          <LazyBaseIcon v-if="wasEdited" :path="mdiPencil" />
-        </span>
-      </template>
       <LazyBlogEditPost
-        v-else
+        v-if="isInEditMode"
         ref="refBlogEditPost"
         v-model="postNew"
         v-model:files="files"
         :v$="v$"
         @submit="onSubmit"
       />
+      <template v-else>
+        <PostData :post="post" />
+        <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
+          <span>{{ createdAtHumanReadable }}</span>
+          <BaseIcon v-if="wasEdited" :path="mdiPencil" />
+        </span>
+      </template>
     </div>
     <div v-if="isAdmin" :class="$style.controls">
       <LazyBaseButton
@@ -26,7 +26,7 @@
         :is-disabled="control.isDisabled"
         @click.stop="control.onClick"
       >
-        <LazyBaseIcon class="text-2xl" :path="control.iconPath" />
+        <BaseIcon class="text-2xl" :path="control.iconPath" />
       </LazyBaseButton>
     </div>
   </div>
@@ -51,6 +51,9 @@ import { onClickOutside, useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
+import PostData from './PostData.vue';
+
+import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { useToastsStore } from '@/stores/toasts';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
@@ -58,9 +61,7 @@ import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
 
-const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
 
 const getInitialPostNew = () => clone(props.post);
