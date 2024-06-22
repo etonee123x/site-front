@@ -71,7 +71,7 @@ const onPasteFile = (file: File) => {
 };
 
 defineExpose({
-  focus: () => refTextarea.value?.focus(),
+  focusTextarea: () => refTextarea.value?.focus(),
 });
 </script>
 
