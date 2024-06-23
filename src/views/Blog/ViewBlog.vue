@@ -47,6 +47,9 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
 import { ref, defineAsyncComponent } from 'vue';
+import { useRoute } from 'vue-router';
+import { isNotNil } from '@shared/src/utils';
+import { toId } from '@shared/src/types';
 
 import DialogPost from './components/DialogPost.vue';
 import BlogPost from './components/BlogPost.vue';
@@ -65,8 +68,10 @@ const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEdi
 
 const { t } = useI18n({ useScope: 'local' });
 
+const route = useRoute();
+
 const blogStore = useBlogStore();
-const { posts, hasPosts, isEnd, isLoading } = storeToRefs(blogStore);
+const { posts, hasPosts, isEnd, isLoading, postSelected } = storeToRefs(blogStore);
 
 const authStore = useAuthStore();
 const { isAdmin } = storeToRefs(authStore);
@@ -107,6 +112,12 @@ const { v$, handle } = useVuelidateBlogPostData(
 
 const onSubmit = handle;
 const onClickButton = handle;
+
+if (isNotNil(route.query.postId)) {
+  blogStore.getPostById(toId(String(route.query.postId))).then((post) => {
+    postSelected.value = post;
+  });
+}
 </script>
 
 <style lang="scss" module>
