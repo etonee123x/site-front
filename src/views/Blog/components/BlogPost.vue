@@ -11,14 +11,12 @@
       />
       <template v-else>
         <PostData :post="post" />
-        <div :class="$style.footer" @click.stop>
+        <PostDataFooter :post="post" @click.stop>
           <span class="text-sm" :class="$style.createdAt" :title="dateExact">
             <span>{{ createdAtHumanReadable }}</span>
             <BaseIcon v-if="wasEdited" :path="mdiPencil" />
           </span>
-          <BaseVr />
-          <BaseIcon :path="mdiLinkVariant" @click="copy" />
-        </div>
+        </PostDataFooter>
       </template>
     </div>
     <div v-if="isAdmin" :class="$style.controls">
@@ -45,7 +43,7 @@ Ru:
 
 <script setup lang="ts">
 import deepEqual from 'deep-equal';
-import { mdiCancel, mdiContentSave, mdiDelete, mdiLinkVariant, mdiPencil } from '@mdi/js';
+import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
 import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
@@ -54,15 +52,14 @@ import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
 import PostData from './PostData.vue';
+import PostDataFooter from './PostDataFooter.vue';
 
-import BaseVr from '@/components/ui/BaseVr.vue';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
-import { useCopyBlogPostURL } from '@/views/Blog/composables/useCopyBlogPostURL';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
@@ -123,8 +120,6 @@ const createdAtHumanReadable = computed(() => intlFormatDistance.value(props.pos
 const isInEditMode = computed(() => areIdsEqual(editModeFor.value, props.post.id));
 
 const wasEdited = computed(() => _wasEdited(props.post));
-
-const { copy } = useCopyBlogPostURL(() => props.post.id);
 
 const onSubmit = handle;
 
@@ -194,13 +189,6 @@ const onClick = () => {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-}
-
-.footer {
-  align-self: flex-end;
-  display: flex;
-  gap: 0.5rem;
 }
 
 .createdAt {
