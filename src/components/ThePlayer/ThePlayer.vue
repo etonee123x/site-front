@@ -1,20 +1,31 @@
 <template>
   <BaseSwipable :class="$style.player" @swiped="onSwiped">
-    <div :class="[$style.container, 'l-container']">
-      <BaseIcon v-if="shouldRenderButtonClose" :class="$style.playerClose" :path="mdiClose" @click="onClickClose" />
-      <div :class="$style.header">
-        <LazyBaseAlwaysScrollable v-if="isSupported" :class="$style.title" title="Copy link" @click="onClickTitle">
+    <div class="l-container" :class="$style.container">
+      <BaseIcon
+        v-if="shouldRenderButtonClose"
+        :class="$style.playerClose"
+        class="text-xl"
+        :path="mdiClose"
+        @click="onClickClose"
+      />
+      <BaseAlwaysScrollable :class="$style.titleWrapper" title="Copy link" @click="onClickTitle">
+        <div :class="$style.title">
           <span>{{ name }}</span>
-          <BaseIcon size="16" :path="mdiLinkVariant" />
-        </LazyBaseAlwaysScrollable>
-        <span v-else :class="$style.title">{{ name }}</span>
-      </div>
+          <BaseIcon :path="mdiLinkVariant" />
+        </div>
+      </BaseAlwaysScrollable>
       <audio ref="refAudio" :src="src" autoplay @ended="onEnded" />
       <div :class="$style.timeline">
         <span>
           {{ formattedCurrentTime }}
         </span>
-        <PlayerSlider v-model="currentTime" :multiplier="duration" is-lazy />
+        <PlayerSlider
+          v-model="currentTime"
+          :multiplier="duration"
+          is-lazy
+          @keydown.right="onKeyDownRightTime"
+          @keydown.left="onKeyDownLeftTime"
+        />
         <span>
           {{ formatedDuration }}
         </span>
@@ -22,7 +33,7 @@
       <div :class="$style.controls">
         <div :class="$style.controlsLeft">
           <BaseToggler v-model="isShuffleModeEnabled" :class="$style.controlsButton">
-            <BaseIcon size="20" :path="mdiShuffleVariant" />
+            <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
           </BaseToggler>
         </div>
         <div :class="$style.controlsCenter">
@@ -33,11 +44,11 @@
             :class="[$style.controlsButton, $style.controlsButton_main]"
             @click="controlButton.onClick"
           >
-            <BaseIcon :path="controlButton.icon" />
+            <BaseIcon class="text-2xl" :path="controlButton.icon" />
           </BaseButton>
         </div>
         <div :class="$style.controlsRight">
-          <PlayerSlider v-model="volume" />
+          <PlayerSlider v-model="volume" @keydown.right="onKeyDownRightVolume" @keydown.left="onKeyDownLeftVolume" />
         </div>
       </div>
     </div>
@@ -45,9 +56,9 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   copied: 'Copied!'
-ru:
+Ru:
   copied: 'Скопировано!'
 </i18n>
 
@@ -62,20 +73,20 @@ import {
   mdiSkipBackward,
   mdiSkipForward,
 } from '@mdi/js';
-import { ref, computed, defineAsyncComponent } from 'vue';
+import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
-import { usePlayerStore } from '@/stores/player';
-import { formatDuration, addId } from '@/utils';
-import { useToastsStore } from '@/stores/toasts';
-import BaseButton from '@/components/BaseButton.vue';
-import BaseIcon from '@/components/BaseIcon.vue';
-import PlayerSlider from '@/components/ThePlayer/components/PlayerSlider.vue';
-import BaseSwipable from '@/components/BaseSwipable.vue';
-import BaseToggler from '@/components/BaseToggler.vue';
+import { PlayerSlider } from './components';
 
-const LazyBaseAlwaysScrollable = defineAsyncComponent(() => import('@/components/BaseAlwaysScrollable.vue'));
+import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseSwipable from '@/components/ui/BaseSwipable.vue';
+import BaseToggler from '@/components/ui/BaseToggler.vue';
+import { usePlayerStore } from '@/stores/player';
+import { useToastsStore } from '@/stores/toasts';
+import { formatDuration, addId, to0To1Borders } from '@/utils';
+import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -125,7 +136,7 @@ const urlFull = computed(() => {
   let _url = [window.location.origin, url.value].join('');
 
   try {
-    _url = decodeURI(_url);
+    _url = encodeURI(_url);
   } catch (e) {
     console.error(e);
   }
@@ -133,9 +144,25 @@ const urlFull = computed(() => {
   return _url;
 });
 
-const { copy, isSupported } = useClipboard({ source: urlFull, legacy: true });
+const { copy } = useClipboard({ source: urlFull, legacy: true });
 
 const onClickTitle = () => copy().then(() => toastsStore.toastSuccess(t('copied')));
+
+const onKeyDownRightTime = () => {
+  currentTime.value += 5;
+};
+
+const onKeyDownLeftTime = () => {
+  currentTime.value -= 5;
+};
+
+const onKeyDownRightVolume = () => {
+  volume.value = to0To1Borders(volume.value + 0.05);
+};
+
+const onKeyDownLeftVolume = () => {
+  volume.value = to0To1Borders(volume.value - 0.05);
+};
 </script>
 
 <style lang="scss" module>
@@ -166,17 +193,16 @@ const onClickTitle = () => copy().then(() => toastsStore.toastSuccess(t('copied'
   }
 }
 
-.header {
-  text-align: center;
+.titleWrapper {
+  cursor: pointer;
+  border-bottom: 1px var(--color-dark) dashed;
+  align-self: center;
 }
 
 .title {
-  cursor: pointer;
-  border-bottom: 1px var(--color-dark) dashed;
-  display: inline-flex;
+  display: flex;
   align-items: flex-start;
-  gap: 0.25rem;
-  max-width: 100%;
+  gap: 0.125rem;
 }
 
 .controls {
@@ -216,6 +242,7 @@ const onClickTitle = () => copy().then(() => toastsStore.toastSuccess(t('copied'
     width: 2rem;
   }
 }
+
 .timeline {
   height: 1.25rem;
   width: 100%;

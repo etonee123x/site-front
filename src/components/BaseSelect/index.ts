@@ -1,2 +1,2 @@
-export { default } from '@/components/BaseSelect/BaseSelect.vue';
-export * from '@/components/BaseSelect/types';
+export { default } from './BaseSelect.vue';
+export * from './types';

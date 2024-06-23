@@ -1,8 +1,8 @@
 <template>
   <div :class="$style.app">
     <TheHeader />
-    <main :class="$style.main">
-      <RouterView class="l-container" />
+    <main ref="refMain" :class="$style.main">
+      <RouterView />
       <LazyTheToasts v-if="hasToasts" />
       <LazyTheGallery v-if="isImageLoaded" />
     </main>
@@ -14,8 +14,8 @@
 import { defineAsyncComponent, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { usePlayerStore } from '@/stores/player';
 import { useGalleryStore } from '@/stores/gallery';
+import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
 import { useComponentsStore } from '@/stores/components';
 import TheHeader from '@/components/TheHeader';
@@ -34,12 +34,17 @@ const toastsStore = useToastsStore();
 const { hasToasts } = storeToRefs(toastsStore);
 
 const componentsStore = useComponentsStore();
-const { thePlayer } = storeToRefs(componentsStore);
+const { thePlayer, main } = storeToRefs(componentsStore);
 
-const refThePlayer = ref<InstanceType<typeof LazyThePlayer> | null>(null);
+const refThePlayer: typeof thePlayer = ref(null);
+const refMain: typeof main = ref(null);
 
 watch(refThePlayer, (v) => {
   thePlayer.value = v;
+});
+
+watch(refMain, (v) => {
+  main.value = v;
 });
 </script>
 

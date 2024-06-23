@@ -1,1 +1,1 @@
-export { default } from '@/views/Explorer/ExplorerView.vue';
+export { default } from '@/views/Explorer/ViewExplorer.vue';

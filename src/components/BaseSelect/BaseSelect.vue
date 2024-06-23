@@ -2,7 +2,7 @@
   <div ref="refSelect" :class="[$style.select, isOpened && $style.select_opened]" @click="onWrapClick">
     <div :class="[$style.option, $style.option_selected]">
       <span>{{ text }}</span>
-      <BaseIcon size="20" :path="path" />
+      <BaseIcon class="text-2xl" :path="path" />
     </div>
     <div v-if="isOpened" :class="$style.options">
       <div v-for="option in options" :key="option.id" :class="$style.option" @click="() => onOptionClick(option)">
@@ -13,13 +13,14 @@
 </template>
 
 <script setup lang="ts">
+// TODO: рефакторинг
 import { onClickOutside, useToggle } from '@vueuse/core';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { computed, ref } from 'vue';
 import { isString } from '@shared/src/utils';
 
 import { type Option } from '@/components/BaseSelect/types';
-import BaseIcon from '@/components/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon.vue';
 
 const props = defineProps<{
   modelValue?: Omit<Option, 'id'> | string;

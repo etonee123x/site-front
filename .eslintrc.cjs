@@ -20,11 +20,13 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/member-delimiter-style': 'error',
+    '@typescript-eslint/no-explicit-any': 'off',
     'vue/max-attributes-per-line': 'off',
     '@typescript-eslint/no-unsafe-declaration-merging': 'off',
     'no-sparse-arrays': 'off',
     'vue/singleline-html-element-content-newline': 'off',
     'vue/html-self-closing': 'off',
     'import/order': ['error', { 'newlines-between': 'always' }],
+    'no-duplicate-imports': 'error',
   },
 };

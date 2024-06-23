@@ -9,6 +9,11 @@
     border-color: var(--color-details);
     background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
   }
+
+  &:focus-visible {
+    @include onFocus();
+    text-decoration: none;
+  }
 }
 
 .title {

@@ -1,0 +1,1 @@
+export { useVuelidateBlogPostData } from './useVuelidateBlogPost';

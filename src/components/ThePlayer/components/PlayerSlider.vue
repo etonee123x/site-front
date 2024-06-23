@@ -1,5 +1,13 @@
 <template>
-  <div ref="refSlider" :class="$style.wrapper" @pointerdown.stop @dragstart.stop @mousedown.stop @touchstart.stop>
+  <div
+    ref="refSlider"
+    tabindex="0"
+    :class="$style.wrapper"
+    @pointerdown.stop
+    @dragstart.stop
+    @mousedown.stop
+    @touchstart.stop
+  >
     <div :class="$style.zone">
       <div :class="$style.filler" :style="style" />
     </div>
@@ -8,7 +16,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { useMousePressed, useMouseInElement, promiseTimeout } from '@vueuse/core';
+import { useMousePressed, useMouseInElement, promiseTimeout, useToggle } from '@vueuse/core';
 
 import { to0To1Borders } from '@/utils';
 
@@ -24,7 +32,7 @@ const props = withDefaults(
 );
 
 const position = ref(0);
-const isUsingPosition = ref(false);
+const [isUsingPosition, setIsUsingPosition] = useToggle();
 
 const model = defineModel<number>();
 
@@ -57,12 +65,12 @@ const onIsPressedChange = async () => {
 const onIsPressedChangeLazy = async () => {
   if (!isPressed.value) {
     model.value = position.value;
-    isUsingPosition.value = false;
+    setIsUsingPosition(false);
 
     return;
   }
 
-  isUsingPosition.value = true;
+  setIsUsingPosition(true);
 
   getPosition().then((_position) => {
     position.value = _position;
@@ -75,8 +83,13 @@ const onIsPressedChangeLazy = async () => {
 <style lang="scss" module>
 .wrapper {
   width: 100%;
-  padding: 0.25rem 0;
+  padding: 0.125rem 0;
   cursor: pointer;
+
+  &:focus {
+    @include onFocus();
+    outline-width: 2px;
+  }
 }
 
 .zone {

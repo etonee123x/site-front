@@ -23,13 +23,13 @@
 </template>
 
 <i18n lang="yaml">
-en:
+En:
   settings: 'Settings'
   color: 'Color:'
   mode: 'Mode:'
   language: 'Language:'
   resetSettings: 'Reset settings'
-ru:
+Ru:
   settings: 'Настройки'
   color: 'Цвет:'
   mode: 'Режим:'
@@ -45,9 +45,9 @@ import { useToggle } from '@vueuse/core';
 
 import { useSettingsStore } from '@/stores/settings';
 import { addId } from '@/utils';
-import BaseDialog from '@/components/BaseDialog.vue';
+import BaseDialog from '@/components/ui/BaseDialog.vue';
+import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseSelect, { type Option } from '@/components/BaseSelect';
-import BaseButton from '@/components/BaseButton.vue';
 import { Language, ThemeColor, ThemeMode } from '@/types';
 
 const isOpened = defineModel<boolean>();
