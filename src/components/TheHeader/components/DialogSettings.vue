@@ -65,8 +65,8 @@ const options = computed(() =>
   [
     {
       text: t('color'),
-      options: Object.values(ThemeColor).map((color) =>
-        addId({ text: themeColorToThemeColorTranslation.value[color], value: color }),
+      options: Object.values(ThemeColor).map((color, index) =>
+        addId({ text: themeColorToThemeColorTranslation.value[color], value: color }, index),
       ),
       modelValue: {
         text: themeColorToThemeColorTranslation.value[model.value.themeColor],
@@ -78,8 +78,8 @@ const options = computed(() =>
     },
     {
       text: t('mode'),
-      options: Object.values(ThemeMode).map((mode) =>
-        addId({ text: themeModeToThemeModeTranslation.value[mode], value: mode }),
+      options: Object.values(ThemeMode).map((mode, index) =>
+        addId({ text: themeModeToThemeModeTranslation.value[mode], value: mode }, index),
       ),
       modelValue: {
         text: themeModeToThemeModeTranslation.value[model.value.themeMode],
@@ -91,7 +91,9 @@ const options = computed(() =>
     },
     {
       text: t('language'),
-      options: Object.values(Language).map((language) => addId({ text: language.toUpperCase(), value: language })),
+      options: Object.values(Language).map((language, index) =>
+        addId({ text: language.toUpperCase(), value: language }, index),
+      ),
       modelValue: {
         text: model.value.language.toUpperCase(),
         value: model.value.language,
