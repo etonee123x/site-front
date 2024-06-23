@@ -15,5 +15,6 @@
   },
   "validations": {
     "required": "Value is required"
-  }
+  },
+  "copied": "Copied!"
 }

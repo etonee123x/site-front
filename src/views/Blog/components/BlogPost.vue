@@ -11,10 +11,14 @@
       />
       <template v-else>
         <PostData :post="post" />
-        <span class="text-sm" :class="$style.createdAt" :title="dateExact" @click="onClickDate">
-          <span>{{ createdAtHumanReadable }}</span>
-          <BaseIcon v-if="wasEdited" :path="mdiPencil" />
-        </span>
+        <div :class="$style.footer" @click.stop>
+          <span class="text-sm" :class="$style.createdAt" :title="dateExact">
+            <span>{{ createdAtHumanReadable }}</span>
+            <BaseIcon v-if="wasEdited" :path="mdiPencil" />
+          </span>
+          <BaseVr />
+          <BaseIcon :path="mdiLinkVariant" @click="copy" />
+        </div>
       </template>
     </div>
     <div v-if="isAdmin" :class="$style.controls">
@@ -34,32 +38,31 @@
 
 <i18n lang="yaml">
 En:
-  copied: 'Copied!'
   updatedAt: 'Edited at: { date }'
 Ru:
-  copied: 'Скопировано!'
   updatedAt: 'Изменено: { date }'
 </i18n>
 
 <script setup lang="ts">
 import deepEqual from 'deep-equal';
-import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
+import { mdiCancel, mdiContentSave, mdiDelete, mdiLinkVariant, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
 import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
-import { onClickOutside, useClipboard } from '@vueuse/core';
+import { onClickOutside } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
 import PostData from './PostData.vue';
 
+import BaseVr from '@/components/ui/BaseVr.vue';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { useDateFns } from '@/composables/useDateFns';
-import { useToastsStore } from '@/stores/toasts';
 import { clone, addId, wasEdited as _wasEdited } from '@/utils';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
+import { useCopyBlogPostURL } from '@/views/Blog/composables/useCopyBlogPostURL';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
@@ -93,8 +96,6 @@ const files = ref<Array<File>>([]);
 
 const postNew = ref(getInitialPostNew());
 
-const toastsStore = useToastsStore();
-
 const { intlFormatDistance } = useDateFns();
 
 const { v$, handle } = useVuelidateBlogPostData(
@@ -123,14 +124,7 @@ const isInEditMode = computed(() => areIdsEqual(editModeFor.value, props.post.id
 
 const wasEdited = computed(() => _wasEdited(props.post));
 
-const source = ref<string>('');
-
-const { copy } = useClipboard({ source, legacy: true });
-
-const onClickDate = () => {
-  source.value = [window.location.origin, window.location.pathname, `/${props.post.id}`].join('');
-  copy().then(() => toastsStore.toastSuccess(t('copied')));
-};
+const { copy } = useCopyBlogPostURL(() => props.post.id);
 
 const onSubmit = handle;
 
@@ -200,12 +194,17 @@ const onClick = () => {
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer {
+  align-self: flex-end;
+  display: flex;
+  gap: 0.5rem;
 }
 
 .createdAt {
   color: var(--color-dark);
-  align-self: flex-end;
-  cursor: default;
   display: flex;
   align-items: center;
   gap: 0.125rem;
