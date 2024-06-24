@@ -32,7 +32,7 @@ export const router = createRouter({
     {
       name: RouteName.Page404,
       path: '/:pathMatch(.*)*',
-      component: () => import('@/views/NotFound'),
+      component: () => import('@/views/Page404'),
     },
   ],
   history: createWebHistory('/'),
