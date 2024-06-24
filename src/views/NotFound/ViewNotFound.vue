@@ -1,7 +1,7 @@
 <template>
-  <div class="l-container" :class="$style.inner">
+  <div class="l-container" :class="$style.view404">
     <div class="text-6xl">404</div>
-    <RouterLink :to="{ path: '/' }" class="text-xl">{{ t('mainPage') }}</RouterLink>
+    <RouterLink :to="{ name: RouteName.Home }" class="text-xl">{{ t('mainPage') }}</RouterLink>
   </div>
 </template>
 
@@ -15,11 +15,13 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
+import { RouteName } from '@/router';
+
 const { t } = useI18n({ useScope: 'local' });
 </script>
 
 <style lang="scss" module>
-.inner {
+.view404 {
   display: flex;
   justify-content: center;
   align-items: center;

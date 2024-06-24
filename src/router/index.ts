@@ -9,7 +9,7 @@ export enum RouteName {
   Home = 'Home',
   Blog = 'Blog',
   Auth = 'Auth',
-  NotFound = 'NotFound',
+  Page404 = 'Page404',
 }
 
 export const router = createRouter({
@@ -30,7 +30,7 @@ export const router = createRouter({
       component: () => import('@/views/Blog'),
     },
     {
-      name: RouteName.NotFound,
+      name: RouteName.Page404,
       path: '/:pathMatch(.*)*',
       component: () => import('@/views/NotFound'),
     },
