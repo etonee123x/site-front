@@ -168,7 +168,7 @@ const onKeyDownLeftVolume = () => {
 <style lang="scss" module>
 .player {
   background-color: var(--color-bg);
-  z-index: var(--z-index-the-player);
+  z-index: 999;
   box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
   padding: 0.5rem 0;
   width: 100%;

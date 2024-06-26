@@ -27,6 +27,7 @@ const link = String(import.meta.env.VITE_TELEGRAM_LINK);
 <style lang="scss" module>
 .footer {
   border-top: 1px var(--color-dark) solid;
+  z-index: 1000;
 }
 .img {
   width: 1.5rem;
