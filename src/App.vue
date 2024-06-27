@@ -7,6 +7,7 @@
       <LazyTheGallery v-if="isImageLoaded" />
     </main>
     <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" :class="$style.player" />
+    <TheFooter v-else />
   </div>
 </template>
 
@@ -19,6 +20,7 @@ import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
 import { useComponentsStore } from '@/stores/components';
 import TheHeader from '@/components/TheHeader';
+import TheFooter from '@/components/TheFooter';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheGallery = defineAsyncComponent(() => import('@/components/TheGallery.vue'));
