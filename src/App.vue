@@ -7,7 +7,7 @@
       <LazyTheGallery v-if="isImageLoaded" />
     </main>
     <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" :class="$style.player" />
-    <TheFooter />
+    <TheFooter v-else />
   </div>
 </template>
 
