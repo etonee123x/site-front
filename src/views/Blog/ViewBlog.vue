@@ -58,6 +58,7 @@ import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useComponentsStore } from '@/stores/components';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
+import { goToPage404 } from '@/composables/goToPage404';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
@@ -114,9 +115,12 @@ const onSubmit = handle;
 const onClickButton = handle;
 
 if (isNotNil(route.query.postId)) {
-  blogStore.getPostById(toId(String(route.query.postId))).then((post) => {
-    postSelected.value = post;
-  });
+  blogStore
+    .getPostById(toId(String(route.query.postId)))
+    .then((post) => {
+      postSelected.value = post;
+    })
+    .catch(goToPage404);
 }
 </script>
 
