@@ -25,6 +25,7 @@ import ExplorerNavbar from './components/ExplorerNavbar.vue';
 
 import { useExplorerStore } from '@/stores/explorer';
 import { RouteName } from '@/router';
+import { goToPage404 } from '@/composables/goToPage404';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
@@ -59,9 +60,7 @@ const getComponent = (item: Item) => {
 };
 
 const fetchData = (route: RouteLocationNormalizedLoaded) =>
-  explorerStore.getFolderData(route.fullPath.replace('/explorer', '')).catch(() => {
-    router.push({ name: RouteName.Explorer });
-  });
+  explorerStore.getFolderData(route.fullPath.replace('/explorer', '')).catch(goToPage404);
 
 fetchData(route);
 
