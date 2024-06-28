@@ -24,7 +24,6 @@ import { storeToRefs } from 'pinia';
 import ExplorerNavbar from './components/ExplorerNavbar.vue';
 
 import { useExplorerStore } from '@/stores/explorer';
-import { RouteName } from '@/router';
 import { goToPage404 } from '@/composables/goToPage404';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
