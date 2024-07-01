@@ -142,6 +142,7 @@ defineExpose({
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: auto;
+  flex-direction: row;
 }
 
 .iconClose {

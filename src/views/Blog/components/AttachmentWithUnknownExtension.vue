@@ -1,7 +1,7 @@
 <template>
   <a :href="fileUrl" target="_blank" :class="$s.attachmentWithUnknownExtension" @click.stop>
     <BaseIcon :path="mdiFileOutline" class="text-2xl" />
-    <span>{{ fileText }}</span>
+    <span :class="$s.fileName">{{ fileText }}</span>
   </a>
 </template>
 
@@ -23,5 +23,11 @@ const fileText = computed(() => props.fileUrl.match(/[^/]+$/)?.[0] || props.file
   display: inline-flex;
   align-items: flex-end;
   gap: 0.125rem;
+}
+.fileName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
 }
 </style>

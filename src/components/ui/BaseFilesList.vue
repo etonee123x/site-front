@@ -3,7 +3,7 @@
     <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
       <div :class="$s.file">
         <FilesListFilePreview :file="file" />
-        <div>{{ file.name }}</div>
+        <div :class="$s.fileName">{{ file.name }}</div>
         <div class="text-2xl" :class="$s.icons">
           <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
           <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
@@ -66,12 +66,21 @@ watch(refUl, (v) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-overflow: ellipsis;
+}
+
+.fileName {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex: 1;
 }
 
 .icons {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-inline-start: auto;
+  align-items: center;
 }
 
 .handle {
