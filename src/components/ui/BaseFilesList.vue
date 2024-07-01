@@ -1,9 +1,11 @@
 <template>
-  <ol ref="refUl" :class="$s.files">
+  <ol ref="refUl" :class="$s.filesList">
     <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
       <div :class="$s.file">
         <FilesListFilePreview :file="file" />
-        <div>{{ file.name }}</div>
+        <BaseAlwaysScrollable duration="10000" :class="$s.fileName">
+          {{ file.name }}
+        </BaseAlwaysScrollable>
         <div class="text-2xl" :class="$s.icons">
           <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
           <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
@@ -21,6 +23,7 @@ import { ref, watch, useCssModule } from 'vue';
 
 import BaseIcon from './BaseIcon.vue';
 import FilesListFilePreview from './FilesListFilePreview.vue';
+import BaseAlwaysScrollable from './BaseAlwaysScrollable.vue';
 
 const model = defineModel<Array<File>>({ required: true });
 
@@ -56,22 +59,29 @@ watch(refUl, (v) => {
 </script>
 
 <style lang="scss" module="$s">
-.files {
+.filesList {
   display: flex;
   gap: 1rem;
   flex-direction: column;
+  padding-inline-start: 2rem;
 }
 
 .file {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-overflow: ellipsis;
+}
+
+.fileName {
+  flex: 1;
 }
 
 .icons {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-inline-start: auto;
+  align-items: center;
 }
 
 .handle {

@@ -15,11 +15,11 @@ import type { Numberable } from '@/types';
 const props = withDefaults(
   defineProps<
     Partial<{
-      speed: Numberable;
+      duration: Numberable;
     }>
   >(),
   {
-    speed: 5000,
+    duration: 5000,
   },
 );
 
@@ -35,16 +35,18 @@ const diffFormatted = computed(() => `-${diff.value}px`);
 
 const isAnimated = computed(() => diff.value > 0);
 
-const speedFormatted = computed(() => `${props.speed}ms`);
+const speedFormatted = computed(() => `${props.duration}ms`);
 </script>
 
 <style lang="scss" module>
 .container {
   overflow: hidden;
   position: relative;
+  display: inline-flex;
 }
 
 .content {
+  margin: var(--base-always-scrollable--content--margin);
   white-space: nowrap;
 
   &_animated {
