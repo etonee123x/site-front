@@ -5,9 +5,7 @@
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog ref="refDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
-      <div :class="$s.fileContainer">
-        <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
-      </div>
+      <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
       <BaseButton :class="$s.addMore" :prepend-icon-path="mdiPlus" @click="onClickAdd">
         {{ t('add') }}
       </BaseButton>
@@ -125,9 +123,5 @@ const onClose = () => {
 .addMore {
   margin: 0 auto;
   margin-bottom: 1rem;
-}
-.fileContainer {
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 </style>
