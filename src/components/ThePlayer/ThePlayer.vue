@@ -8,8 +8,8 @@
         :path="mdiClose"
         @click="onClickClose"
       />
-      <BaseAlwaysScrollable :class="$style.titleWrapper" title="Copy link" @click="onClickTitle">
-        <div :class="$style.title">
+      <BaseAlwaysScrollable :class="$style.titleWrapper">
+        <div :class="$style.title" title="Copy link" @click="onClickTitle">
           <span>{{ name }}</span>
           <BaseIcon :path="mdiLinkVariant" />
         </div>
@@ -194,15 +194,15 @@ const onKeyDownLeftVolume = () => {
 }
 
 .titleWrapper {
-  cursor: pointer;
-  border-bottom: 1px var(--color-dark) dashed;
-  align-self: center;
+  --base-always-scrollable--content--margin: 0 auto;
 }
 
 .title {
+  cursor: pointer;
   display: flex;
   align-items: flex-start;
   gap: 0.125rem;
+  border-bottom: 1px var(--color-dark) dashed;
 }
 
 .controls {

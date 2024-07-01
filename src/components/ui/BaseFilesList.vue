@@ -3,7 +3,9 @@
     <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
       <div :class="$s.file">
         <FilesListFilePreview :file="file" />
-        <div :class="$s.fileName">{{ file.name }}</div>
+        <BaseAlwaysScrollable duration="10000" :class="$s.fileName">
+          {{ file.name }}
+        </BaseAlwaysScrollable>
         <div class="text-2xl" :class="$s.icons">
           <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
           <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
@@ -21,6 +23,7 @@ import { ref, watch, useCssModule } from 'vue';
 
 import BaseIcon from './BaseIcon.vue';
 import FilesListFilePreview from './FilesListFilePreview.vue';
+import BaseAlwaysScrollable from './BaseAlwaysScrollable.vue';
 
 const model = defineModel<Array<File>>({ required: true });
 
@@ -71,9 +74,6 @@ watch(refUl, (v) => {
 }
 
 .fileName {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   flex: 1;
 }
 
