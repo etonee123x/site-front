@@ -6,7 +6,7 @@
       class="f-body-2"
       :class="$style.theTextarea"
       :placeholder="placeholder"
-      @keydown.enter="onEnter"
+      @keydown.enter.shift.prevent="onEnter"
       @paste="onPaste"
     />
     <ul v-if="isNotEmptyArray(errors)" class="text-sm" :class="$style.errors">
@@ -36,14 +36,7 @@ const emit = defineEmits<{
   pasteFile: [File];
 }>();
 
-const onEnter = (e: KeyboardEvent) => {
-  if (e.shiftKey) {
-    return;
-  }
-
-  e.preventDefault();
-  emit('submit');
-};
+const onEnter = () => emit('submit');
 
 const onPaste = (e: ClipboardEvent) => {
   const maybeFile = e.clipboardData?.files[0];
