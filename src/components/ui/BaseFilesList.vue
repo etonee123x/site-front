@@ -1,5 +1,5 @@
 <template>
-  <ol ref="refUl" :class="$s.files">
+  <ol ref="refUl" :class="$s.filesList">
     <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
       <div :class="$s.file">
         <FilesListFilePreview :file="file" />
@@ -56,10 +56,11 @@ watch(refUl, (v) => {
 </script>
 
 <style lang="scss" module="$s">
-.files {
+.filesList {
   display: flex;
   gap: 1rem;
   flex-direction: column;
+  padding-inline-start: 2rem;
 }
 
 .file {

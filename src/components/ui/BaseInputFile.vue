@@ -121,7 +121,6 @@ const onClose = () => {
 }
 
 .addMore {
-  margin: 0 auto;
-  margin-bottom: 1rem;
+  margin: 1rem auto;
 }
 </style>
