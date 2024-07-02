@@ -120,7 +120,7 @@ export const useBlogStore = defineStore('blog', () => {
 
   watch(postSelected, () =>
     router.push({
-      query: {
+      params: {
         ...router.currentRoute.value.query,
         postId: postSelected.value ? String(postSelected.value.id) : undefined,
       },

@@ -114,9 +114,9 @@ const { v$, handle } = useVuelidateBlogPostData(
 const onSubmit = handle;
 const onClickButton = handle;
 
-if (isNotNil(route.query.postId)) {
+if (isNotNil(route.params.postId)) {
   blogStore
-    .getPostById(toId(String(route.query.postId)))
+    .getPostById(toId(String(route.params.postId)))
     .then((post) => {
       postSelected.value = post;
     })
