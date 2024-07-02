@@ -8,6 +8,7 @@ export enum RouteName {
   Explorer = 'Explorer',
   Home = 'Home',
   Blog = 'Blog',
+  BlogPost = 'BlogPost',
   Auth = 'Auth',
   Page404 = 'Page404',
 }
@@ -33,6 +34,11 @@ export const router = createRouter({
       name: RouteName.Page404,
       path: '/:pathMatch(.*)*',
       component: () => import('@/views/Page404'),
+    },
+    {
+      name: RouteName.BlogPost,
+      path: '/blog/:postId',
+      component: () => import('@/views/Blog'),
     },
   ],
   history: createWebHistory('/'),
