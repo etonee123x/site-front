@@ -15,7 +15,7 @@ Ru:
 
 <script lang="ts" setup>
 import { mdiLinkVariant } from '@mdi/js';
-import type { Post } from '@shared/src/types';
+import { type Post } from '@shared/src/types';
 import { useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
@@ -33,13 +33,10 @@ const { copy } = useClipboard({ legacy: true });
 
 const toastsStore = useToastsStore();
 
-const onClickCopyUrl = () => {
-  const locationURL = new URL(window.location.href);
-
-  locationURL.searchParams.set('postId', String(props.post.id));
-
-  return copy(locationURL.href).then(() => toastsStore.toastSuccess(t('copied')));
-};
+const onClickCopyUrl = () =>
+  copy(window.location.href.replace(/(?<=blog).*/, `/${props.post.id}`)).then(() =>
+    toastsStore.toastSuccess(t('copied')),
+  );
 </script>
 
 <style lang="scss" module>
