@@ -60,6 +60,7 @@ import { clone, addId, wasEdited as _wasEdited } from '@/utils';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
+import { RouteName, router } from '@/router';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
@@ -82,7 +83,7 @@ onClickOutside(refRoot, () => {
 });
 
 const blogStore = useBlogStore();
-const { isLoading, editModeFor, postSelected } = storeToRefs(blogStore);
+const { isLoading, editModeFor } = storeToRefs(blogStore);
 
 const authStore = useAuthStore();
 const { isAdmin } = storeToRefs(authStore);
@@ -173,7 +174,12 @@ const onClick = () => {
     return;
   }
 
-  postSelected.value = props.post;
+  router.push({
+    name: RouteName.BlogPost,
+    params: {
+      postId: props.post.id,
+    },
+  });
 };
 </script>
 

@@ -1,9 +1,8 @@
 import type { Id, Post, PostData } from '@shared/src/types';
 import { defineStore } from 'pinia';
-import { ref, computed, reactive, shallowRef, watch } from 'vue';
+import { ref, computed, reactive, shallowRef } from 'vue';
 import { useCounter } from '@vueuse/core';
 import { isNotEmptyArray } from '@shared/src/utils';
-import { useRouter } from 'vue-router';
 
 import {
   getPosts as _getPosts,
@@ -115,17 +114,6 @@ export const useBlogStore = defineStore('blog', () => {
       isLoading[IsLoadingAction.Get] = false;
     });
   };
-
-  const router = useRouter();
-
-  watch(postSelected, () =>
-    router.push({
-      params: {
-        ...router.currentRoute.value.query,
-        postId: postSelected.value ? String(postSelected.value.id) : undefined,
-      },
-    }),
-  );
 
   return {
     posts,
