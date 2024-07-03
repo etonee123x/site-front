@@ -25,6 +25,7 @@ Ru:
 import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 import PostDataFooter from './PostDataFooter.vue';
 
@@ -32,6 +33,7 @@ import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
 import { wasEdited as _wasEdited } from '@/utils';
 import { useDateFns } from '@/composables/useDateFns';
+import { RouteName } from '@/router';
 
 const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 
@@ -39,13 +41,15 @@ const FORMAT_TEMPALTE = 'PPp';
 
 const { t } = useI18n({ useScope: 'local' });
 
+const router = useRouter();
+
 const blogStore = useBlogStore();
 const { postSelected } = storeToRefs(blogStore);
 
 const { format } = useDateFns();
 
 const onDialogClose = () => {
-  postSelected.value = null;
+  router.push({ name: RouteName.Blog });
 };
 
 const dates = computed(() =>

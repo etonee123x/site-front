@@ -46,9 +46,9 @@ Ru:
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
-import { ref, defineAsyncComponent } from 'vue';
+import { ref, defineAsyncComponent, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { isNotNil } from '@shared/src/utils';
+import { isNil } from '@shared/src/utils';
 import { toId } from '@shared/src/types';
 
 import DialogPost from './components/DialogPost.vue';
@@ -114,14 +114,25 @@ const { v$, handle } = useVuelidateBlogPostData(
 const onSubmit = handle;
 const onClickButton = handle;
 
-if (isNotNil(route.query.postId)) {
-  blogStore
-    .getPostById(toId(String(route.query.postId)))
-    .then((post) => {
-      postSelected.value = post;
-    })
-    .catch(goToPage404);
-}
+watch(
+  () => route.params.postId,
+  () => {
+    if (isNil(route.params.postId)) {
+      postSelected.value = null;
+      return;
+    }
+
+    blogStore
+      .getPostById(toId(String(route.params.postId)))
+      .then((post) => {
+        postSelected.value = post;
+      })
+      .catch(goToPage404);
+  },
+  {
+    immediate: true,
+  },
+);
 </script>
 
 <style lang="scss" module>
