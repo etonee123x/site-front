@@ -1,5 +1,5 @@
 <template>
-  <footer class="border-t-[1px] border-dark border-solid">
+  <footer class="border-t border-t-dark">
     <div class="l-container py-2 flex gap-2 items-center">
       <div>{{ t('me') }}</div>
       <a target="_blank" :href="telegramLink">
