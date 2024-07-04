@@ -16,12 +16,17 @@ export default {
           800: 'var(--color-details-800)',
           900: 'var(--color-details-900)',
         },
+        background: 'var(--color-bg)',
+        dark: 'var(--color-dark)',
       },
       maxWidth: {
         '75rem': '75rem',
       },
       width: {
         '90%': '90%',
+      },
+      boxShadow: {
+        player: '0px -2px 4px 0px rgba(34, 60, 80, 0.2)',
       },
     },
   },

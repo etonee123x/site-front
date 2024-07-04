@@ -1,21 +1,24 @@
 <template>
-  <BaseSwipable :class="$style.player" @swiped="onSwiped">
-    <div class="l-container" :class="$style.container">
+  <BaseSwipable class="bg-background z-[1000] shadow-player py-2 relative w-full" @swiped="onSwiped">
+    <div class="l-container flex flex-col gap-1 justify-center">
       <BaseIcon
         v-if="shouldRenderButtonClose"
-        :class="$style.playerClose"
-        class="text-xl"
+        class="text-xl absolute end-2 top-2 no-hover:hidden"
         :path="mdiClose"
         @click="onClickClose"
       />
       <BaseAlwaysScrollable :class="$style.titleWrapper">
-        <div :class="$style.title" title="Copy link" @click="onClickTitle">
+        <div
+          class="pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
+          title="Copy link"
+          @click="onClickTitle"
+        >
           <span>{{ name }}</span>
           <BaseIcon :path="mdiLinkVariant" />
         </div>
       </BaseAlwaysScrollable>
       <audio ref="refAudio" :src="src" autoplay @ended="onEnded" />
-      <div :class="$style.timeline">
+      <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
         <span>
           {{ formattedCurrentTime }}
         </span>
@@ -30,24 +33,24 @@
           {{ formatedDuration }}
         </span>
       </div>
-      <div :class="$style.controls">
-        <div :class="$style.controlsLeft">
-          <BaseToggler v-model="isShuffleModeEnabled" :class="$style.controlsButton">
+      <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
+        <div class="flex justify-end">
+          <BaseToggler v-model="isShuffleModeEnabled" class="whitespace-nowrap min-w-6">
             <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
           </BaseToggler>
         </div>
-        <div :class="$style.controlsCenter">
+        <div class="flex justify-center gap-2">
           <BaseButton
             v-for="controlButton in controlButtons"
             :key="controlButton.id"
             :is-disabled="controlButton.isDisabled"
-            :class="[$style.controlsButton, $style.controlsButton_main]"
+            class="whitespace-nowrap min-w-6 h-6 w-8"
             @click="controlButton.onClick"
           >
             <BaseIcon class="text-2xl" :path="controlButton.icon" />
           </BaseButton>
         </div>
-        <div :class="$style.controlsRight">
+        <div class="flex h-full w-5/6 max-w-20 items-center">
           <PlayerSlider v-model="volume" @keydown.right="onKeyDownRightVolume" @keydown.left="onKeyDownLeftVolume" />
         </div>
       </div>
@@ -166,90 +169,7 @@ const onKeyDownLeftVolume = () => {
 </script>
 
 <style lang="scss" module>
-.player {
-  background-color: var(--color-bg);
-  z-index: var(--z-index-the-player);
-  box-shadow: 0px -2px 4px 0px rgba(34, 60, 80, 0.2);
-  padding: 0.5rem 0;
-  width: 100%;
-  position: relative;
-}
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  justify-content: center;
-}
-
-.playerClose {
-  position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
-  cursor: pointer;
-
-  @media (hover: none) {
-    display: none;
-  }
-}
-
 .titleWrapper {
   --base-always-scrollable--content--margin: 0 auto;
-}
-
-.title {
-  cursor: pointer;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.125rem;
-  border-bottom: 1px var(--color-dark) dashed;
-}
-
-.controls {
-  display: grid;
-  grid-template-areas: 'left center right';
-  grid-template-columns: 1fr min-content 1fr;
-  grid-column-gap: 1rem;
-  align-items: center;
-}
-
-.controlsLeft {
-  display: flex;
-  justify-content: end;
-}
-
-.controlsCenter {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.controlsRight {
-  display: flex;
-  height: 100%;
-  width: 85%;
-  max-width: 5rem;
-  display: flex;
-  align-items: center;
-}
-
-.controlsButton {
-  white-space: nowrap;
-  min-width: 1.5rem;
-
-  &_main {
-    height: 1.5rem;
-    width: 2rem;
-  }
-}
-
-.timeline {
-  height: 1.25rem;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
 }
 </style>
