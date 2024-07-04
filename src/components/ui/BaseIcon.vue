@@ -6,7 +6,7 @@
   </DefineTemplate>
 
   <ReuseTemplate v-if="isNil(onClick)" v-bind="$attrs" @click="() => onClick?.()" />
-  <BaseButton v-else v-bind="$attrs" :class="$s.buttonIcon" @click="() => onClick?.()">
+  <BaseButton v-else v-bind="$attrs" class="p-0.5" @click="() => onClick?.()">
     <ReuseTemplate />
   </BaseButton>
 </template>
@@ -35,9 +35,3 @@ withDefaults(
 
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate();
 </script>
-
-<style lang="scss" module="$s">
-.buttonIcon {
-  padding: 0.125rem;
-}
-</style>

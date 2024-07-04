@@ -73,9 +73,3 @@ const onTouchEnd = () => {
   setTimeout(() => emit('swiped'), Number(props.disapearDelay));
 };
 </script>
-
-<style lang="scss" module>
-.swipeElement {
-  width: 100%;
-}
-</style>
