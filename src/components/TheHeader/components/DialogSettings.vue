@@ -7,12 +7,12 @@
     @close="onDialogClose"
     @confirm="onDialogConfirm"
   >
-    <div :class="$style.content">
-      <div v-for="option in options" :key="option.id" :class="$style.row">
+    <div class="flex flex-col gap-4">
+      <div v-for="option in options" :key="option.id" class="flex justify-between items-center">
         <span>{{ option.text }}</span>
         <BaseSelect
           :model-value="option.modelValue"
-          :class="$style.select"
+          class="w-32"
           :options="option.options"
           @update:model-value="option.onUpdate"
         />
@@ -124,21 +124,3 @@ const onClickResetSettings = () => {
   model.value = settings.value;
 };
 </script>
-
-<style lang="scss" module>
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.select {
-  width: 8rem;
-}
-</style>
