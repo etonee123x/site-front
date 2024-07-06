@@ -1,7 +1,7 @@
 <template>
   <div>
     <ExplorerNavbar />
-    <div class="l-container" :class="$style.content">
+    <div class="l-container flex flex-col gap-2 p-2">
       <LazyExplorerElementSystem v-if="lvlUp" @keydown.enter="onClickLvlUp" @click="onClickLvlUp">
         ...
       </LazyExplorerElementSystem>
@@ -65,12 +65,3 @@ fetchData(route);
 
 onBeforeRouteUpdate(fetchData);
 </script>
-
-<style lang="scss" module>
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-}
-</style>
