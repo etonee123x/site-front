@@ -1,7 +1,7 @@
 <template>
   <div>
     <ExplorerNavbar />
-    <div class="l-container flex flex-col gap-2 p-2">
+    <div class="l-container flex flex-col gap-2 py-2">
       <LazyExplorerElementSystem v-if="lvlUp" @keydown.enter="onClickLvlUp" @click="onClickLvlUp">
         ...
       </LazyExplorerElementSystem>
