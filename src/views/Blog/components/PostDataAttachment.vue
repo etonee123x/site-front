@@ -1,5 +1,5 @@
 <template>
-  <component :is="component.is" :class="$s.postDataAttachment" v-bind="component.binds" />
+  <component :is="component.is" class="max-w-full" v-bind="component.binds" />
 </template>
 
 <script setup lang="ts">
@@ -40,9 +40,3 @@ const component = computed(() => {
   }
 });
 </script>
-
-<style lang="scss" module="$s">
-.postDataAttachment {
-  max-width: 100%;
-}
-</style>

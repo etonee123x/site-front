@@ -1,5 +1,5 @@
 <template>
-  <div :class="$style.postDataFooter">
+  <div class="flex justify-end mt-4 items-center gap-2">
     <slot />
     <BaseVr />
     <BaseIcon :path="mdiLinkVariant" @click="onClickCopyUrl" />
@@ -38,13 +38,3 @@ const onClickCopyUrl = () =>
     toastsStore.toastSuccess(t('copied')),
   );
 </script>
-
-<style lang="scss" module>
-.postDataFooter {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-  align-items: center;
-  gap: 0.5rem;
-}
-</style>
