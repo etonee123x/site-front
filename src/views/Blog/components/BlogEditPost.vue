@@ -14,7 +14,7 @@
     </div>
     <div v-if="isNotEmptyArray(files)">
       <div class="mb-3 flex items-center gap-2">
-        <div class="text-xl flex gap-2 flex-col">{{ t('files') }}</div>
+        <div class="text-xl">{{ t('files') }}</div>
         <LazyBaseIcon :path="mdiDelete" @click="onClickDeleteFiles" />
       </div>
       <LazyBaseFilesList v-model="files" />

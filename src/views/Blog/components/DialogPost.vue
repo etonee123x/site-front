@@ -3,7 +3,7 @@
     <LazyPostData v-if="postSelected" :post="postSelected" />
     <template #footer>
       <PostDataFooter v-if="postSelected" :post="postSelected">
-        <div class="text-sm text-dark flex flex-col items-end overflow-y-auto">
+        <div class="text-sm text-dark flex flex-col items-end">
           <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
           <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
         </div>
