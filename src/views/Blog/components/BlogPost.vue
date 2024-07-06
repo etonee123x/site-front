@@ -1,6 +1,6 @@
 <template>
-  <div ref="refRoot" :class="$style.post" @click="onClick">
-    <div :class="$style.postInner">
+  <div ref="refRoot" class="w-full border border-dark rounded cursor-pointer" @click="onClick">
+    <div class="p-4 flex flex-col">
       <LazyBlogEditPost
         v-if="isInEditMode"
         ref="refBlogEditPost"
@@ -12,18 +12,18 @@
       <template v-else>
         <PostData :post="post" />
         <PostDataFooter :post="post" @click.stop>
-          <span class="text-sm" :class="$style.createdAt" :title="dateExact">
+          <span class="text-sm text-dark flex items-center gap-0.5" :title="dateExact">
             <span>{{ createdAtHumanReadable }}</span>
             <BaseIcon v-if="wasEdited" :path="mdiPencil" />
           </span>
         </PostDataFooter>
       </template>
     </div>
-    <div v-if="isAdmin" :class="$style.controls">
+    <div v-if="isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
       <LazyBaseButton
         v-for="control in controls"
         :key="control.id"
-        :class="$style.control"
+        class="p-0.5"
         :is-loading="control.isLoading"
         :is-disabled="control.isDisabled"
         @click.stop="control.onClick"
@@ -182,37 +182,3 @@ const onClick = () => {
   });
 };
 </script>
-
-<style lang="scss" module>
-.post {
-  width: 100%;
-  border: 1px solid var(--color-dark);
-  border-radius: 0.25rem;
-  cursor: pointer;
-}
-
-.postInner {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-
-.createdAt {
-  color: var(--color-dark);
-  display: flex;
-  align-items: center;
-  gap: 0.125rem;
-}
-
-.controls {
-  display: flex;
-  justify-content: end;
-  border-top: 1px solid var(--color-dark);
-  padding: 0.25rem;
-  gap: 0.5rem;
-}
-
-.control {
-  padding: 0.125rem;
-}
-</style>
