@@ -1,9 +1,14 @@
 <template>
   <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
-    <div :class="$style.metadataList">
-      <div v-for="metadata in metadataList" :key="metadata.id" :title="metadata.title" :class="$style.metadata">
-        <BaseIcon class="text-2xl" :class="$style.metadataIcon" :path="metadata.path" />
-        <div :class="$style.metadataValue">
+    <div class="flex gap-4 overflow-x-auto">
+      <div
+        v-for="metadata in metadataList"
+        :key="metadata.id"
+        :title="metadata.title"
+        class="flex flex-col items-center"
+      >
+        <BaseIcon class="text-2xl h-6" :path="metadata.path" />
+        <div class="text-center max-w-40">
           {{ metadata.value }}
         </div>
       </div>
@@ -81,26 +86,3 @@ const metadataList = computed(() =>
     .map(addId),
 );
 </script>
-
-<style module lang="scss">
-.metadataList {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-}
-
-.metadata {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.metadataIcon {
-  height: 1.5rem;
-}
-
-.metadataValue {
-  text-align: center;
-  max-width: 10rem;
-}
-</style>
