@@ -1,13 +1,3 @@
 <template>
-  <div :class="$style.vr" />
+  <div class="inline-block self-stretch w-px min-h-4 bg-dark" />
 </template>
-
-<style lang="scss" module>
-.vr {
-  display: inline-block;
-  align-self: stretch;
-  width: 1px;
-  min-height: 1em;
-  background-color: var(--color-dark);
-}
-</style>

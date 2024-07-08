@@ -1,13 +1,13 @@
 <template>
-  <ol ref="refUl" :class="$s.filesList">
-    <li v-for="(file, index) in model" :key="getKeyByFile(file)" :class="$s.fileWrapper">
-      <div :class="$s.file">
+  <ol ref="refUl" class="flex gap-4 flex-col ps-8">
+    <li v-for="(file, index) in model" :key="getKeyByFile(file)">
+      <div class="flex items-center gap-2">
         <FilesListFilePreview :file="file" />
-        <BaseAlwaysScrollable duration="10000" :class="$s.fileName">
+        <BaseAlwaysScrollable duration="10000" class="flex-1">
           {{ file.name }}
         </BaseAlwaysScrollable>
-        <div class="text-2xl" :class="$s.icons">
-          <BaseIcon :class="$s.handle" :path="mdiSwapVertical" />
+        <div class="text-2xl flex gap-2 ms-auto items-center">
+          <BaseIcon class="cursor-grabbing text-dark" :path="mdiSwapVertical" />
           <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
         </div>
       </div>
@@ -57,42 +57,3 @@ watch(refUl, (v) => {
   });
 });
 </script>
-
-<style lang="scss" module="$s">
-.filesList {
-  display: flex;
-  gap: 1rem;
-  flex-direction: column;
-  padding-inline-start: 2rem;
-}
-
-.file {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.fileName {
-  flex: 1;
-}
-
-.icons {
-  display: flex;
-  gap: 0.5rem;
-  margin-inline-start: auto;
-  align-items: center;
-}
-
-.handle {
-  cursor: grab;
-  color: var(--color-dark);
-}
-
-.index {
-  margin-inline-end: 0.25rem;
-}
-
-.fileWrapper {
-  list-style-type: inherit;
-}
-</style>
