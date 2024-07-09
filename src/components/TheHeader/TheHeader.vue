@@ -4,7 +4,7 @@
       <RouterLink :to="to" class="text-xl">eto-ne-e123x</RouterLink>
       <ul class="flex gap-2">
         <li v-for="link in links" :key="link.id">
-          <RouterLink class="active:text-details-500" :to="link.to">
+          <RouterLink :to="link.to" active-class="text-details-500">
             {{ link.text }}
           </RouterLink>
         </li>
