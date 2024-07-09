@@ -7,12 +7,12 @@
     @close="onDialogClose"
     @confirm="onDialogConfirm"
   >
-    <div :class="$style.content">
-      <div :class="$style.row">
+    <div class="flex flex-col gap-4">
+      <div class="flex justify-between items-center">
         <span>{{ t('color') }}</span>
         <BaseSelect
           v-model="model.themeColor"
-          :class="$style.select"
+          class="w-32"
           :options="
             Object.values(ThemeColor).map((color) => ({
               label: themeColorToThemeColorTranslation[color],
@@ -22,11 +22,11 @@
           :reduce="propFn('value')"
         />
       </div>
-      <div :class="$style.row">
+      <div class="flex justify-between items-center">
         <span>{{ t('mode') }}</span>
         <BaseSelect
           v-model="model.themeMode"
-          :class="$style.select"
+          class="w-32"
           :options="
             Object.values(ThemeMode).map((mode) => ({
               label: themeModeToThemeModeTranslation[mode],
@@ -36,11 +36,11 @@
           :reduce="propFn('value')"
         />
       </div>
-      <div :class="$style.row">
+      <div class="flex justify-between items-center">
         <span>{{ t('language') }}</span>
         <BaseSelect
           v-model="model.language"
-          :class="$style.select"
+          class="w-32"
           :options="Object.values(Language).map((language) => ({ label: language.toUpperCase(), value: language }))"
           :reduce="propFn('value')"
         />
