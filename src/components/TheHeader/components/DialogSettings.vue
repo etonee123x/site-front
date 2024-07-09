@@ -1,23 +1,51 @@
 <template>
   <BaseDialog
     v-model="isOpened"
-    :title="title"
+    :title="t('settings')"
     width="20rem"
     height="20rem"
     @close="onDialogClose"
     @confirm="onDialogConfirm"
   >
     <div class="flex flex-col gap-4">
-      <div v-for="option in options" :key="option.id" class="flex justify-between items-center">
-        <span>{{ option.text }}</span>
+      <div class="flex justify-between items-center">
+        <span>{{ t('color') }}</span>
         <BaseSelect
-          :model-value="option.modelValue"
+          v-model="model.themeColor"
           class="w-32"
-          :options="option.options"
-          @update:model-value="option.onUpdate"
+          :options="
+            Object.values(ThemeColor).map((color) => ({
+              label: themeColorToThemeColorTranslation[color],
+              value: color,
+            }))
+          "
+          :reduce="propFn('value')"
         />
       </div>
-      <BaseButton @click="onClickResetSettings">{{ resetSettings }}</BaseButton>
+      <div class="flex justify-between items-center">
+        <span>{{ t('mode') }}</span>
+        <BaseSelect
+          v-model="model.themeMode"
+          class="w-32"
+          :options="
+            Object.values(ThemeMode).map((mode) => ({
+              label: themeModeToThemeModeTranslation[mode],
+              value: mode,
+            }))
+          "
+          :reduce="propFn('value')"
+        />
+      </div>
+      <div class="flex justify-between items-center">
+        <span>{{ t('language') }}</span>
+        <BaseSelect
+          v-model="model.language"
+          class="w-32"
+          :options="Object.values(Language).map((language) => ({ label: language.toUpperCase(), value: language }))"
+          :reduce="propFn('value')"
+        />
+      </div>
+      <BaseButton @click="onClickResetSettings">{{ t('resetSettings') }}</BaseButton>
     </div>
   </BaseDialog>
 </template>
@@ -38,16 +66,16 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useToggle } from '@vueuse/core';
+import { propFn } from '@shared/src/utils';
 
 import { useSettingsStore } from '@/stores/settings';
-import { addId } from '@/utils';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
-import BaseSelect, { type Option } from '@/components/BaseSelect';
+import BaseSelect from '@/components/ui/BaseSelect.vue';
 import { Language, ThemeColor, ThemeMode } from '@/types';
 
 const isOpened = defineModel<boolean>();
@@ -60,53 +88,6 @@ const { settings, themeColorToThemeColorTranslation, themeModeToThemeModeTransla
 const { t } = useI18n({ useScope: 'local' });
 
 const model = ref(settings.value);
-
-const options = computed(() =>
-  [
-    {
-      text: t('color'),
-      options: Object.values(ThemeColor).map((color, index) =>
-        addId({ text: themeColorToThemeColorTranslation.value[color], value: color }, index),
-      ),
-      modelValue: {
-        text: themeColorToThemeColorTranslation.value[model.value.themeColor],
-        value: model.value.themeColor,
-      },
-      onUpdate: (option: Option<ThemeColor>) => {
-        model.value.themeColor = option.value;
-      },
-    },
-    {
-      text: t('mode'),
-      options: Object.values(ThemeMode).map((mode, index) =>
-        addId({ text: themeModeToThemeModeTranslation.value[mode], value: mode }, index),
-      ),
-      modelValue: {
-        text: themeModeToThemeModeTranslation.value[model.value.themeMode],
-        value: model.value.themeMode,
-      },
-      onUpdate: (option: Option<ThemeMode>) => {
-        model.value.themeMode = option.value;
-      },
-    },
-    {
-      text: t('language'),
-      options: Object.values(Language).map((language, index) =>
-        addId({ text: language.toUpperCase(), value: language }, index),
-      ),
-      modelValue: {
-        text: model.value.language.toUpperCase(),
-        value: model.value.language,
-      },
-      onUpdate: (option: Option<Language>) => {
-        model.value.language = option.value;
-      },
-    },
-  ].map(addId),
-);
-
-const title = computed(() => t('settings'));
-const resetSettings = computed(() => t('resetSettings'));
 
 const onDialogClose = () => toggle(false);
 
