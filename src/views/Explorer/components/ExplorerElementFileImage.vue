@@ -1,7 +1,7 @@
 <template>
   <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
-    <div :class="$style.wrapper">
-      <img :class="$style.theImage" :src="element.src" />
+    <div class="flex justify-center max-w-full">
+      <img class="max-w-full" :src="element.src" />
     </div>
   </ElementFileWrapper>
 </template>
@@ -21,15 +21,3 @@ const { loadImage } = useGalleryStore();
 
 const onClick = () => loadImage(props.element);
 </script>
-
-<style module lang="scss">
-.wrapper {
-  display: flex;
-  justify-content: center;
-  max-width: 100%;
-}
-
-.theImage {
-  max-width: 100%;
-}
-</style>
