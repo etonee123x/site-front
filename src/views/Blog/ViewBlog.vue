@@ -14,7 +14,7 @@
           {{ t('send') }}
         </LazyBaseButton>
       </LazyBaseForm>
-      <LazyBaseHr v-if="hasPosts" class="mt-4 mb-4" />
+      <LazyBaseHr v-if="hasPosts" class="my-4" />
     </template>
     <LazyBaseLoading
       v-if="isLoading[IsLoadingAction.Get] && !hasPosts"
