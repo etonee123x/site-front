@@ -46,15 +46,6 @@ const style = computed(() => ({ bottom: `calc(1rem + ${playerHeight.value}px)` }
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-
-  &__toast-close {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    right: 0;
-  }
 }
 
 .toast {
