@@ -7,7 +7,7 @@
         :path="mdiClose"
         @click="onClickClose"
       />
-      <BaseAlwaysScrollable :class="$style.titleWrapper">
+      <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
         <div
           class="pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
           title="Copy link"
@@ -167,9 +167,3 @@ const onKeyDownLeftVolume = () => {
   volume.value = to0To1Borders(volume.value - 0.05);
 };
 </script>
-
-<style lang="scss" module>
-.titleWrapper {
-  --base-always-scrollable--content--margin: 0 auto;
-}
-</style>
