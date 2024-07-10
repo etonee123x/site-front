@@ -1,12 +1,12 @@
 <template>
   <div v-if="theImage">
-    <div ref="refMediaContainer" :style="fullStyles" :class="$style.mediaContainer">
-      <div :class="$style.mediaInfo">
+    <div ref="refMediaContainer" :style="fullStyles" class="touch-pinch-zoom fixed bg-items p-2 border-2 border-dark">
+      <div class="text-center mb-1">
         {{ theImage.name }}
       </div>
       <img
         ref="refMedia"
-        :class="$style.theMedia"
+        class="mx-auto block"
         :draggable="false"
         :src="theImage.src"
         @load="onImgLoad"
@@ -124,23 +124,3 @@ watch(theImage, () => {
   setIsMediaVisible(false);
 });
 </script>
-
-<style lang="scss" module>
-.mediaContainer {
-  touch-action: pinch-zoom;
-  position: fixed;
-  background-color: var(--color-items);
-  padding: 0.5rem;
-  border: 2px var(--color-dark) solid;
-}
-
-.mediaInfo {
-  text-align: center;
-  margin-bottom: 0.25rem;
-}
-
-.theMedia {
-  margin: 0 auto;
-  display: block;
-}
-</style>

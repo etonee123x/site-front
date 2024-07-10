@@ -2,14 +2,14 @@
   <div
     ref="refSlider"
     tabindex="0"
-    :class="$style.wrapper"
+    class="w-full py-0.5 cursor-pointer focus: outline-2"
     @pointerdown.stop
     @dragstart.stop
     @mousedown.stop
     @touchstart.stop
   >
-    <div :class="$style.zone">
-      <div :class="$style.filler" :style="style" />
+    <div class="bg-dark">
+      <div class="h-1 bg-details-500" :style="style" />
     </div>
   </div>
 </template>
@@ -79,25 +79,3 @@ const onIsPressedChangeLazy = async () => {
   });
 };
 </script>
-
-<style lang="scss" module>
-.wrapper {
-  width: 100%;
-  padding: 0.125rem 0;
-  cursor: pointer;
-
-  &:focus {
-    @include onFocus();
-    outline-width: 2px;
-  }
-}
-
-.zone {
-  background-color: var(--color-dark);
-}
-
-.filler {
-  height: 0.25rem;
-  background-color: var(--color-details);
-}
-</style>
