@@ -19,9 +19,9 @@
       </div>
     </template>
     <template #option="option">
-      <div :class="$style.option" class="flex gap-1 justify-between items-center text-xs">
+      <div class="flex gap-1 justify-between items-center text-xs">
         <div>{{ getOptionLabel(option) }}</div>
-        <BaseIcon :class="$style.iconSelected" :path="mdiCheck" />
+        <BaseIcon class="hidden" :class="$style.iconSelected" :path="mdiCheck" />
       </div>
     </template>
   </VueSelect>
@@ -67,17 +67,6 @@ const getOptionLabel = (option: Option) =>
   --vs-controls-color: var(--color-dark);
   --vs-dropdown-min-width: 100%;
   --vs-dropdown-option--active-bg: var(--color-details);
-}
-
-.option {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.iconSelected {
-  display: none;
 }
 
 :global(.vs__dropdown-option--selected) {
