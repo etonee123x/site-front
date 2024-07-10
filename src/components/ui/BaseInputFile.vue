@@ -104,9 +104,7 @@ const onClose = () => {
   border-radius: 0.5rem;
 
   @include withHover {
-    &:not(&[disabled]) {
-      background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
-    }
+    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
   }
 
   &_focused {
