@@ -1,15 +1,15 @@
 <template>
-  <header :class="$style.header">
-    <div class="l-container" :class="$style.inner">
+  <header class="border-b border-b-details-500">
+    <div class="l-container flex items-center py-2 gap-4">
       <RouterLink :to="to" class="text-xl">eto-ne-e123x</RouterLink>
-      <ul :class="$style.links">
+      <ul class="flex gap-2">
         <li v-for="link in links" :key="link.id">
-          <RouterLink :class="$style.link" :to="link.to" :active-class="$style.link_active">
+          <RouterLink :to="link.to" active-class="text-details-500">
             {{ link.text }}
           </RouterLink>
         </li>
       </ul>
-      <ul class="text-2xl" :class="$style.icons">
+      <ul class="text-2xl ms-auto flex gap-1">
         <li v-for="icon in icons" :key="icon.id">
           <BaseIcon :path="icon.path" @click="icon.onClick" />
         </li>
@@ -76,33 +76,3 @@ const icons = computed(() =>
   ].map(addId),
 );
 </script>
-
-<style lang="scss" module>
-.header {
-  border-bottom: var(--color-details) 1px solid;
-}
-
-.inner {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0;
-  gap: 1rem;
-}
-
-.icons {
-  margin-inline-start: auto;
-  display: flex;
-  gap: 0.25rem;
-}
-
-.links {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.link {
-  &_active {
-    color: var(--color-details);
-  }
-}
-</style>

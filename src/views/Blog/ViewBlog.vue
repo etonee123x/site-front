@@ -1,8 +1,8 @@
 <template>
-  <div class="l-container" :class="$style.blogView">
+  <div class="l-container pt-2 h-full flex flex-col">
     <DialogPost />
     <template v-if="isAdmin">
-      <LazyBaseForm :class="$style.form" @submit.prevent="onSubmit">
+      <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
         <LazyBlogEditPost
           ref="refLazyBlogEditPost"
           v-model="postData"
@@ -14,19 +14,23 @@
           {{ t('send') }}
         </LazyBaseButton>
       </LazyBaseForm>
-      <LazyBaseHr v-if="hasPosts" :class="$style.hr" />
+      <LazyBaseHr v-if="hasPosts" class="my-4" />
     </template>
-    <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get] && !hasPosts" is-full :class="$style.notPosts" />
+    <LazyBaseLoading
+      v-if="isLoading[IsLoadingAction.Get] && !hasPosts"
+      is-full
+      class="flex justify-center items-center flex-1"
+    />
     <template v-else>
       <template v-if="hasPosts">
-        <ul :class="$style.posts">
+        <ul class="flex flex-col gap-4 last:pb-4">
           <li v-for="post in posts" :key="post.id">
             <BlogPost :post="post" />
           </li>
         </ul>
-        <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full :class="$style.loadingWithPosts" />
+        <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full class="flex justify-center p-4" />
       </template>
-      <div v-else class="text-lg" :class="$style.notPosts">
+      <div v-else class="text-lg flex justify-center items-center flex-1">
         {{ t('nothingWasFound') }}
       </div>
     </template>
@@ -134,45 +138,3 @@ watch(
   },
 );
 </script>
-
-<style lang="scss" module>
-.blogView {
-  padding-top: 0.5rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.notPosts {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-}
-
-.posts {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  &:last-child {
-    padding-bottom: 1rem;
-  }
-}
-
-.hr {
-  margin: 1rem 0;
-}
-
-.loadingWithPosts {
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-</style>
