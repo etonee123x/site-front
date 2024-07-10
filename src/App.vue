@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col bg-background h-screen overflow-hidden">
     <TheHeader />
-    <main ref="refMain" :class="$s.main" class="relative overflow-y-auto flex flex-col flex-1">
+    <main ref="refMain" class="scrollbar-gutter-stable-both relative overflow-y-auto flex flex-col flex-1">
       <RouterView />
       <LazyTheToasts v-if="hasToasts" />
       <LazyTheGallery v-if="isImageLoaded" />
@@ -49,9 +49,3 @@ watch(refMain, (v) => {
   main.value = v;
 });
 </script>
-
-<style module="$s" lang="scss">
-.main {
-  scrollbar-gutter: stable both-edges;
-}
-</style>
