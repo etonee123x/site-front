@@ -42,12 +42,6 @@ export default {
       });
 
       addUtilities({
-        '.scrollbar-gutter-stable-both': {
-          'scrollbar-gutter': 'stable both-edges',
-        },
-      });
-
-      addUtilities({
         '.on-focus': {
           outline: 'var(--color-dark) solid 1px',
           'outline-offset': '0px',
