@@ -40,6 +40,13 @@ export default {
           margin: '0 auto',
         },
       });
+
+      addUtilities({
+        '.on-focus': {
+          outline: 'var(--color-dark) solid 1px',
+          'outline-offset': '0px',
+        },
+      });
     },
   ],
 };
