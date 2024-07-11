@@ -1,15 +1,19 @@
 <template>
-  <dialog ref="refDialog" :style="style" class="l-container" :class="$style.dialog">
-    <div ref="refDialogInner" :class="$style.inner">
+  <dialog
+    ref="refDialog"
+    :style="style"
+    class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-auto backdrop-opacity-35"
+  >
+    <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
-        <div :class="$style.header">
-          <span v-if="isNotNil(title)" class="text-lg" :class="$style.title">{{ title }}</span>
-          <LazyBaseIcon :path="mdiClose" class="text-xl" :class="$style.iconClose" @click="onClickCloseIcon" />
+        <div class="flex justify-between items-center mb-6">
+          <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
+          <LazyBaseIcon :path="mdiClose" class="text-xl ms-auto" @click="onClickCloseIcon" />
         </div>
       </slot>
       <slot v-bind="{ close }" />
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
-        <div v-if="isNotEmptyArray(buttons)" :class="$style.footer">
+        <div v-if="isNotEmptyArray(buttons)" class="flex justify-end gap-2 mt-auto">
           <LazyBaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
           </LazyBaseButton>
@@ -107,44 +111,3 @@ defineExpose({
   close,
 });
 </script>
-
-<style lang="scss" module>
-.dialog {
-  padding: 0;
-  border: 1px var(--color-details) solid;
-  outline: none;
-  border-radius: 0.5rem;
-  background-color: var(--color-bg);
-  margin: auto;
-
-  &::backdrop {
-    background: rgba(0, 0, 0, 33.33%);
-  }
-}
-
-.inner {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: auto;
-}
-
-.iconClose {
-  margin-inline-start: auto;
-}
-</style>
