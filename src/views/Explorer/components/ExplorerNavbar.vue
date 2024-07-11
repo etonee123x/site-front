@@ -1,7 +1,12 @@
 <template>
-  <div :class="$style.navbar">
+  <div class="sticky top-0 flex items-center overflow-x-auto bg-background py-2">
     <ul class="l-container">
-      <li v-for="(navigationItem, idx) in navigationItems" :key="idx" :class="$style.navigationItem">
+      <li
+        v-for="(navigationItem, index) in navigationItems"
+        :key="index"
+        :class="$s.navigationItem"
+        class="whitespace-nowrap table-cell align-middle last:text-details-500"
+      >
         <RouterLink :to="navigationItem.link">
           {{ navigationItem.text }}
         </RouterLink>
@@ -19,30 +24,10 @@ const explorerStore = useExplorerStore();
 const { navigationItems } = storeToRefs(explorerStore);
 </script>
 
-<style module lang="scss">
-.navbar {
-  position: sticky;
-  top: 0;
-  display: flex;
-  align-items: center;
-  overflow-x: auto;
-  background-color: var(--color-bg);
-  padding: 0.5rem 0;
-}
-
-.navigationItem {
-  white-space: nowrap;
-  display: table-cell;
-  vertical-align: middle;
-
-  &:not(:first-child)::before {
-    content: '>';
-    color: initial;
-    padding: 0 0.5rem;
-  }
-
-  &:last-child {
-    color: var(--color-details);
-  }
+<style module="$s" lang="scss">
+.navigationItem:not(:first-child)::before {
+  content: '>';
+  color: initial;
+  padding: 0 0.5rem;
 }
 </style>
