@@ -2,7 +2,7 @@
   <div
     ref="refSlider"
     tabindex="0"
-    class="w-full py-0.5 cursor-pointer focus: outline-2"
+    class="w-full py-0.5 cursor-pointer focus:on-focus focus:outline-2"
     @pointerdown.stop
     @dragstart.stop
     @mousedown.stop
