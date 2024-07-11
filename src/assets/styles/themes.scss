@@ -1,6 +1,8 @@
 .theme {
   &_color {
     &_red {
+      --color-details-1: #fff5f5;
+      --color-details-10: #ffebeb;
       --color-details-50: #ffe5e5;
       --color-details-100: #ffb3b3;
       --color-details-200: #ff8080;
@@ -81,17 +83,27 @@
 
   &_mode {
     &_light {
-      --color-items: #f8faff;
-      --color-folders: #fff1b2;
+      --color-items: var(--color-details-1);
+      --color-items-hovered: var(--color-details-50);
+
+      --color-folders: var(--color-details-100);
+      --color-folders-hovered: var(--color-details-200);
+
+      --color-dark: var(--color-details-900);
+
       --color-bg: white;
-      --color-dark: #808080;
     }
 
     &_dark {
-      --color-items: #7a7b83;
-      --color-folders: #bbb38e;
+      --color-items: var(--color-details-1);
+      --color-items-hovered: var(--color-details-50);
+
+      --color-folders: var(--color-details-100);
+      --color-folders-hovered: var(--color-details-200);
+
+      --color-dark: var(--color-details-900);
+
       --color-bg: #808080;
-      --color-dark: #404040;
     }
   }
 }

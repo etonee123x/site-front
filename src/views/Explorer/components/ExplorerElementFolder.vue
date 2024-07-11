@@ -24,7 +24,7 @@ defineProps<{
 
   @include withHover {
     border-color: var(--color-details);
-    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+    @apply bg-items-hovered;
   }
 
   &:focus-visible {
@@ -57,10 +57,10 @@ defineProps<{
 
 .directoryElement {
   &_folder {
-    background-color: var(--color-folders);
+    @apply bg-folders;
 
     @include withHover {
-      background-color: color-mix(in srgb, var(--color-folders) 90%, var(--color-black));
+      @apply bg-folders-hovered;
     }
   }
 }

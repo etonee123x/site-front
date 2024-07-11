@@ -5,21 +5,21 @@
     :disabled="isDisabled"
     @click="onCLick"
   >
-    <div :class="$style.inner">
-      <div :class="[$style.slot, isLoading && $style.slot_hidden]">
-        <div v-if="$slots.prepend || prependIconPath" :class="$style.wrapperPrependAppend">
+    <div class="flex justify-between">
+      <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-35'">
+        <div v-if="$slots.prepend || prependIconPath" class="flex">
           <slot name="prepend">
             <LazyBaseIcon v-if="prependIconPath" :path="prependIconPath" />
           </slot>
         </div>
         <slot />
-        <div v-if="$slots.append || appendIconPath" :class="$style.wrapperPrependAppend">
+        <div v-if="$slots.append || appendIconPath" class="flex">
           <slot name="append">
             <LazyBaseIcon v-if="appendIconPath" :path="appendIconPath" />
           </slot>
         </div>
       </div>
-      <LazyBaseLoading v-if="isLoading" :class="$style.loading" />
+      <LazyBaseLoading v-if="isLoading" class="absolute left-1/2" />
     </div>
   </button>
 </template>
@@ -56,28 +56,25 @@ const onCLick = (e: Event) => {
 </script>
 
 <style lang="scss" module>
-.inner {
-  display: flex;
-  justify-content: space-between;
-}
+button {
+  all: unset;
+  @apply bg-items border border-dark rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
 
-.slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.25rem;
-
-  &_hidden {
-    opacity: 33%;
+  @include withHover {
+    @apply bg-items-hovered;
   }
-}
 
-.loading {
-  position: absolute;
-  left: 50%;
-}
+  &:active,
+  &_active {
+    @apply text-details-500 border-details-500;
+  }
 
-.wrapperPrependAppend {
-  display: flex;
+  &[disabled] {
+    @apply pointer-events-none bg-dark text-items;
+  }
+
+  &:focus {
+    @apply on-focus;
+  }
 }
 </style>

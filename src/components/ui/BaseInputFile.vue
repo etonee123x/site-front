@@ -104,7 +104,7 @@ const onClose = () => {
   border-radius: 0.5rem;
 
   @include withHover {
-    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+    @apply bg-items-hovered;
   }
 
   &_focused {

@@ -6,6 +6,8 @@ export default {
     extend: {
       colors: {
         details: {
+          1: 'var(--color-details-1)',
+          10: 'var(--color-details-10)',
           50: 'var(--color-details-50)',
           100: 'var(--color-details-100)',
           200: 'var(--color-details-200)',
@@ -17,10 +19,17 @@ export default {
           800: 'var(--color-details-800)',
           900: 'var(--color-details-900)',
         },
+        items: {
+          DEFAULT: 'var(--color-items)',
+          hovered: 'var(--color-items-hovered)',
+        },
+        folders: {
+          DEFAULT: 'var(--color-folders)',
+          hovered: 'var(--color-folders-hovered)',
+        },
         background: 'var(--color-bg)',
         dark: 'var(--color-dark)',
         error: 'var(--color-error)',
-        items: 'var(--color-items)',
       },
       maxWidth: {
         '75rem': '75rem',
