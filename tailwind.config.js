@@ -19,6 +19,8 @@ export default {
         },
         background: 'var(--color-bg)',
         dark: 'var(--color-dark)',
+        error: 'var(--color-error)',
+        items: 'var(--color-items)',
       },
       maxWidth: {
         '75rem': '75rem',
