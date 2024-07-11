@@ -15,8 +15,7 @@
   cursor: pointer;
 
   @include withHover {
-    border-color: var(--color-details);
-    @apply bg-items-hovered;
+    @apply bg-items-hovered border-details-500;
   }
 
   &:focus-visible {
