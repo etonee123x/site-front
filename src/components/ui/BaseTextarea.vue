@@ -1,15 +1,14 @@
 <template>
-  <div :class="$style.textarea">
+  <div class="flex flex-col gap-1">
     <textarea
       ref="textarea"
       v-model="model"
-      class="f-body-2"
-      :class="$style.theTextarea"
+      class="f-body-2 rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-none resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
       :placeholder="placeholder"
       @keydown.enter.shift.prevent="onEnter"
       @paste="onPaste"
     />
-    <ul v-if="isNotEmptyArray(errors)" class="text-sm" :class="$style.errors">
+    <ul v-if="isNotEmptyArray(errors)" class="text-sm flex flex-col gap-1 text-error">
       <li v-for="error in errors" :key="error.$uid">{{ error.$message }}</li>
     </ul>
   </div>
@@ -56,38 +55,3 @@ defineExpose({
   focus: () => textarea.value?.focus(),
 });
 </script>
-
-<style lang="scss" module>
-.theTextarea {
-  border-radius: 0.5rem;
-  border: 1px solid var(--color-dark);
-  overflow: hidden;
-  width: 100%;
-  margin: 0;
-  padding: 1rem 1rem;
-  outline: unset;
-  resize: none;
-  display: flex;
-  background-color: unset;
-  flex: 1;
-
-  &::placeholder {
-    color: var(--color-dark);
-  }
-
-  &:focus {
-    @include onFocus();
-  }
-}
-
-.textarea,
-.errors {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.errors {
-  color: var(--color-error);
-}
-</style>
