@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-  box-sizing: border-box;
+  @apply box-border;
 }
 
 html,
@@ -14,81 +14,34 @@ body {
 
 ul,
 ol {
-  padding: 0;
-  margin: 0;
+  @apply p-0 m-0;
 }
 
 li {
-  list-style-type: none;
+  @apply list-none;
 }
 
 a {
-  color: inherit;
+  @apply text-inherit;
   text-decoration-line: inherit;
 
   @include withHover {
-    color: var(--color-details);
+    @apply text-details-500;
+  }
+
+  &:focus-visible {
+    @apply outline-none underline;
   }
 }
 
 p {
   all: unset;
-  display: block;
-}
-
-hr {
-  margin: 0;
-  border: none;
-  background-color: var(--color-dark);
-  min-height: 1px;
-  min-width: 1px;
-}
-
-button {
-  all: unset;
-  background-color: var(--color-items);
-  border: 1px solid var(--color-dark);
-  border-radius: 0.25rem;
-  padding: 0.5rem;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  @include withHover {
-    &:not(&[disabled]) {
-      background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
-    }
-  }
-
-  &:is(&:active, &_active):not(&[disabled]) {
-    color: var(--color-details);
-    border-color: var(--color-details);
-  }
-
-  &[disabled] {
-    cursor: default;
-
-    background-color: var(--color-dark);
-    color: var(--color-items);
-  }
-
-  &:focus {
-    @include onFocus()
-  }
-}
-
-a:focus-visible {
-  outline: none;
-  text-decoration: underline;
+  @apply block;
 }
 
 :root {
   --color-black: #000000;
   --color-success: #34C759;
-  --color-warning: #FF9500;
   --color-error: #FF3B30;
 
   --color-details: #ff0000;
@@ -97,6 +50,4 @@ a:focus-visible {
   --color-folders: #fff1b2;
   --color-bg: #ffffff;
   --color-dark: #808080;
-
-  --z-index-select-options: 2000;
 }

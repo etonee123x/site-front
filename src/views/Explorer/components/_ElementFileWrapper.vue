@@ -42,7 +42,7 @@ const birthTimeFormatted = computed(() => format(new Date(props.element.birthtim
 
   @include withHover {
     border-color: var(--color-details);
-    background-color: color-mix(in srgb, var(--color-items) 95%, var(--color-black));
+    @apply bg-items-hovered;
   }
 
   &:focus-visible {
