@@ -31,19 +31,10 @@ export default {
         dark: 'var(--color-dark)',
         error: 'var(--color-error)',
       },
-      maxWidth: {
-        '75rem': '75rem',
-      },
-      width: {
-        '90%': '90%',
-      },
-      boxShadow: {
-        player: '0px -2px 4px 0px rgba(34, 60, 80, 0.2)',
-      },
     },
   },
   plugins: [
-    ({ addUtilities }) => {
+    ({ addUtilities, addVariant }) => {
       addUtilities({
         '.l-container': {
           maxWidth: '75rem',
@@ -58,6 +49,8 @@ export default {
           'outline-offset': '0px',
         },
       });
+
+      addVariant('with-hover', ['@media (any-hover: hover) { &:hover }']);
     },
   ],
 };

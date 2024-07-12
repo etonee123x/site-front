@@ -1,6 +1,6 @@
 <template>
   <div :class="$s.inputFile">
-    <div :class="[$s.trigger, isFocused && $s.trigger_focused]" @click="onClick">
+    <div :class="[$s.trigger, isFocused && $s.trigger_focused]" class="with-hover:bg-items-hovered" @click="onClick">
       <input :class="$s.input" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
@@ -102,10 +102,6 @@ const onClose = () => {
   padding: 1rem;
   border: 1px solid var(--color-dark);
   border-radius: 0.5rem;
-
-  @include withHover {
-    @apply bg-items-hovered;
-  }
 
   &_focused {
     @include onFocus();

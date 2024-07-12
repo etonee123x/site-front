@@ -58,9 +58,7 @@ const style = computed(() => ({ bottom: `calc(1rem + ${playerHeight.value}px)` }
   border: 1px solid var(--color-dark);
   border-radius: 0.125rem;
 
-  @include withHover {
-    transform: scale(1.02);
-  }
+  @apply with-hover:scale-[1.02];
 
   &_error {
     .toastIcon {

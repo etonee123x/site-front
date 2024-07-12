@@ -1,5 +1,5 @@
 <template>
-  <button type="button" :class="[$s.button, isActive && $s.button_active]" :disabled="isDisabled" @click="onCLick">
+  <button type="button" :disabled="isDisabled" @click="onCLick">
     <div class="flex justify-between">
       <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-35'">
         <div v-if="$slots.prepend || prependIconPath" class="flex">
@@ -50,26 +50,13 @@ const onCLick = (e: Event) => {
 };
 </script>
 
-<style lang="scss" module="$s">
+<style lang="scss">
 button {
   all: unset;
-  @apply bg-items border border-dark rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
-
-  @include withHover {
-    @apply bg-items-hovered;
-  }
-
-  &:active,
-  &_active {
-    @apply text-details-500 border-details-500;
-  }
-
-  &[disabled] {
-    @apply pointer-events-none bg-dark text-items;
-  }
-
-  &:focus {
-    @apply on-focus;
-  }
+  @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
+  @apply with-hover:bg-items-hovered;
+  @apply focus:on-focus;
+  @apply disabled:pointer-events-none disabled:bg-dark disabled:text-items;
+  @apply active:text-details-500 active:border-details-500;
 }
 </style>

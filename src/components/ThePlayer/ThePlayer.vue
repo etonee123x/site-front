@@ -1,5 +1,8 @@
 <template>
-  <BaseSwipable class="bg-background z-[1000] shadow-player py-2 relative w-full" @swiped="onSwiped">
+  <BaseSwipable
+    class="bg-background z-[1000] shadow-[0_-2px_4px_0_rgba(34,60,80,0.2)] py-2 relative w-full"
+    @swiped="onSwiped"
+  >
     <div class="l-container flex flex-col gap-1 justify-center">
       <BaseIcon
         v-if="shouldRenderButtonClose"

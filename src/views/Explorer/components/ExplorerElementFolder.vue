@@ -19,11 +19,7 @@ defineProps<{
 
 .explorerElement {
   &_folder {
-    @apply bg-folders;
-
-    @include withHover {
-      @apply bg-folders-hovered;
-    }
+    @apply bg-folders with-hover:bg-folders-hovered;
   }
 }
 </style>
