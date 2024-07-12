@@ -12,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import { useTitle } from '@vueuse/core';
 import { defineAsyncComponent, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
@@ -37,6 +38,8 @@ const { hasToasts } = storeToRefs(toastsStore);
 
 const componentsStore = useComponentsStore();
 const { thePlayer, main } = storeToRefs(componentsStore);
+
+useTitle(String(import.meta.env.VITE_SITE_TITLE));
 
 const refThePlayer: typeof thePlayer = ref(null);
 const refMain: typeof main = ref(null);

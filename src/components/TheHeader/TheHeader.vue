@@ -1,7 +1,7 @@
 <template>
   <header class="border-b border-b-details-500">
     <div class="l-container flex items-center py-2 gap-4">
-      <RouterLink :to="to" class="text-xl">eto-ne-e123x</RouterLink>
+      <RouterLink :to="to" class="text-xl">{{ siteTitle }}</RouterLink>
       <ul class="flex gap-2">
         <li v-for="link in links" :key="link.id">
           <RouterLink :to="link.to" active-class="text-details-500">
@@ -49,6 +49,8 @@ const [isDialogSettingsOpened, toggleIsDialogSettingsOpened] = useToggle();
 
 const authStore = useAuthStore();
 const { isAdmin } = storeToRefs(authStore);
+
+const siteTitle = String(import.meta.env.VITE_SITE_TITLE);
 
 const to = { name: RouteName.Home };
 
