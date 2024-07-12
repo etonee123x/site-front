@@ -16,6 +16,7 @@
       '[--vs-controls-color:var(--color-dark)]',
       '[--vs-dropdown-min-width:100%]',
       '[--vs-dropdown-option--active-bg:var(--color-details-500)]',
+      '[--vs-selected-color:var(--color-text)]',
     ]"
   >
     <template #selected-option-container="{ option, deselect }">
