@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog is-hidden-header :model-value="Boolean(postSelected)" height="min-content" @close="onDialogClose">
+  <BaseDialog is-hidden-header :model-value="Boolean(postSelected)" style="height: min-content" @close="onDialogClose">
     <LazyPostData v-if="postSelected" :post="postSelected" />
     <template #footer>
       <PostDataFooter v-if="postSelected" :post="postSelected">

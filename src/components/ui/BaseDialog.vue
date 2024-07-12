@@ -1,10 +1,9 @@
 <template>
   <dialog
     ref="refDialog"
-    :style="style"
     class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
   >
-    <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full">
+    <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full [scrollbar-gutter:stable_both-edges]">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
@@ -37,7 +36,7 @@ import { computed, ref, watch, type CSSProperties, defineAsyncComponent } from '
 import { onClickOutside } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { isNotEmptyArray, isNotNil, pick } from '@shared/src/utils';
+import { isNotEmptyArray, isNotNil } from '@shared/src/utils';
 import type { FunctionCallback, WithId } from '@shared/src/types';
 
 import { addId } from '@/utils';
@@ -72,8 +71,6 @@ const emit = defineEmits<{
 const model = defineModel<boolean>();
 
 const { t } = useI18n({ useScope: 'local' });
-
-const style = computed(() => pick(props, ['height', 'width']));
 
 const buttons = computed(
   () =>

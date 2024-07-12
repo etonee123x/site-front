@@ -2,12 +2,11 @@
   <BaseDialog
     v-model="isOpened"
     :title="t('settings')"
-    width="20rem"
-    height="20rem"
+    style="max-width: 25rem"
     @close="onDialogClose"
     @confirm="onDialogConfirm"
   >
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-4 mb-6">
       <div class="flex justify-between items-center">
         <span>{{ t('color') }}</span>
         <BaseSelect
