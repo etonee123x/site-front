@@ -4,7 +4,7 @@
     <main ref="refMain" class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1">
       <RouterView />
       <LazyTheToasts v-if="hasToasts" />
-      <LazyTheGallery v-if="isImageLoaded" />
+      <LazyTheGallery v-if="isGalleryItemLoaded" />
     </main>
     <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" />
     <TheFooter v-else />
@@ -31,7 +31,7 @@ const playerStore = usePlayerStore();
 const { isTrackLoaded } = storeToRefs(playerStore);
 
 const galleryStore = useGalleryStore();
-const { isImageLoaded } = storeToRefs(galleryStore);
+const { isGalleryItemLoaded } = storeToRefs(galleryStore);
 
 const toastsStore = useToastsStore();
 const { hasToasts } = storeToRefs(toastsStore);
