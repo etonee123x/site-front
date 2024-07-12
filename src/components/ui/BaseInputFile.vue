@@ -1,12 +1,16 @@
 <template>
-  <div :class="$s.inputFile">
-    <div :class="[$s.trigger, isFocused && $s.trigger_focused]" class="with-hover:bg-items-hovered" @click="onClick">
-      <input :class="$s.input" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
+  <div>
+    <div
+      class="flex justify-center items-center cursor-pointer p-4 border border-dark rounded-lg"
+      :class="isFocused && 'on-focus'"
+      @click="onClick"
+    >
+      <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog ref="refDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
-      <BaseButton :class="$s.addMore" :prepend-icon-path="mdiPlus" @click="onClickAdd">
+      <BaseButton class="mx-auto my-4" :prepend-icon-path="mdiPlus" @click="onClickAdd">
         {{ t('add') }}
       </BaseButton>
     </BaseDialog>
@@ -92,29 +96,3 @@ const onClose = () => {
   model.value = [];
 };
 </script>
-
-<style lang="scss" module="$s">
-.trigger {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  padding: 1rem;
-  border: 1px solid var(--color-dark);
-  border-radius: 0.5rem;
-
-  &_focused {
-    @include onFocus();
-  }
-}
-
-.input {
-  position: fixed;
-  left: 0;
-  transform: translateX(-200%);
-}
-
-.addMore {
-  margin: 1rem auto;
-}
-</style>
