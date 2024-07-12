@@ -1,25 +1,32 @@
 import { defineStore } from 'pinia';
-import { shallowRef, computed } from 'vue';
-import { type ItemImage } from '@shared/src/types';
+import { shallowRef, computed, ref } from 'vue';
+import { type ItemImage, type ItemVideo } from '@shared/src/types';
+
+type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 
 export const useGalleryStore = defineStore('gallery', () => {
-  const theImage = shallowRef<ItemImage | null>(null);
+  const galleryItem = shallowRef<GalleryItem | null>(null);
 
-  const isImageLoaded = computed(() => Boolean(theImage.value));
+  const galleryItems = ref<Array<GalleryItem>>([]);
 
-  const loadImage = (img: ItemImage) => {
-    theImage.value = img;
+  const isGalleryItemLoaded = computed(() => Boolean(galleryItem.value));
+
+  const loadGalleryItem = (_galleryItem: GalleryItem, _galleryItems: Array<GalleryItem> = []) => {
+    galleryItem.value = _galleryItem;
+    galleryItems.value = _galleryItems;
   };
 
-  const unloadImage = () => {
-    theImage.value = null;
+  const unloadGalleryItem = () => {
+    galleryItem.value = null;
+    galleryItems.value = [];
   };
 
   return {
-    theImage,
-    isImageLoaded,
+    galleryItem,
+    galleryItems,
+    isGalleryItemLoaded,
 
-    loadImage,
-    unloadImage,
+    loadGalleryItem,
+    unloadGalleryItem,
   };
 });
