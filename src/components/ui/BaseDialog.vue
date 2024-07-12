@@ -2,7 +2,7 @@
   <dialog
     ref="refDialog"
     :style="style"
-    class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-auto backdrop-opacity-35"
+    class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
   >
     <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
