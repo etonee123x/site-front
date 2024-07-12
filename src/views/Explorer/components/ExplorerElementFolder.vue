@@ -19,6 +19,6 @@ defineProps<{
 
 .explorerElement.explorerElement_folder {
   @apply bg-folders;
-  @apply with-hover:bg-folders-hovered;
+  @apply with-hover:bg-folders-hovered with-hover:text-[initial];
 }
 </style>
