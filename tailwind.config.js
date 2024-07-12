@@ -30,6 +30,7 @@ export default {
         background: 'var(--color-bg)',
         dark: 'var(--color-dark)',
         error: 'var(--color-error)',
+        success: 'var(--color-success)',
       },
     },
   },
