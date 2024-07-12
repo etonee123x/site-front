@@ -1,5 +1,5 @@
 <template>
-  <BaseButton :is-active="modelValue" @click="onClick">
+  <BaseButton :class="model && 'text-details-500 border-details-500'" @click="onClick">
     <slot />
   </BaseButton>
 </template>

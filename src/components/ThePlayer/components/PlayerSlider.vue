@@ -8,7 +8,7 @@
     @mousedown.stop
     @touchstart.stop
   >
-    <div class="bg-dark">
+    <div class="bg-[rgb(from_var(--color-details-500)_r_g_b_/_0.25)]">
       <div class="h-1 bg-details-500" :style="style" />
     </div>
   </div>

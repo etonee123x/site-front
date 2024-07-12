@@ -27,7 +27,6 @@ const LazyBaseLoading = defineAsyncComponent(() => import('./BaseLoading.vue'));
 
 const props = defineProps<
   Partial<{
-    isActive: boolean;
     isDisabled: boolean;
     isLoading: boolean;
     prependIconPath: string;
@@ -56,7 +55,7 @@ button {
   @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
   @apply with-hover:bg-items-hovered;
   @apply focus:on-focus;
-  @apply disabled:pointer-events-none disabled:bg-dark disabled:text-items;
+  @apply disabled:pointer-events-none disabled:bg-dark disabled:opacity-25 disabled:text-items;
   @apply active:text-details-500 active:border-details-500;
 }
 </style>
