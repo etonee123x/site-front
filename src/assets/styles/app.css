@@ -31,16 +31,3 @@ p {
   all: unset;
   @apply block;
 }
-
-:root {
-  --color-black: #000000;
-  --color-success: #34C759;
-  --color-error: #FF3B30;
-
-  --color-details: #ff0000;
-
-  --color-items: #f8faff;
-  --color-folders: #fff1b2;
-  --color-bg: #ffffff;
-  --color-dark: #808080;
-}

@@ -7,5 +7,5 @@
 </template>
 
 <style module="$s">
-@import '../assets/styles/explorerElement.scss';
+@import '../assets/styles/explorerElement.css';
 </style>

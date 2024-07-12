@@ -15,7 +15,7 @@ defineProps<{
 </script>
 
 <style module="$s">
-@import '../assets/styles/explorerElement.scss';
+@import '../assets/styles/explorerElement.css';
 
 .explorerElement.explorerElement_folder {
   @apply bg-folders;

@@ -36,5 +36,5 @@ const birthTimeFormatted = computed(() => format(new Date(props.element.birthtim
 </script>
 
 <style module="$s">
-@import '../assets/styles/explorerElement.scss';
+@import '../assets/styles/explorerElement.css';
 </style>
