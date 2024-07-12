@@ -1,6 +1,6 @@
 <template>
-  <RouterLink :to="element.url" :class="[$style.directoryElement, $style.directoryElement_folder]">
-    <div :class="$style.title">
+  <RouterLink :to="element.url" :class="[$s.explorerElement, $s.explorerElement_folder]">
+    <div :class="$s.title" class="w-2/3 overflow-x-auto overflow-y-hidden m-2">
       {{ element.name }}
     </div>
   </RouterLink>
@@ -14,47 +14,10 @@ defineProps<{
 }>();
 </script>
 
-<style module lang="scss">
-.directoryElement {
-  background-color: var(--color-items);
-  border: 2px var(--color-dark) solid;
-  border-radius: 0.5rem;
-  width: 100%;
-  cursor: pointer;
+<style module="$s" lang="scss">
+@import '../assets/styles/explorerElement.scss';
 
-  @include withHover {
-    @apply bg-items-hovered border-details-500;
-  }
-
-  &:focus-visible {
-    @include onFocus();
-    text-decoration: none;
-  }
-}
-
-.title {
-  max-width: 70%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  margin: 0.5rem;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid rgba(34, 60, 80, 0.4);
-}
-
-.content {
-  margin: 0.5rem;
-}
-
-.birthTime {
-  text-align: right;
-  margin: 0.5rem;
-}
-
-.directoryElement {
+.explorerElement {
   &_folder {
     @apply bg-folders;
 

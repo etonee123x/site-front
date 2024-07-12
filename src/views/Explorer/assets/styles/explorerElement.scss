@@ -1,0 +1,15 @@
+.explorerElement {
+  @apply bg-items border-2 border-dark rounded-lg w-full cursor-pointer;
+
+  @include withHover {
+    @apply bg-items-hovered border-details-500;
+  }
+
+  &:focus-visible {
+    @apply on-focus no-underline;
+  }
+}
+
+.title {
+  @apply w-2/3 overflow-x-auto overflow-y-hidden m-2
+}
