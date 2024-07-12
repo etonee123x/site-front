@@ -1,6 +1,12 @@
 <template>
-  <div v-if="galleryItem">
-    <div ref="refMediaContainer" :style="fullStyles" class="touch-pinch-zoom fixed bg-items p-2 border-2 border-dark">
+  <div
+    v-if="galleryItem"
+    ref="refMediaContainer"
+    :style="fullStyles"
+    class="touch-pinch-zoom fixed bg-background p-2 border-2 border-dark flex gap-2 items-center"
+  >
+    <BaseButton :prepend-icon-path="mdiChevronLeft" class="h-10" @click="() => prev()" />
+    <div>
       <div class="text-center mb-1">
         {{ galleryItem.name }}
       </div>
@@ -12,18 +18,15 @@
         @load="onImgLoad"
         @wheel.prevent="onWheel"
       />
-      <div class="flex justify-between gap-4 mt-2">
-        <BaseButton :prepend-icon-path="mdiChevronLeft" class="flex-1"></BaseButton>
-        <BaseButton :prepend-icon-path="mdiChevronRight" class="flex-1"></BaseButton>
-      </div>
     </div>
+    <BaseButton :prepend-icon-path="mdiChevronRight" class="h-10" @click="() => next()" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import { onClickOutside, useDraggable, useToggle } from '@vueuse/core';
+import { onClickOutside, useDraggable, useToggle, onKeyStroke } from '@vueuse/core';
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 
 import { useGalleryStore } from '@/stores/gallery';
@@ -32,6 +35,7 @@ import BaseButton from '@/components/ui/BaseButton.vue';
 
 const galleryStore = useGalleryStore();
 const { galleryItem } = storeToRefs(galleryStore);
+const { next, prev } = galleryStore;
 
 const componentsStore = useComponentsStore();
 const { playerHeight } = storeToRefs(componentsStore);
@@ -121,6 +125,9 @@ const onWheel = (e: WheelEvent) => {
     (woPx(refMediaContainer.value.style.top) ?? 0) - (e.clientY - top) * multiplier,
   );
 };
+
+onKeyStroke('ArrowRight', () => next());
+onKeyStroke('ArrowLeft', () => prev());
 
 watch(galleryItem, () => {
   if (galleryItem.value) {

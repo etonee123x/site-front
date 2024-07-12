@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
-import { shallowRef, computed, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { type ItemImage, type ItemVideo } from '@shared/src/types';
+import { useCycleList } from '@vueuse/core';
 
 type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 
 export const useGalleryStore = defineStore('gallery', () => {
-  const galleryItem = shallowRef<GalleryItem | null>(null);
-
   const galleryItems = ref<Array<GalleryItem>>([]);
 
   const isGalleryItemLoaded = computed(() => Boolean(galleryItem.value));
@@ -17,9 +16,16 @@ export const useGalleryStore = defineStore('gallery', () => {
   };
 
   const unloadGalleryItem = () => {
-    galleryItem.value = null;
     galleryItems.value = [];
   };
+
+  const {
+    next,
+    prev,
+    state: galleryItem,
+  } = useCycleList(galleryItems, {
+    getIndexOf: (value, list) => list.findIndex((item) => item?.src === value?.src),
+  });
 
   return {
     galleryItem,
@@ -28,5 +34,8 @@ export const useGalleryStore = defineStore('gallery', () => {
 
     loadGalleryItem,
     unloadGalleryItem,
+
+    next,
+    prev,
   };
 });
