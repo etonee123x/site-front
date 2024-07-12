@@ -27,7 +27,7 @@
     <template #option="option">
       <div class="flex gap-1 justify-between items-center text-xs">
         <div>{{ getOptionLabel(option) }}</div>
-        <BaseIcon class="hidden" :class="$style.iconSelected" :path="mdiCheck" />
+        <BaseIcon class="hidden" :class="$s.iconSelected" :path="mdiCheck" />
       </div>
     </template>
   </VueSelect>
@@ -69,7 +69,7 @@ const getOptionLabel = (option: Option) =>
   option && typeof option === 'object' ? option[props.label ?? ('label' as keyof Option)] : option;
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="$s">
 :global(.vs__dropdown-option--selected) {
   .iconSelected {
     @apply block;
