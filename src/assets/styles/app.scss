@@ -23,15 +23,8 @@ li {
 
 a {
   @apply text-inherit;
-  text-decoration-line: inherit;
-
-  @include withHover {
-    @apply text-details-500;
-  }
-
-  &:focus-visible {
-    @apply outline-none underline;
-  }
+  @apply with-hover:text-details-500;
+  @apply focus-visible:outline-none focus-visible:underline;
 }
 
 p {

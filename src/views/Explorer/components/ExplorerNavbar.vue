@@ -4,17 +4,7 @@
       <li
         v-for="(navigationItem, index) in navigationItems"
         :key="index"
-        :class="[
-          'whitespace-nowrap',
-          'table-cell',
-          'align-middle',
-          'last:text-details-500',
-          'before:text-[initial]',
-          'before:px-2',
-          'before:[--tw-content:\'>\']',
-          'before:first:[--tw-content:\'\']',
-          'before:first:p-0',
-        ]"
+        class="whitespace-nowrap table-cell align-middle last:text-details-500 before:text-[initial] before:px-2 before:[--tw-content:'>'] before:first:[--tw-content:''] before:first:p-0"
       >
         <RouterLink :to="navigationItem.link">
           {{ navigationItem.text }}

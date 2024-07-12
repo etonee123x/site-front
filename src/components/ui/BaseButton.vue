@@ -1,7 +1,7 @@
 <template>
   <button type="button" :disabled="isDisabled" @click="onCLick">
-    <div class="flex justify-between">
-      <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-35'">
+    <div class="flex justify-between relative">
+      <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
         <div v-if="$slots.prepend || prependIconPath" class="flex">
           <slot name="prepend">
             <LazyBaseIcon v-if="prependIconPath" :path="prependIconPath" />
