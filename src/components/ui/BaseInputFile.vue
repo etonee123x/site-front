@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="flex justify-center items-center cursor-pointer p-4 border border-dark rounded-lg"
+      class="flex justify-center items-center cursor-pointer p-4 border border-dark rounded-lg bg-items with-hover:bg-items-hovered"
       :class="isFocused && 'on-focus'"
       @click="onClick"
     >
