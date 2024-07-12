@@ -14,12 +14,10 @@ defineProps<{
 }>();
 </script>
 
-<style module="$s" lang="scss">
+<style module="$s">
 @import '../assets/styles/explorerElement.scss';
 
-.explorerElement {
-  &_folder {
-    @apply bg-folders with-hover:bg-folders-hovered;
-  }
+.explorerElement.explorerElement_folder {
+  @apply bg-folders with-hover:bg-folders-hovered;
 }
 </style>

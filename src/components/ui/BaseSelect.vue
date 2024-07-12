@@ -69,7 +69,7 @@ const getOptionLabel = (option: Option) =>
   option && typeof option === 'object' ? option[props.label ?? ('label' as keyof Option)] : option;
 </script>
 
-<style lang="scss" module="$s">
+<style module="$s">
 :global(.vs__dropdown-option--selected) .iconSelected {
   @apply block;
 }

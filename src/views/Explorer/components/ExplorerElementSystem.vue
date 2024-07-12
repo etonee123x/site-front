@@ -6,6 +6,6 @@
   </div>
 </template>
 
-<style lang="scss" module="$s">
+<style module="$s">
 @import '../assets/styles/explorerElement.scss';
 </style>

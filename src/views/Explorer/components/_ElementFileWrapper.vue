@@ -35,6 +35,6 @@ const onClick = () => emit('click');
 const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
 </script>
 
-<style lang="scss" module="$s">
+<style module="$s">
 @import '../assets/styles/explorerElement.scss';
 </style>
