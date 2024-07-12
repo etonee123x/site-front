@@ -1,5 +1,11 @@
 <template>
-  <div ref="refElement" :style="style" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+  <div
+    ref="refElement"
+    :style="style"
+    @touchstart="onTouchStart"
+    @touchmove.prevent="onTouchMove"
+    @touchend="onTouchEnd"
+  >
     <slot />
   </div>
 </template>
@@ -9,13 +15,11 @@ import { type CSSProperties, reactive, ref, computed } from 'vue';
 import { useElementSize } from '@vueuse/core';
 import { isTruthy } from '@shared/src/utils';
 
-import type { Numberable } from '@/types';
-
 const props = withDefaults(
   defineProps<
     Partial<{
-      threshold: Numberable;
-      disapearDelay: Numberable;
+      threshold: number | `${number}`;
+      disapearDelay: number | `${number}`;
     }>
   >(),
   {

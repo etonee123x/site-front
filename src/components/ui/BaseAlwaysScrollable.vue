@@ -14,12 +14,10 @@
 import { useElementSize } from '@vueuse/core';
 import { computed, ref } from 'vue';
 
-import type { Numberable } from '@/types';
-
 const props = withDefaults(
   defineProps<
     Partial<{
-      duration: Numberable;
+      duration: number | `${number}`;
     }>
   >(),
   {

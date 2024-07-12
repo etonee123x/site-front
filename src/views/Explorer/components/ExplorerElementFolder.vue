@@ -18,6 +18,7 @@ defineProps<{
 @import '../assets/styles/explorerElement.scss';
 
 .explorerElement.explorerElement_folder {
-  @apply bg-folders with-hover:bg-folders-hovered;
+  @apply bg-folders;
+  @apply with-hover:bg-folders-hovered;
 }
 </style>
