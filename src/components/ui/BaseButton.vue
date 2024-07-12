@@ -1,25 +1,20 @@
 <template>
-  <button
-    type="button"
-    :class="[$style.button, isActive && $style.button_active]"
-    :disabled="isDisabled"
-    @click="onCLick"
-  >
-    <div :class="$style.inner">
-      <div :class="[$style.slot, isLoading && $style.slot_hidden]">
-        <div v-if="$slots.prepend || prependIconPath" :class="$style.wrapperPrependAppend">
+  <button type="button" :disabled="isDisabled" @click="onCLick">
+    <div class="flex justify-between relative">
+      <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
+        <div v-if="$slots.prepend || prependIconPath" class="flex">
           <slot name="prepend">
             <LazyBaseIcon v-if="prependIconPath" :path="prependIconPath" />
           </slot>
         </div>
         <slot />
-        <div v-if="$slots.append || appendIconPath" :class="$style.wrapperPrependAppend">
+        <div v-if="$slots.append || appendIconPath" class="flex">
           <slot name="append">
             <LazyBaseIcon v-if="appendIconPath" :path="appendIconPath" />
           </slot>
         </div>
       </div>
-      <LazyBaseLoading v-if="isLoading" :class="$style.loading" />
+      <LazyBaseLoading v-if="isLoading" class="absolute left-1/2" />
     </div>
   </button>
 </template>
@@ -55,29 +50,13 @@ const onCLick = (e: Event) => {
 };
 </script>
 
-<style lang="scss" module>
-.inner {
-  display: flex;
-  justify-content: space-between;
-}
-
-.slot {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.25rem;
-
-  &_hidden {
-    opacity: 33%;
-  }
-}
-
-.loading {
-  position: absolute;
-  left: 50%;
-}
-
-.wrapperPrependAppend {
-  display: flex;
+<style>
+button {
+  all: unset;
+  @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
+  @apply with-hover:bg-items-hovered;
+  @apply focus:on-focus;
+  @apply disabled:pointer-events-none disabled:bg-dark disabled:text-items;
+  @apply active:text-details-500 active:border-details-500;
 }
 </style>

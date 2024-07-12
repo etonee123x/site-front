@@ -1,19 +1,19 @@
 <template>
-  <div :class="$s.editPost">
-    <div :class="$s.inputs">
+  <div class="flex gap-4 flex-col">
+    <div class="flex gap-4">
       <BaseTextarea
         ref="refTextarea"
         v-model="model.text"
-        :class="$s.textArea"
+        class="flex-1"
         :placeholder="t('textareaPlaceholder')"
         :errors="v$.text.$errors"
         @submit="onSubmit"
         @paste-file="onPasteFile"
       />
-      <BaseInputFile v-model="files" :class="$s.inputFile" />
+      <BaseInputFile v-model="files" class="sticky top-2 h-min w-min" />
     </div>
     <div v-if="isNotEmptyArray(files)">
-      <div :class="$s.filesHeader">
+      <div class="mb-3 flex items-center gap-2">
         <div class="text-xl">{{ t('files') }}</div>
         <LazyBaseIcon :path="mdiDelete" @click="onClickDeleteFiles" />
       </div>
@@ -74,39 +74,3 @@ defineExpose({
   focusTextarea: () => refTextarea.value?.focus(),
 });
 </script>
-
-<style lang="scss" module="$s">
-.inputs,
-.editPost {
-  display: flex;
-  gap: 1rem;
-}
-
-.editPost {
-  flex-direction: column;
-}
-
-.textArea {
-  flex: 1;
-}
-
-.inputFile {
-  position: sticky;
-  top: 0.5rem;
-  height: min-content;
-  width: min-content;
-}
-
-.files {
-  display: flex;
-  gap: 0.5rem;
-  flex-direction: column;
-}
-
-.filesHeader {
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-</style>

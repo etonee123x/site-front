@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div ref="refRoot" :class="$style.content" v-html="html" />
+  <div ref="refRoot" :class="$s.html" class="whitespace-break-spaces break-words" v-html="html" />
 </template>
 
 <script setup lang="ts">
@@ -34,13 +34,8 @@ onMounted(() =>
 );
 </script>
 
-<style lang="scss" module>
-.content {
-  a {
-    text-decoration: underline;
-  }
-
-  white-space: break-spaces;
-  word-wrap: break-word;
+<style module="$s">
+.html a {
+  @apply underline;
 }
 </style>

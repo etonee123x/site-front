@@ -1,11 +1,11 @@
 <template>
-  <div tabindex="0" :class="$style.directoryElement">
-    <div :class="$style.title">
+  <div tabindex="0" :class="$s.explorerElement">
+    <div :class="$s.title">
       <slot />
     </div>
   </div>
 </template>
 
-<style lang="scss" module>
-@import '@/views/Explorer/assets/styles/directory-element.scss';
+<style module="$s">
+@import '../assets/styles/explorerElement.css';
 </style>

@@ -11,13 +11,6 @@ export default defineConfig({
       '@shared': resolve(__dirname, './submodules/shared'),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@import "./src/assets/styles/mixins/index.scss";',
-      },
-    },
-  },
   plugins: [vue(), VueI18nPlugin({})],
   publicDir: 'public',
 });

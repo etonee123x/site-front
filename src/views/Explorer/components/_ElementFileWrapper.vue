@@ -1,14 +1,15 @@
 <template>
-  <div tabindex="0" :class="$style.directoryElement" @keydown.enter="onClick" @click="onClick">
-    <div :class="$style.header">
-      <div :class="$style.title">
+  <div tabindex="0" :class="$s.explorerElement" @keydown.enter="onClick" @click="onClick">
+    <div class="flex justify-between">
+      <div :class="$s.title">
         {{ element.name }}
       </div>
-      <div :class="$style.birthTime" title="Created at">
+      <div class="text-right m-2" title="Created at">
         {{ birthTimeFormatted }}
       </div>
     </div>
-    <div :class="$style.content">
+    <BaseHr />
+    <div class="m-2">
       <slot />
     </div>
   </div>
@@ -18,6 +19,8 @@
 import { computed } from 'vue';
 import { format } from 'date-fns';
 import { type ItemFile } from '@shared/src/types';
+
+import BaseHr from '@/components/ui/BaseHr.vue';
 
 const props = defineProps<{
   element: ItemFile;
@@ -32,6 +35,6 @@ const onClick = () => emit('click');
 const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
 </script>
 
-<style lang="scss" module>
-@import '@/views/Explorer/assets/styles/directory-element.scss';
+<style module="$s">
+@import '../assets/styles/explorerElement.css';
 </style>

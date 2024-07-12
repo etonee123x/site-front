@@ -1,12 +1,12 @@
 <template>
-  <div :class="$style.app">
+  <div class="flex flex-col bg-background h-screen overflow-hidden">
     <TheHeader />
-    <main ref="refMain" :class="$style.main">
+    <main ref="refMain" class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1">
       <RouterView />
       <LazyTheToasts v-if="hasToasts" />
       <LazyTheGallery v-if="isImageLoaded" />
     </main>
-    <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" :class="$style.player" />
+    <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" />
     <TheFooter v-else />
   </div>
 </template>
@@ -49,22 +49,3 @@ watch(refMain, (v) => {
   main.value = v;
 });
 </script>
-
-<style module lang="scss">
-.app {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-bg);
-  height: 100vh;
-  overflow: hidden;
-}
-
-.main {
-  position: relative;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  scrollbar-gutter: stable both-edges;
-}
-</style>

@@ -1,9 +1,9 @@
 <template>
-  <footer :class="$style.footer">
-    <div class="l-container" :class="$style.inner">
+  <footer class="border-t border-t-dark">
+    <div class="l-container py-2 flex gap-2 items-center">
       <div>{{ t('me') }}</div>
       <a target="_blank" :href="telegramLink">
-        <img :class="$style.img" src="/src/components/TheFooter/assets/icons/Logo.svg" />
+        <img class="w-6 h-6" src="/src/components/TheFooter/assets/icons/Logo.svg" />
       </a>
     </div>
   </footer>
@@ -23,21 +23,3 @@ const { t } = useI18n({ useScope: 'local' });
 
 const telegramLink = String(import.meta.env.VITE_TELEGRAM_LINK);
 </script>
-
-<style lang="scss" module>
-.footer {
-  border-top: 1px var(--color-dark) solid;
-}
-
-.img {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-.inner {
-  padding: 0.5rem 0;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-</style>
