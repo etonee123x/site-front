@@ -1,6 +1,10 @@
 <template>
-  <div ref="refContainer" :class="$style.container">
-    <div ref="refContent" :class="[$style.content, isAnimated && $style.content_animated]">
+  <div ref="refContainer" class="overflow-hidden relative inline-flex">
+    <div
+      ref="refContent"
+      class="whitespace-nowrap [margin:var(--base-always-scrollable--content--margin)]"
+      :class="isAnimated && $s.animated"
+    >
       <slot />
     </div>
   </div>
@@ -38,20 +42,9 @@ const isAnimated = computed(() => diff.value > 0);
 const speedFormatted = computed(() => `${props.duration}ms`);
 </script>
 
-<style lang="scss" module>
-.container {
-  overflow: hidden;
-  position: relative;
-  display: inline-flex;
-}
-
-.content {
-  margin: var(--base-always-scrollable--content--margin);
-  white-space: nowrap;
-
-  &_animated {
-    animation: scroll v-bind('speedFormatted') linear infinite;
-  }
+<style lang="scss" module="$s">
+.animated {
+  animation: scroll v-bind('speedFormatted') linear infinite;
 }
 
 @keyframes scroll {

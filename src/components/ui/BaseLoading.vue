@@ -1,7 +1,9 @@
 <template>
-  <span :class="$style.loading">
-    <span v-if="isFull" :class="$style.indicator">{{ t('loading') }}</span>
-    <span v-else :class="[$style.indicator, $style.indicator_notFull]" />
+  <span>
+    <span v-if="isFull" :class="CLASSES">
+      {{ t('loading') }}
+    </span>
+    <span v-else :class="CLASSES" class="after:translate-x-1/2 after:end-0" />
   </span>
 </template>
 
@@ -20,26 +22,11 @@ defineProps<{
 }>();
 
 const { t } = useI18n({ useScope: 'local' });
+
+const CLASSES = ['relative', 'after:absolute', "after:[--tw-content:'.']", 'after:[animation:loading_2s_infinite]'];
 </script>
 
-<style lang="scss" module>
-.indicator {
-  position: relative;
-
-  &::after {
-    content: '.';
-    position: absolute;
-    inset-inline-start: 100%;
-    animation: loading 2s infinite;
-  }
-
-  &_notFull {
-    &::after {
-      transform: translateX(-50%);
-    }
-  }
-}
-
+<style lang="scss">
 @keyframes loading {
   0% {
     content: '.';

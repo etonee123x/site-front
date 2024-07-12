@@ -1,10 +1,5 @@
 <template>
-  <button
-    type="button"
-    :class="[$style.button, isActive && $style.button_active]"
-    :disabled="isDisabled"
-    @click="onCLick"
-  >
+  <button type="button" :class="[$s.button, isActive && $s.button_active]" :disabled="isDisabled" @click="onCLick">
     <div class="flex justify-between">
       <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-35'">
         <div v-if="$slots.prepend || prependIconPath" class="flex">
@@ -55,7 +50,7 @@ const onCLick = (e: Event) => {
 };
 </script>
 
-<style lang="scss" module>
+<style lang="scss" module="$s">
 button {
   all: unset;
   @apply bg-items border border-dark rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
