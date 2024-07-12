@@ -1,17 +1,21 @@
 <template>
-  <div v-if="theImage">
+  <div v-if="galleryItem">
     <div ref="refMediaContainer" :style="fullStyles" class="touch-pinch-zoom fixed bg-items p-2 border-2 border-dark">
       <div class="text-center mb-1">
-        {{ theImage.name }}
+        {{ galleryItem.name }}
       </div>
       <img
         ref="refMedia"
         class="mx-auto block"
         :draggable="false"
-        :src="theImage.src"
+        :src="galleryItem.src"
         @load="onImgLoad"
         @wheel.prevent="onWheel"
       />
+      <div class="flex justify-between gap-4 mt-2">
+        <BaseButton :prepend-icon-path="mdiChevronLeft" class="flex-1"></BaseButton>
+        <BaseButton :prepend-icon-path="mdiChevronRight" class="flex-1"></BaseButton>
+      </div>
     </div>
   </div>
 </template>
@@ -20,12 +24,14 @@
 import { storeToRefs } from 'pinia';
 import { ref, computed, watch } from 'vue';
 import { onClickOutside, useDraggable, useToggle } from '@vueuse/core';
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js';
 
 import { useGalleryStore } from '@/stores/gallery';
 import { useComponentsStore } from '@/stores/components';
+import BaseButton from '@/components/ui/BaseButton.vue';
 
 const galleryStore = useGalleryStore();
-const { theImage } = storeToRefs(galleryStore);
+const { galleryItem } = storeToRefs(galleryStore);
 
 const componentsStore = useComponentsStore();
 const { playerHeight } = storeToRefs(componentsStore);
@@ -34,7 +40,7 @@ const refMediaContainer = ref<HTMLDivElement>();
 const refMedia = ref<HTMLImageElement>();
 const [isMediaVisible, setIsMediaVisible] = useToggle();
 
-onClickOutside(refMediaContainer, galleryStore.unloadImage);
+onClickOutside(refMediaContainer, galleryStore.unloadGalleryItem);
 const { x, y, style } = useDraggable(refMediaContainer, { preventDefault: true, stopPropagation: true });
 
 const fullStyles = computed(() => [style.value, { opacity: Number(isMediaVisible.value) }]);
@@ -116,8 +122,8 @@ const onWheel = (e: WheelEvent) => {
   );
 };
 
-watch(theImage, () => {
-  if (theImage.value) {
+watch(galleryItem, () => {
+  if (galleryItem.value) {
     return;
   }
 
