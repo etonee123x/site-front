@@ -70,9 +70,7 @@ const getOptionLabel = (option: Option) =>
 </script>
 
 <style lang="scss" module="$s">
-:global(.vs__dropdown-option--selected) {
-  .iconSelected {
-    @apply block;
-  }
+:global(.vs__dropdown-option--selected) .iconSelected {
+  @apply block;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div tabindex="0" :class="$s.explorerElement">
-    <div :class="$refs.title">
+    <div :class="$s.title">
       <slot />
     </div>
   </div>

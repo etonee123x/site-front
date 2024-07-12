@@ -26,7 +26,7 @@ const { t } = useI18n({ useScope: 'local' });
 const CLASSES = ['relative', 'after:absolute', "after:[--tw-content:'.']", 'after:[animation:loading_2s_infinite]'];
 </script>
 
-<style lang="scss">
+<style>
 @keyframes loading {
   0% {
     content: '.';

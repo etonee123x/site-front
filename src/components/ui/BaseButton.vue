@@ -50,7 +50,7 @@ const onCLick = (e: Event) => {
 };
 </script>
 
-<style lang="scss">
+<style>
 button {
   all: unset;
   @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;

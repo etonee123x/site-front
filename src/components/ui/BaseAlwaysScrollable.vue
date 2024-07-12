@@ -42,7 +42,7 @@ const isAnimated = computed(() => diff.value > 0);
 const speedFormatted = computed(() => `${props.duration}ms`);
 </script>
 
-<style lang="scss" module="$s">
+<style module="$s">
 .animated {
   animation: scroll v-bind('speedFormatted') linear infinite;
 }

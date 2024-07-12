@@ -34,10 +34,8 @@ onMounted(() =>
 );
 </script>
 
-<style lang="scss" module="$s">
-.html {
-  a {
-    @apply underline;
-  }
+<style module="$s">
+.html a {
+  @apply underline;
 }
 </style>
