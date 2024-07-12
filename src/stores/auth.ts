@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, shallowRef } from 'vue';
 
 import { getAuthData as _getAuthData } from '@/api';
 import { type AuthData, Role } from '@/types';
 
 export const useAuthStore = defineStore('auth', () => {
-  const authData = ref<AuthData | null>(null);
+  const authData = shallowRef<AuthData | null>(null);
 
   const isAdmin = computed(() => Boolean(authData.value && authData.value.role === Role.Admin));
 
