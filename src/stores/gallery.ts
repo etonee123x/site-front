@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { type ItemImage, type ItemVideo } from '@shared/src/types';
+import { isExtVideo, type ItemImage, type ItemVideo } from '@shared/src/types';
 import { useCycleList } from '@vueuse/core';
+
+import { getFileUrlExt } from '@/utils/url';
 
 type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 
@@ -27,10 +29,25 @@ export const useGalleryStore = defineStore('gallery', () => {
     getIndexOf: (value, list) => list.findIndex((item) => item?.src === value?.src),
   });
 
+  const isCurrentGalleryItemVideo = computed(() => {
+    if (!galleryItem.value) {
+      return false;
+    }
+
+    const maybeExt = getFileUrlExt(galleryItem.value.src);
+    if (!maybeExt) {
+      return false;
+    }
+
+    return isExtVideo(maybeExt);
+  });
+
   return {
     galleryItem,
     galleryItems,
+
     isGalleryItemLoaded,
+    isCurrentGalleryItemVideo,
 
     loadGalleryItem,
     unloadGalleryItem,

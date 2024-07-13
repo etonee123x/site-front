@@ -101,7 +101,19 @@ onClickOutside(refDialogInner, close);
 
 const onClickCloseIcon = close;
 
-watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()));
+watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()), { immediate: true });
+
+watch(refDialog, () => {
+  if (!refDialog.value) {
+    return;
+  }
+
+  if (!model.value || refDialog.value.open) {
+    return;
+  }
+
+  refDialog.value?.showModal();
+});
 
 defineExpose({
   open,

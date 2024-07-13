@@ -1,4 +1,5 @@
 import type { Nil } from '@shared/src/types';
+import type { ComponentPublicInstance, PublicProps } from 'vue';
 
 export * from './settings';
 export * from './toasts';
@@ -17,3 +18,5 @@ export type PartialKeys<TObject, Keys extends keyof TObject> = {
 export type ArrayOrNot<T> = T | Array<T>;
 
 export type Unpromise<T extends Promise<any>> = T extends Promise<infer Result> ? Result : never;
+
+export type ExtractProps<T extends ComponentPublicInstance> = Omit<T['$props'], keyof PublicProps>;

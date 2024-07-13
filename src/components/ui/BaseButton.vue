@@ -2,15 +2,15 @@
   <button type="button" :disabled="isDisabled" @click="onCLick">
     <div class="flex justify-between relative">
       <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
-        <div v-if="$slots.prepend || prependIconPath" class="flex">
+        <div v-if="$slots.prepend || prependIcon" class="flex">
           <slot name="prepend">
-            <LazyBaseIcon v-if="prependIconPath" :path="prependIconPath" />
+            <LazyBaseIcon v-if="prependIcon" v-bind="prependIcon" />
           </slot>
         </div>
         <slot />
-        <div v-if="$slots.append || appendIconPath" class="flex">
+        <div v-if="$slots.append || appendIcon" class="flex">
           <slot name="append">
-            <LazyBaseIcon v-if="appendIconPath" :path="appendIconPath" />
+            <LazyBaseIcon v-if="appendIcon" v-bind="appendIcon" />
           </slot>
         </div>
       </div>
@@ -22,15 +22,19 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
+import type { ExtractProps } from '@/types';
+
 const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
 const LazyBaseLoading = defineAsyncComponent(() => import('./BaseLoading.vue'));
+
+type IconProps = Omit<ExtractProps<InstanceType<typeof LazyBaseIcon>>, 'onClick'>;
 
 const props = defineProps<
   Partial<{
     isDisabled: boolean;
     isLoading: boolean;
-    prependIconPath: string;
-    appendIconPath: string;
+    prependIcon: IconProps;
+    appendIcon: IconProps;
   }>
 >();
 

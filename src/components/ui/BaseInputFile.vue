@@ -10,7 +10,7 @@
     </div>
     <BaseDialog ref="refDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
-      <BaseButton class="mx-auto my-4" :prepend-icon-path="mdiPlus" @click="onClickAdd">
+      <BaseButton class="mx-auto my-4" :prepend-icon="{ path: mdiPlus }" @click="onClickAdd">
         {{ t('add') }}
       </BaseButton>
     </BaseDialog>
