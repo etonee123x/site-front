@@ -7,30 +7,17 @@
 </template>
 
 <script setup lang="ts">
-import { isItemImage, isItemVideo, type ItemImage } from '@shared/src/types';
-import { storeToRefs } from 'pinia';
-import { pick } from '@shared/src/utils';
+import { type ItemImage } from '@shared/src/types';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
 import { useGalleryStore } from '@/stores/gallery';
-import { useExplorerStore } from '@/stores/explorer';
 
 const props = defineProps<{
   element: ItemImage;
 }>();
 
-const explorerStore = useExplorerStore();
-const { folderElements } = storeToRefs(explorerStore);
-const { loadGalleryItem } = useGalleryStore();
+const { loadGalleryItemFromCurrentExplorerFolder } = useGalleryStore();
 
-const onClick = () =>
-  loadGalleryItem(
-    pick(props.element, ['name', 'src']),
-    folderElements.value.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>(
-      (acc, folderElement) =>
-        isItemImage(folderElement) || isItemVideo(folderElement) ? [...acc, pick(folderElement, ['name', 'src'])] : acc,
-      [],
-    ),
-  );
+const onClick = () => loadGalleryItemFromCurrentExplorerFolder(props.element);
 </script>

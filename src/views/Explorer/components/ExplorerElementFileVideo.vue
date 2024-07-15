@@ -1,7 +1,7 @@
 <template>
-  <ElementFileWrapper :element="element">
+  <ElementFileWrapper :element="element" @click="onClick">
     <div class="flex justify-center max-w-full">
-      <video class="max-w-full" :src="element.src" controls />
+      <video class="max-w-full" :src="element.src" />
     </div>
   </ElementFileWrapper>
 </template>
@@ -11,7 +11,13 @@ import { type ItemVideo } from '@shared/src/types';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
-defineProps<{
+import { useGalleryStore } from '@/stores/gallery';
+
+const props = defineProps<{
   element: ItemVideo;
 }>();
+
+const { loadGalleryItemFromCurrentExplorerFolder } = useGalleryStore();
+
+const onClick = () => loadGalleryItemFromCurrentExplorerFolder(props.element);
 </script>
