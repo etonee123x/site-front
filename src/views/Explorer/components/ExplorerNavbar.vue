@@ -1,5 +1,5 @@
 <template>
-  <div class="sticky top-0 flex items-center overflow-x-auto bg-background py-2">
+  <div class="sticky top-0 flex items-center overflow-x-auto bg-background py-2 z-10">
     <ul class="l-container">
       <li
         v-for="(navigationItem, index) in navigationItems"

@@ -13,6 +13,7 @@ import { useGalleryStore } from '@/stores/gallery';
 import { useBlogStore } from '@/stores/blog';
 
 const LazyAttachmentWithUnknownExtension = defineAsyncComponent(() => import('./AttachmentWithUnknownExtension.vue'));
+const LazyPreviewVideo = defineAsyncComponent(() => import('@/components/PreviewVideo.vue'));
 
 const props = defineProps<{
   fileUrl: string;
@@ -79,7 +80,7 @@ const component = computed(() => {
       };
     case maybeExt && isExtVideo(maybeExt):
       return {
-        is: 'video',
+        is: LazyPreviewVideo,
         binds: {
           src: props.fileUrl,
           onClick: (e: Event) => {

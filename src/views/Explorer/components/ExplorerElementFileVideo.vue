@@ -1,8 +1,6 @@
 <template>
   <ElementFileWrapper :element="element" @click="onClick">
-    <div class="flex justify-center max-w-full">
-      <video class="max-w-full" :src="element.src" />
-    </div>
+    <PreviewVideo :src="element.src" />
   </ElementFileWrapper>
 </template>
 
@@ -11,6 +9,7 @@ import { type ItemVideo } from '@shared/src/types';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
+import PreviewVideo from '@/components/PreviewVideo.vue';
 import { useGalleryStore } from '@/stores/gallery';
 
 const props = defineProps<{
