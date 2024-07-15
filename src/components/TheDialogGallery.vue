@@ -11,7 +11,12 @@
         {{ galleryItem.name }}
       </BaseAlwaysScrollable>
       <div ref="refMediaContainer" class="flex-1 flex items-center justify-center overflow-hidden w-full h-full">
-        <img class="w-full h-full object-contain" :draggable="false" :src="galleryItem.src" />
+        <component
+          :is="component.is"
+          v-bind="component.binds"
+          class="h-full object-contain outline-none border-none"
+          :src="galleryItem.src"
+        />
       </div>
     </div>
   </BaseDialog>
@@ -20,20 +25,33 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { onKeyStroke, useSwipe } from '@vueuse/core';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useGalleryStore } from '@/stores/gallery';
 
 const galleryStore = useGalleryStore();
-const { galleryItem } = storeToRefs(galleryStore);
+const { galleryItem, isCurrentGalleryItemVideo } = storeToRefs(galleryStore);
 const { next, prev, unloadGalleryItem } = galleryStore;
 
 onKeyStroke('ArrowRight', () => next());
 onKeyStroke('ArrowLeft', () => prev());
 
 const refMediaContainer = ref<HTMLDivElement>();
+
+const component = computed(() =>
+  isCurrentGalleryItemVideo.value
+    ? {
+        is: 'video',
+        binds: {
+          controls: true,
+        },
+      }
+    : {
+        is: 'img',
+      },
+);
 
 useSwipe(refMediaContainer, {
   onSwipeEnd: (...[, direction]) => {

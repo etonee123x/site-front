@@ -82,7 +82,6 @@ const component = computed(() => {
         is: 'video',
         binds: {
           src: props.fileUrl,
-          controls: true,
           onClick: (e: Event) => {
             e.stopPropagation();
             loadToGallery();
