@@ -22,20 +22,6 @@
         />
       </div>
       <div class="flex justify-between items-center">
-        <span>{{ t('mode') }}</span>
-        <BaseSelect
-          v-model="model.themeMode"
-          class="w-32"
-          :options="
-            Object.values(ThemeMode).map((mode) => ({
-              label: themeModeToThemeModeTranslation[mode],
-              value: mode,
-            }))
-          "
-          :reduce="propFn('value')"
-        />
-      </div>
-      <div class="flex justify-between items-center">
         <span>{{ t('language') }}</span>
         <BaseSelect
           v-model="model.language"
@@ -75,14 +61,14 @@ import { useSettingsStore } from '@/stores/settings';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseSelect from '@/components/ui/BaseSelect.vue';
-import { Language, ThemeColor, ThemeMode } from '@/types';
+import { Language, ThemeColor } from '@/types';
 
 const isOpened = defineModel<boolean>();
 
 const toggle = useToggle(isOpened);
 
 const settingsStore = useSettingsStore();
-const { settings, themeColorToThemeColorTranslation, themeModeToThemeModeTranslation } = storeToRefs(settingsStore);
+const { settings, themeColorToThemeColorTranslation } = storeToRefs(settingsStore);
 
 const { t } = useI18n({ useScope: 'local' });
 

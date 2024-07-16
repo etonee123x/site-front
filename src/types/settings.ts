@@ -8,12 +8,6 @@ export enum ThemeColor {
   Orange = 'Orange',
 }
 
-export enum ThemeMode {
-  System = 'System',
-  Dark = 'Dark',
-  Light = 'Light',
-}
-
 export enum Language {
   Ru = 'Ru',
   En = 'En',
@@ -21,6 +15,5 @@ export enum Language {
 
 export interface Settings {
   themeColor: ThemeColor;
-  themeMode: ThemeMode;
   language: Language;
 }

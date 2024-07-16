@@ -8,11 +8,6 @@
     "random": "Random",
     "red": "Red"
   },
-  "themeMode": {
-    "system": "System",
-    "dark": "Dark",
-    "light": "Light"
-  },
   "validations": {
     "required": "Value is required"
   }
