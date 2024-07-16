@@ -31,17 +31,3 @@ p {
   all: unset;
   @apply block;
 }
-
-:root {
-  --color-text: black;
-  
-  --color-items: var(--color-details-1);
-  --color-items-hovered: var(--color-details-10);
-
-  --color-folders: var(--color-details-75);
-  --color-folders-hovered: var(--color-details-100);
-
-  --color-dark: var(--color-details-900);
-
-  --color-bg: white;
-}
