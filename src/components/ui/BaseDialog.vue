@@ -2,6 +2,7 @@
   <dialog
     ref="refDialog"
     class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
+    @close="onClose"
   >
     <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full [scrollbar-gutter:stable_both-edges]">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
@@ -91,9 +92,11 @@ const buttons = computed(
 );
 
 const close = () => {
-  refDialog.value?.close();
+  model.value = false;
   emit('close');
 };
+
+const onClose = close;
 
 const open = () => refDialog.value?.showModal();
 
@@ -101,7 +104,19 @@ onClickOutside(refDialogInner, close);
 
 const onClickCloseIcon = close;
 
-watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()));
+watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()), { immediate: true });
+
+watch(refDialog, () => {
+  if (!refDialog.value) {
+    return;
+  }
+
+  if (!model.value || refDialog.value.open) {
+    return;
+  }
+
+  refDialog.value?.showModal();
+});
 
 defineExpose({
   open,

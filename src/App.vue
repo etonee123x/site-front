@@ -4,7 +4,7 @@
     <main ref="refMain" class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1">
       <RouterView />
       <LazyTheToasts v-if="hasToasts" />
-      <LazyTheGallery v-if="isImageLoaded" />
+      <LazyTheDialogGallery v-if="isGalleryItemLoaded" />
     </main>
     <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" />
     <TheFooter v-else />
@@ -24,14 +24,14 @@ import TheHeader from '@/components/TheHeader';
 import TheFooter from '@/components/TheFooter';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
-const LazyTheGallery = defineAsyncComponent(() => import('@/components/TheGallery.vue'));
+const LazyTheDialogGallery = defineAsyncComponent(() => import('@/components/TheDialogGallery.vue'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
 
 const playerStore = usePlayerStore();
 const { isTrackLoaded } = storeToRefs(playerStore);
 
 const galleryStore = useGalleryStore();
-const { isImageLoaded } = storeToRefs(galleryStore);
+const { isGalleryItemLoaded } = storeToRefs(galleryStore);
 
 const toastsStore = useToastsStore();
 const { hasToasts } = storeToRefs(toastsStore);

@@ -4,10 +4,11 @@
 
 <script setup lang="ts">
 import { mdiFileOutline } from '@mdi/js';
-import { isExtAudio, isExtImage } from '@shared/src/types';
+import { isExtAudio, isExtImage, isExtVideo } from '@shared/src/types';
 import { defineAsyncComponent, computed } from 'vue';
 
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
+const LazyPreviewVideo = defineAsyncComponent(() => import('@/components/PreviewVideo.vue'));
 
 const props = defineProps<{
   file: File;
@@ -23,8 +24,8 @@ const component = computed(() => {
         binds: {
           src: URL.createObjectURL(props.file),
           style: {
-            width: '4rem',
-            height: '4rem',
+            maxWidth: '10rem',
+            maxHeight: '10rem',
             objectFit: 'contain',
           },
         },
@@ -37,22 +38,18 @@ const component = computed(() => {
           controls: true,
         },
       };
-    // case isMimeVideo(props.file.type):
-    //   return {
-    //     is: 'video',
-    //     binds: {
-    //       src: URL.createObjectURL(props.file),
-    //       controls: true,
-    //     },
-    //   };
-    // case isMimeText(props.file.type):
-    //   return {
-    //     is: LazyBaseIcon,
-    //     binds: {
-    //       path: mdiTextBoxOutline,
-    //       size: '2rem',
-    //     },
-    //   };
+    case isExtVideo(ext):
+      return {
+        is: LazyPreviewVideo,
+        binds: {
+          src: URL.createObjectURL(props.file),
+          controls: true,
+          style: {
+            maxWidth: '10rem',
+            maxHeight: '10rem',
+          },
+        },
+      };
     default:
       return {
         is: LazyBaseIcon,

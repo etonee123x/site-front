@@ -17,7 +17,7 @@ const props = defineProps<{
   element: ItemImage;
 }>();
 
-const { loadImage } = useGalleryStore();
+const { loadGalleryItemFromCurrentExplorerFolder } = useGalleryStore();
 
-const onClick = () => loadImage(props.element);
+const onClick = () => loadGalleryItemFromCurrentExplorerFolder(props.element);
 </script>
