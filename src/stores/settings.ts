@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
-import { usePreferredDark } from '@vueuse/core';
+import { computed, ref } from 'vue';
 import { enGB, ru } from 'date-fns/locale';
 
 import { i18n } from '@/i18n';
-import { type Settings, ThemeColor, ThemeMode, Language } from '@/types';
+import { type Settings, ThemeColor, Language } from '@/types';
 
 const CLASS_TITLES = Object.freeze({
   THEME_COLOR: 'theme_color',
@@ -49,17 +48,7 @@ export const useSettingsStore = defineStore('settings', () => {
     }),
   );
 
-  const themeModeToThemeModeTranslation = computed(() =>
-    Object.freeze({
-      [ThemeMode.System]: t('themeMode.system'),
-      [ThemeMode.Dark]: t('themeMode.dark'),
-      [ThemeMode.Light]: t('themeMode.light'),
-    }),
-  );
-
   const _settings = ref(Object.assign({}, window.CONFIG, getLocalStorageSettings()));
-
-  const isPreferredDark = usePreferredDark();
 
   const settings = computed({
     get: () => _settings.value,
@@ -71,12 +60,10 @@ export const useSettingsStore = defineStore('settings', () => {
   });
 
   const themeColor = computed(() => _settings.value.themeColor);
-  const themeMode = computed(() => _settings.value.themeMode);
   const language = computed(() => _settings.value.language);
 
   const initSettings = () => {
     setColor(themeColor.value);
-    setMode(themeMode.value);
     setLanguage(language.value);
   };
 
@@ -110,22 +97,6 @@ export const useSettingsStore = defineStore('settings', () => {
 
   const dateFnsLocale = computed(() => LANGUAGE_TO_DATE_FNS_LOCALE[i18n.global.locale.value]);
 
-  const themeModeSystem = computed(() => (isPreferredDark.value ? ThemeMode.Dark : ThemeMode.Light));
-
-  const setMode = (mode: ThemeMode, asSystem = false) => {
-    const _mode = mode === ThemeMode.System || asSystem ? themeModeSystem.value : mode;
-    const bodyClassList = document.querySelector('body')?.classList;
-    const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter((_class) => !_class.startsWith(CLASS_TITLES.THEME_MODE));
-
-    newClasses.push([CLASS_TITLES.THEME_MODE, _mode.toLowerCase()].join('_'));
-
-    bodyClassList?.remove(...oldClasses);
-    bodyClassList?.add(...newClasses);
-
-    _settings.value.themeMode = asSystem ? ThemeMode.System : mode;
-  };
-
   const saveSettings = () => localStorage.setItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE, JSON.stringify(settings.value));
 
   const resetSettings = () => {
@@ -134,31 +105,16 @@ export const useSettingsStore = defineStore('settings', () => {
     settings.value = Object.assign({}, window.CONFIG);
   };
 
-  watch(
-    themeModeSystem,
-    (v) => {
-      if (_settings.value.themeMode !== ThemeMode.System) {
-        return;
-      }
-
-      setMode(v, true);
-    },
-    { immediate: true },
-  );
-
   return {
     settings,
     themeColor,
-    themeMode,
     dateFnsLocale,
 
     themeColorToThemeColorTranslation,
-    themeModeToThemeModeTranslation,
 
     initSettings,
     saveSettings,
     resetSettings,
     setColor,
-    setMode,
   };
 });
