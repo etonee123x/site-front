@@ -33,13 +33,15 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, ref, watch, type CSSProperties, defineAsyncComponent } from 'vue';
-import { onClickOutside } from '@vueuse/core';
+import { computed, ref, watch, type CSSProperties, defineAsyncComponent, onBeforeUnmount } from 'vue';
+import { onClickOutside, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray, isNotNil } from '@shared/src/utils';
 import type { FunctionCallback, WithId } from '@shared/src/types';
+import { storeToRefs } from 'pinia';
 
+import { useComponentsStore } from '@/stores/components';
 import { addId } from '@/utils';
 
 const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton.vue'));
@@ -47,6 +49,12 @@ const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
 
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
+
+const componentsStore = useComponentsStore();
+const { main } = storeToRefs(componentsStore);
+
+const isLocked = useScrollLock(main);
+const toggleIsLocked = useToggle(isLocked);
 
 interface Button extends WithId {
   text: string;
@@ -70,6 +78,7 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel<boolean>();
+const toggleModel = useToggle(model);
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -92,7 +101,7 @@ const buttons = computed(
 );
 
 const close = () => {
-  model.value = false;
+  toggleModel(false);
   emit('close');
 };
 
@@ -104,7 +113,23 @@ onClickOutside(refDialogInner, close);
 
 const onClickCloseIcon = close;
 
-watch(model, (value) => (value ? refDialog.value?.showModal() : refDialog.value?.close()), { immediate: true });
+onBeforeUnmount(() => toggleIsLocked(false));
+
+watch(
+  model,
+  () => {
+    if (model.value) {
+      refDialog.value?.showModal();
+      toggleIsLocked(true);
+
+      return;
+    }
+
+    refDialog.value?.close();
+    toggleIsLocked(false);
+  },
+  { immediate: true },
+);
 
 watch(refDialog, () => {
   if (!refDialog.value) {
