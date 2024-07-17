@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col bg-background h-screen overflow-hidden">
+  <div class="flex flex-col bg-background h-[100dvh] overflow-hidden">
     <TheHeader />
     <main ref="refMain" class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1">
       <RouterView />
