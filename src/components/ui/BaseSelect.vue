@@ -12,11 +12,11 @@
     :multiple="isMultiple"
     :class="[
       '[--vs-dropdown-option-padding:0.5rem]',
-      '[--vs-border-color:var(--color-dark)]',
-      '[--vs-controls-color:var(--color-dark)]',
+      '[--vs-border-color:--color-dark]',
+      '[--vs-controls-color:--color-dark]',
       '[--vs-dropdown-min-width:100%]',
-      '[--vs-dropdown-option--active-bg:var(--color-details-500)]',
-      '[--vs-selected-color:var(--color-text)]',
+      '[--vs-dropdown-option--active-bg:--color-details-500]',
+      '[--vs-selected-color:--color-text]',
     ]"
   >
     <template #selected-option-container="{ option, deselect }">
