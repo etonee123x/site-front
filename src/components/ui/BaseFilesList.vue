@@ -7,7 +7,7 @@
           {{ file.name }}
         </BaseAlwaysScrollable>
         <div class="text-2xl flex gap-2 ms-auto items-center">
-          <BaseIcon class="cursor-grabbing text-dark" :path="mdiSwapVertical" />
+          <BaseIcon class="cursor-grab text-dark" :class="CLASS_HANDLE" :path="mdiSwapVertical" />
           <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
         </div>
       </div>
@@ -19,15 +19,15 @@
 import { mdiDelete, mdiSwapVertical } from '@mdi/js';
 import { isNil } from '@shared/src/utils';
 import Sortable from 'sortablejs';
-import { ref, watch, useCssModule } from 'vue';
+import { ref, watch } from 'vue';
 
 import BaseIcon from './BaseIcon.vue';
 import FilesListFilePreview from './FilesListFilePreview.vue';
 import BaseAlwaysScrollable from './BaseAlwaysScrollable.vue';
 
-const model = defineModel<Array<File>>({ required: true });
+const CLASS_HANDLE = '_handle';
 
-const $s = useCssModule('$s');
+const model = defineModel<Array<File>>({ required: true });
 
 const refUl = ref<HTMLUListElement>();
 let sortable: null | Sortable = null;
@@ -52,7 +52,7 @@ watch(refUl, (v) => {
   }
 
   sortable = Sortable.create(v, {
-    handle: `.${$s.handle}`,
+    handle: `.${CLASS_HANDLE}`,
     onEnd,
   });
 });

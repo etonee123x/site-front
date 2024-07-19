@@ -1,7 +1,7 @@
 <template>
   <BaseDialog
+    ref="refBaseDialog"
     style="width: 90%; max-width: 90%; height: 90%; max-height: 90%; overflow: hidden"
-    model-value
     is-hidden-footer
     is-hidden-header
     @close="onClose"
@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { onKeyStroke, useSwipe } from '@vueuse/core';
+import { onKeyStroke, useSwipe, whenever } from '@vueuse/core';
 import { ref, computed } from 'vue';
 
 import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
@@ -32,8 +32,10 @@ import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useGalleryStore } from '@/stores/gallery';
 
 const galleryStore = useGalleryStore();
-const { galleryItem, isCurrentGalleryItemVideo } = storeToRefs(galleryStore);
+const { galleryItem, isCurrentGalleryItemVideo, isGalleryItemLoaded } = storeToRefs(galleryStore);
 const { next, prev, unloadGalleryItem } = galleryStore;
+
+const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
 
 onKeyStroke('ArrowRight', () => next());
 onKeyStroke('ArrowLeft', () => prev());
@@ -66,4 +68,6 @@ useSwipe(refMediaContainer, {
 });
 
 const onClose = unloadGalleryItem;
+
+whenever(isGalleryItemLoaded, () => refBaseDialog.value?.open());
 </script>

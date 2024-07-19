@@ -3,6 +3,7 @@
     ref="refDialog"
     class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
     @close="onClose"
+    @cancel.prevent="onClose"
   >
     <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full [scrollbar-gutter:stable_both-edges]">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
@@ -34,7 +35,7 @@ Ru:
 
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent, onBeforeUnmount } from 'vue';
-import { onClickOutside, useScrollLock, useToggle } from '@vueuse/core';
+import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray, isNotNil } from '@shared/src/utils';
@@ -76,20 +77,6 @@ const emit = defineEmits<{
   confirm: [];
 }>();
 
-const model = defineModel<boolean>({
-  get: () => Boolean(refDialog.value?.open),
-  set: (v) => {
-    if (v) {
-      refDialog.value?.show();
-      toggleIsLocked(true);
-    } else {
-      refDialog.value?.close();
-      toggleIsLocked(false);
-    }
-  },
-});
-const toggleModel = useToggle(model);
-
 const { t } = useI18n({ useScope: 'local' });
 
 const buttons = computed(
@@ -110,13 +97,35 @@ const buttons = computed(
     ].map(addId),
 );
 
+const isOpened = ref(Boolean(refDialog.value?.open));
+
+useMutationObserver(
+  refDialog,
+  () => {
+    isOpened.value = Boolean(refDialog.value?.open);
+  },
+  {
+    attributes: true,
+  },
+);
+
 const open = () => {
-  toggleModel(true);
+  if (isOpened.value) {
+    return;
+  }
+
+  refDialog.value?.showModal();
+  toggleIsLocked(true);
   emit('open');
 };
 
 const close = () => {
-  toggleModel(false);
+  if (!isOpened.value) {
+    return;
+  }
+
+  refDialog.value?.close();
+  toggleIsLocked(false);
   emit('close');
 };
 
@@ -130,6 +139,6 @@ onBeforeUnmount(() => toggleIsLocked(false));
 defineExpose({
   open,
   close,
-  isOpened: computed(() => Boolean(refDialog.value?.open)),
+  isOpened,
 });
 </script>

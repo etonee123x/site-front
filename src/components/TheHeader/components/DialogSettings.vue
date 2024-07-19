@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog ref="refBaseDialog" :title="t('settings')" style="max-width: 25rem" @confirm="onDialogConfirm">
+  <BaseDialog ref="refBaseDialog" :title="t('settings')" style="max-width: 25rem" @confirm="onConfirm" @close="onClose">
     <div class="flex flex-col gap-4 mb-6">
       <div class="flex justify-between items-center">
         <span>{{ t('color') }}</span>
@@ -55,6 +55,7 @@ import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseSelect from '@/components/ui/BaseSelect.vue';
 import { Language, ThemeColor } from '@/types';
+import { clone } from '@/utils/clone';
 
 const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
 
@@ -63,18 +64,26 @@ const { settings, themeColorToThemeColorTranslation } = storeToRefs(settingsStor
 
 const { t } = useI18n({ useScope: 'local' });
 
-const model = ref(settings.value);
+const model = ref(clone(settings.value));
 
-const onDialogConfirm = () => {
+const onConfirm = () => {
   settings.value = model.value;
 
   settingsStore.saveSettings();
 };
 
+const resetModel = () => {
+  model.value = clone(settings.value);
+};
+
+const onClose = () => {
+  resetModel();
+};
+
 const onClickResetSettings = () => {
   settingsStore.resetSettings();
 
-  model.value = settings.value;
+  resetModel();
 };
 
 defineExpose({

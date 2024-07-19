@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog is-hidden-header :model-value="Boolean(postSelected)" style="height: min-content" @close="onDialogClose">
+  <BaseDialog ref="refBaseDialog" is-hidden-header style="height: min-content" @close="onDialogClose">
     <LazyPostData v-if="postSelected" :post="postSelected" />
     <template #footer>
       <PostDataFooter v-if="postSelected" :post="postSelected">
@@ -23,7 +23,7 @@ Ru:
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -48,9 +48,7 @@ const { postSelected } = storeToRefs(blogStore);
 
 const { format } = useDateFns();
 
-const onDialogClose = () => {
-  router.push({ name: RouteName.Blog });
-};
+const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
 
 const dates = computed(() =>
   postSelected.value
@@ -65,4 +63,16 @@ const dates = computed(() =>
 );
 
 const wasEdited = computed(() => Boolean(postSelected.value && _wasEdited(postSelected.value)));
+
+const onDialogClose = () => {
+  router.push({ name: RouteName.Blog });
+};
+
+watch(postSelected, () => {
+  if (postSelected.value) {
+    refBaseDialog.value?.open();
+  } else {
+    refBaseDialog.value?.close();
+  }
+});
 </script>

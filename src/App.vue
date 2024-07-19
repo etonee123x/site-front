@@ -4,7 +4,7 @@
     <main ref="refMain" class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1">
       <RouterView />
       <LazyTheToasts v-if="hasToasts" />
-      <LazyTheDialogGallery v-if="isGalleryItemLoaded" />
+      <TheDialogGallery />
     </main>
     <LazyThePlayer v-if="isTrackLoaded" ref="refThePlayer" />
     <TheFooter v-else />
@@ -16,22 +16,18 @@ import { useTitle } from '@vueuse/core';
 import { defineAsyncComponent, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import { useGalleryStore } from '@/stores/gallery';
 import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
 import { useComponentsStore } from '@/stores/components';
 import TheHeader from '@/components/TheHeader';
 import TheFooter from '@/components/TheFooter';
+import TheDialogGallery from '@/components/TheDialogGallery.vue';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
-const LazyTheDialogGallery = defineAsyncComponent(() => import('@/components/TheDialogGallery.vue'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
 
 const playerStore = usePlayerStore();
 const { isTrackLoaded } = storeToRefs(playerStore);
-
-const galleryStore = useGalleryStore();
-const { isGalleryItemLoaded } = storeToRefs(galleryStore);
 
 const toastsStore = useToastsStore();
 const { hasToasts } = storeToRefs(toastsStore);
