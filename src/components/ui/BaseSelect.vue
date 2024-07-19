@@ -6,10 +6,10 @@
     :searchable="false"
     :clearable="false"
     :deselect-from-dropdown="isMultiple"
+    :multiple="isMultiple"
     :reduce
     :options
     :label
-    :multiple="isMultiple"
     :class="[
       '[--vs-dropdown-option-padding:0.5rem]',
       '[--vs-border-color:--color-dark]',
