@@ -1,11 +1,5 @@
 <template>
-  <BaseDialog
-    v-model="isOpened"
-    :title="t('settings')"
-    style="max-width: 25rem"
-    @close="onDialogClose"
-    @confirm="onDialogConfirm"
-  >
+  <BaseDialog ref="refBaseDialog" :title="t('settings')" style="max-width: 25rem" @confirm="onDialogConfirm">
     <div class="flex flex-col gap-4 mb-6">
       <div class="flex justify-between items-center">
         <span>{{ t('color') }}</span>
@@ -51,10 +45,9 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { useToggle } from '@vueuse/core';
 import { propFn } from '@shared/src/utils';
 
 import { useSettingsStore } from '@/stores/settings';
@@ -63,9 +56,7 @@ import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseSelect from '@/components/ui/BaseSelect.vue';
 import { Language, ThemeColor } from '@/types';
 
-const isOpened = defineModel<boolean>();
-
-const toggle = useToggle(isOpened);
+const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
 
 const settingsStore = useSettingsStore();
 const { settings, themeColorToThemeColorTranslation } = storeToRefs(settingsStore);
@@ -74,14 +65,10 @@ const { t } = useI18n({ useScope: 'local' });
 
 const model = ref(settings.value);
 
-const onDialogClose = () => toggle(false);
-
 const onDialogConfirm = () => {
   settings.value = model.value;
 
   settingsStore.saveSettings();
-
-  onDialogClose();
 };
 
 const onClickResetSettings = () => {
@@ -89,4 +76,10 @@ const onClickResetSettings = () => {
 
   model.value = settings.value;
 };
+
+defineExpose({
+  open: () => refBaseDialog.value?.open(),
+  close: () => refBaseDialog.value?.close(),
+  isOpened: computed(() => refBaseDialog.value?.isOpened),
+});
 </script>

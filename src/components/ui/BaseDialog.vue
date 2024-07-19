@@ -33,7 +33,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, ref, watch, type CSSProperties, defineAsyncComponent, onBeforeUnmount } from 'vue';
+import { computed, ref, defineAsyncComponent, onBeforeUnmount } from 'vue';
 import { onClickOutside, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
@@ -64,8 +64,6 @@ interface Button extends WithId {
 const props = defineProps<
   Partial<{
     title: string;
-    width: CSSProperties['width'];
-    height: CSSProperties['height'];
     buttons: Array<Button>;
     isHiddenHeader: boolean;
     isHiddenFooter: boolean;
@@ -73,11 +71,23 @@ const props = defineProps<
 >();
 
 const emit = defineEmits<{
+  open: [];
   close: [];
   confirm: [];
 }>();
 
-const model = defineModel<boolean>();
+const model = defineModel<boolean>({
+  get: () => Boolean(refDialog.value?.open),
+  set: (v) => {
+    if (v) {
+      refDialog.value?.show();
+      toggleIsLocked(true);
+    } else {
+      refDialog.value?.close();
+      toggleIsLocked(false);
+    }
+  },
+});
 const toggleModel = useToggle(model);
 
 const { t } = useI18n({ useScope: 'local' });
@@ -100,51 +110,26 @@ const buttons = computed(
     ].map(addId),
 );
 
+const open = () => {
+  toggleModel(true);
+  emit('open');
+};
+
 const close = () => {
   toggleModel(false);
   emit('close');
 };
 
 const onClose = close;
-
-const open = () => refDialog.value?.showModal();
+const onClickCloseIcon = close;
 
 onClickOutside(refDialogInner, close);
 
-const onClickCloseIcon = close;
-
 onBeforeUnmount(() => toggleIsLocked(false));
-
-watch(
-  model,
-  () => {
-    if (model.value) {
-      refDialog.value?.showModal();
-      toggleIsLocked(true);
-
-      return;
-    }
-
-    refDialog.value?.close();
-    toggleIsLocked(false);
-  },
-  { immediate: true },
-);
-
-watch(refDialog, () => {
-  if (!refDialog.value) {
-    return;
-  }
-
-  if (!model.value || refDialog.value.open) {
-    return;
-  }
-
-  refDialog.value?.showModal();
-});
 
 defineExpose({
   open,
   close,
+  isOpened: computed(() => Boolean(refDialog.value?.open)),
 });
 </script>

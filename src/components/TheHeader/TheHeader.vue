@@ -15,7 +15,7 @@
         </li>
       </ul>
     </div>
-    <DialogSettings v-model="isDialogSettingsOpened" />
+    <DialogSettings ref="refDialogSettings" />
   </header>
 </template>
 
@@ -30,12 +30,11 @@ En:
 
 <script setup lang="ts">
 import { mdiAccountCircleOutline, mdiCog } from '@mdi/js';
-import { useToggle } from '@vueuse/core';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
-import { DialogSettings } from './components';
+import DialogSettings from './components/DialogSettings.vue';
 
 import { logout } from '@/helpers/logout';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
@@ -45,7 +44,7 @@ import { useAuthStore } from '@/stores/auth';
 
 const { t } = useI18n({ useScope: 'local' });
 
-const [isDialogSettingsOpened, toggleIsDialogSettingsOpened] = useToggle();
+const refDialogSettings = ref<InstanceType<typeof DialogSettings>>();
 
 const authStore = useAuthStore();
 const { isAdmin } = storeToRefs(authStore);
@@ -73,7 +72,7 @@ const icons = computed(() =>
       : []),
     {
       path: mdiCog,
-      onClick: () => toggleIsDialogSettingsOpened(true),
+      onClick: () => refDialogSettings.value?.open(),
     },
   ].map(addId),
 );
