@@ -83,7 +83,7 @@ import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
-import { PlayerSlider } from './components';
+import PlayerSlider from './components/PlayerSlider.vue';
 
 import BaseButton from '@/components/ui/BaseButton.vue';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
