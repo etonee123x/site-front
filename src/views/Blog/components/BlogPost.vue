@@ -56,7 +56,9 @@ import PostDataFooter from './PostDataFooter.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { useDateFns } from '@/composables/useDateFns';
-import { clone, addId, wasEdited as _wasEdited } from '@/utils';
+import { clone } from '@/utils/clone';
+import { addId } from '@/utils/addId';
+import { wasEdited as _wasEdited } from '@/utils/post';
 import { IsLoadingAction, useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';

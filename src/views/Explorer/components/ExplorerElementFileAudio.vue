@@ -40,7 +40,8 @@ import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, 
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
-import { formatDuration, addId } from '@/utils';
+import { formatDuration } from '@/utils/formatDuration';
+import { addId } from '@/utils/addId';
 import { usePlayerStore } from '@/stores/player';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
 

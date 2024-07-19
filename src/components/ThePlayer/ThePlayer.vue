@@ -91,7 +91,9 @@ import BaseSwipable from '@/components/ui/BaseSwipable.vue';
 import BaseToggler from '@/components/ui/BaseToggler.vue';
 import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
-import { formatDuration, addId, to0To1Borders } from '@/utils';
+import { formatDuration } from '@/utils/formatDuration';
+import { addId } from '@/utils/addId';
+import { to0To1Borders } from '@/utils/to0To1Borders';
 import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
 
 const { t } = useI18n({ useScope: 'local' });

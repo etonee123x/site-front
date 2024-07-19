@@ -38,7 +38,7 @@ import DialogSettings from './components/DialogSettings.vue';
 
 import { logout } from '@/helpers/logout';
 import BaseIcon from '@/components/ui/BaseIcon.vue';
-import { addId } from '@/utils';
+import { addId } from '@/utils/addId';
 import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
 
