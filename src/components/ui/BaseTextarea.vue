@@ -20,10 +20,13 @@ import type { ErrorObject } from '@vuelidate/core';
 import { useTextareaAutosize } from '@vueuse/core';
 
 withDefaults(
-  defineProps<{
-    placeholder?: string;
-    errors?: Array<ErrorObject>;
-  }>(),
+  defineProps<
+    Partial<{
+      placeholder: string;
+      errors: Array<ErrorObject>;
+      hasEmojies: boolean;
+    }>
+  >(),
   {
     placeholder: undefined,
     errors: () => [],
