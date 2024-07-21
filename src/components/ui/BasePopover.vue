@@ -1,5 +1,5 @@
 <template>
-  <Tippy :interactive="isInteractive" :trigger="trigger">
+  <Tippy :interactive="isInteractive" :trigger="trigger" max-width="none">
     <slot />
     <template #content>
       <slot name="content" />
@@ -25,3 +25,11 @@ const props = withDefaults(
 
 const trigger = computed(() => props.triggers?.join(' ') || undefined);
 </script>
+
+<style>
+.tippy-content {
+  --popover-content--max-width: 20rem;
+  --popover-content--max-height: 25rem;
+  @apply bg-background border border-dark rounded p-2 max-w-[--popover-content--max-width] max-h-[--popover-content--max-height] overflow-x-hidden overflow-y-auto;
+}
+</style>

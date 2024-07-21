@@ -73,7 +73,7 @@ const onPasteFile = (file: File) => {
 };
 
 const onSelect = (emoji: string) => {
-  console.log(emoji);
+  model.value.text += emoji;
 };
 
 defineExpose({
