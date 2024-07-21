@@ -5,6 +5,8 @@
       v-model="model"
       class="f-body-2 rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-none resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
       :placeholder="placeholder"
+      @focus="onFocus"
+      @blur="onBlur"
       @keydown.enter.shift.prevent="onEnter"
       @paste="onPaste"
     />
@@ -34,6 +36,8 @@ withDefaults(
 );
 
 const emit = defineEmits<{
+  focus: [];
+  blur: [];
   submit: [];
   pasteFile: [File];
 }>();
@@ -54,7 +58,12 @@ const model = defineModel<string>();
 
 const { textarea } = useTextareaAutosize({ input: model, styleProp: 'minHeight' });
 
+const onFocus = () => emit('focus');
+const onBlur = () => emit('blur');
+
 defineExpose({
   focus: () => textarea.value?.focus(),
+  blur: () => textarea.value?.blur(),
+  textarea,
 });
 </script>

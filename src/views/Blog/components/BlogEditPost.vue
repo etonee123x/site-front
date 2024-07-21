@@ -11,7 +11,7 @@
         @paste-file="onPasteFile"
       />
       <div class="sticky top-2 flex flex-col gap-1 text-2xl">
-        <BaseEmojis @select="onSelect" />
+        <BaseEmojis @select="onSelectEmoji" />
         <BaseInputFile v-model="files" />
       </div>
     </div>
@@ -36,7 +36,7 @@ En:
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref, type UnwrapRef, defineAsyncComponent } from 'vue';
+import { ref, type UnwrapRef, defineAsyncComponent, nextTick } from 'vue';
 import type { PostData } from '@shared/src/types';
 import { isNotEmptyArray } from '@shared/src/utils';
 import { mdiDelete } from '@mdi/js';
@@ -74,8 +74,22 @@ const onPasteFile = (file: File) => {
   files.value.push(file);
 };
 
-const onSelect = (emoji: string) => {
-  model.value.text += emoji;
+const onSelectEmoji = (emoji: string) => {
+  if (!refTextarea.value) {
+    return;
+  }
+
+  const { selectionStart, selectionEnd } = refTextarea.value.textarea;
+
+  model.value.text = [
+    model.value.text.slice(0, selectionStart),
+    emoji,
+    model.value.text.slice(selectionEnd, model.value.text.length),
+  ].join('');
+
+  const newSelectionStart = selectionStart + emoji.length;
+
+  nextTick(() => refTextarea.value?.textarea.setSelectionRange(newSelectionStart, newSelectionStart));
 };
 
 defineExpose({
