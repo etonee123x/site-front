@@ -1,5 +1,5 @@
 <template>
-  <header class="border-b border-b-details-500">
+  <header class="border-b border-b-details-500 z-10 bg-background">
     <div class="l-container flex items-center py-2 gap-4">
       <RouterLink :to="to" class="text-xl">{{ siteTitle }}</RouterLink>
       <ul class="flex gap-2">

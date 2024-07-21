@@ -10,8 +10,10 @@
         @submit="onSubmit"
         @paste-file="onPasteFile"
       />
-      <BaseEmojies @select="onSelect" />
-      <BaseInputFile v-model="files" class="sticky top-2 h-min w-min" />
+      <div class="sticky top-2 flex flex-col gap-1 text-2xl">
+        <BaseEmojis @select="onSelect" />
+        <BaseInputFile v-model="files" />
+      </div>
     </div>
     <div v-if="isNotEmptyArray(files)">
       <div class="mb-3 flex items-center gap-2">
@@ -42,7 +44,7 @@ import { mdiDelete } from '@mdi/js';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
-import BaseEmojies from '@/components/ui/BaseEmojies.vue';
+import BaseEmojis from '@/components/ui/BaseEmojis.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));

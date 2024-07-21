@@ -1,6 +1,6 @@
 <template>
-  <BasePopover :triggers="['click']">
-    <BaseIcon class="cursor-pointer" :path="mdiEmoticonConfusedOutline" />
+  <BasePopover ref="refBasePopover" :triggers="['manual']">
+    <BaseIcon :path="mdiEmoticonConfusedOutline" @click="onClickActivator" />
     <template #content>
       <div v-for="(group, index) in dataByGroup" :key="group.slug">
         <div class="mb-2 text-xs">{{ group.name }}</div>
@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { mdiEmoticonConfusedOutline } from '@mdi/js';
 import dataByGroup from 'unicode-emoji-json/data-by-group.json';
+import { ref } from 'vue';
 
 import BasePopover from './BasePopover.vue';
 import BaseIcon from './BaseIcon.vue';
@@ -30,5 +31,9 @@ const emit = defineEmits<{
   select: [string];
 }>();
 
+const refBasePopover = ref<InstanceType<typeof BasePopover>>();
+
 const onClickEmoji = (groupSlug: string) => emit('select', groupSlug);
+
+const onClickActivator = () => refBasePopover.value?.show();
 </script>

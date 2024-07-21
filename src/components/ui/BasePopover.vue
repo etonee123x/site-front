@@ -1,5 +1,14 @@
 <template>
-  <Tippy :interactive="isInteractive" :trigger="trigger" max-width="none">
+  <Tippy
+    ref="refTippy"
+    :append-to="appendTo"
+    :interactive="isInteractive"
+    :trigger="trigger"
+    placement="bottom"
+    inline-positioning
+    max-width="none"
+    :z-index="0"
+  >
     <slot />
     <template #content>
       <slot name="content" />
@@ -8,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { Tippy } from 'vue-tippy';
+import { ref, computed } from 'vue';
+import { Tippy, type TippyComponent } from 'vue-tippy';
 
 const props = withDefaults(
   defineProps<
@@ -23,7 +32,20 @@ const props = withDefaults(
   },
 );
 
+const refTippy = ref<TippyComponent>();
+
 const trigger = computed(() => props.triggers?.join(' ') || undefined);
+
+const show = () => refTippy.value?.show();
+
+const hide = () => refTippy.value?.hide();
+
+const appendTo = () => window.document.body;
+
+defineExpose({
+  show,
+  hide,
+});
 </script>
 
 <style>

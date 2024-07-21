@@ -1,13 +1,6 @@
 <template>
   <div>
-    <div
-      class="flex justify-center items-center cursor-pointer p-4 border border-dark rounded-lg bg-items with-hover:bg-items-hovered"
-      :class="isFocused && 'on-focus'"
-      @click="onClick"
-    >
-      <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
-      <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
-    </div>
+    <BaseIcon :path="mdiFilePlusOutline" @click="onClick" />
     <BaseDialog ref="refBaseDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
       <BaseButton class="mx-auto my-4" :prepend-icon="{ path: mdiPlus }" @click="onClickAdd">
@@ -38,15 +31,12 @@ import BaseIcon from './BaseIcon.vue';
 import BaseDialog from './BaseDialog.vue';
 
 import { useIsUniqueFileCheck } from '@/composables/useIsUniqueFileCheck';
-import { useIsFocused } from '@/composables/useIsFocused';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 
 const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
-
-const { onFocus, onBlur, isFocused } = useIsFocused();
 
 const { open: openInitial, onChange: onChangeInitial, reset: resetInitial } = useFileDialog();
 onChangeInitial((files) => {
