@@ -32,6 +32,7 @@
       </LazyBaseButton>
     </div>
   </div>
+  <DialogConfirmation ref="refConfirmDelete" @confirm="onConfirmDelete" />
 </template>
 
 <i18n lang="yaml">
@@ -53,6 +54,7 @@ import { storeToRefs } from 'pinia';
 
 import PostData from './PostData.vue';
 import PostDataFooter from './PostDataFooter.vue';
+import DialogConfirmation from './DialogConfirmation.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon.vue';
 import { useDateFns } from '@/composables/useDateFns';
@@ -71,6 +73,7 @@ const getInitialPostNew = () => clone(props.post);
 
 const refRoot = ref<HTMLDivElement>();
 const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
+const refConfirmDelete = ref<InstanceType<typeof DialogConfirmation>>();
 
 const props = defineProps<{
   post: Post;
@@ -166,10 +169,14 @@ const controls = computed(() =>
     {
       iconPath: mdiDelete,
       isLoading: isLoading.value[IsLoadingAction.Delete],
-      onClick: () => blogStore.deletePost(props.post.id),
+      onClick: () => refConfirmDelete.value?.open(props.post),
     },
   ].map(addId),
 );
+
+const onConfirmDelete = () => {
+  blogStore.deletePost(props.post.id);
+};
 
 const onClick = () => {
   if (isInEditMode.value) {
