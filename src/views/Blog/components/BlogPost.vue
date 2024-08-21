@@ -32,14 +32,23 @@
       </LazyBaseButton>
     </div>
   </div>
-  <DialogConfirmation ref="refConfirmDelete" @confirm="onConfirmDelete" />
+  <DialogConfirmation
+    ref="refDialogConfirmation"
+    :title="t('confirmDelete')"
+    :message="t('deleteMessage')"
+    @confirm="onConfirmDelete"
+  />
 </template>
 
 <i18n lang="yaml">
 En:
   updatedAt: 'Edited at: { date }'
+  confirmDelete: 'Delete Post'
+  deleteMessage: 'Are you sure you want to delete this post?'
 Ru:
   updatedAt: 'Изменено: { date }'
+  confirmDelete: 'Удалить пост'
+  deleteMessage: 'Вы уверены, что хотите удалить этот пост?'
 </i18n>
 
 <script setup lang="ts">
@@ -73,7 +82,7 @@ const getInitialPostNew = () => clone(props.post);
 
 const refRoot = ref<HTMLDivElement>();
 const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
-const refConfirmDelete = ref<InstanceType<typeof DialogConfirmation>>();
+const refDialogConfirmation = ref<InstanceType<typeof DialogConfirmation>>();
 
 const props = defineProps<{
   post: Post;
@@ -169,7 +178,7 @@ const controls = computed(() =>
     {
       iconPath: mdiDelete,
       isLoading: isLoading.value[IsLoadingAction.Delete],
-      onClick: () => refConfirmDelete.value?.open(props.post),
+      onClick: () => refDialogConfirmation.value?.open(),
     },
   ].map(addId),
 );

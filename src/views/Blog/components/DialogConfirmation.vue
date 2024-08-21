@@ -1,49 +1,39 @@
 <template>
-  <BaseDialog ref="refDialog" :title="t('confirmDelete')" @close="onClose">
+  <BaseDialog ref="refDialogConfirmation" :title="title" @close="onClose">
     <div class="flex flex-col gap-4">
-      <p>{{ t('deleteMessage') }}</p>
+      <p>{{ message }}</p>
       <div class="flex gap-2"></div>
     </div>
   </BaseDialog>
 </template>
 
-<i18n lang="yaml">
-En:
-  confirmDelete: 'Delete Post'
-  deleteMessage: 'Are you sure you want to delete this post?'
-  confirm: 'Confirm'
-  cancel: 'Cancel'
-Ru:
-  confirmDelete: 'Удалить пост'
-  deleteMessage: 'Вы уверены, что хотите удалить этот пост?'
-  confirm: 'Подтвердить'
-  cancel: 'Отмена'
-</i18n>
-
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import type { Post } from '@shared/src/types';
+import { ref, defineProps } from 'vue';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 
-const { t } = useI18n({ useScope: 'local' });
+defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  message: {
+    type: String,
+    required: true,
+  },
+});
 
-const refDialog = ref<InstanceType<typeof BaseDialog>>();
-const postToDelete = ref<Post | null>(null);
+const refDialogConfirmation = ref<InstanceType<typeof BaseDialog>>();
 
-const openDialog = (post: Post) => {
-  postToDelete.value = post;
-  refDialog.value?.open();
+const openDialog = () => {
+  refDialogConfirmation.value?.open();
 };
 
 const closeDialog = () => {
-  refDialog.value?.close();
+  refDialogConfirmation.value?.close();
 };
 
-const onClose = () => {
-  postToDelete.value = null;
-};
+const onClose = () => {};
 
 defineExpose({
   open: openDialog,
