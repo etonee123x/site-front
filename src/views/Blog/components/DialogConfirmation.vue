@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog ref="refDialogConfirmation" :title="title" @close="onClose">
+  <BaseDialog ref="refDialogConfirmation" :title="title" @close="cancel" @confirm="confirm">
     <div class="flex flex-col gap-4">
       <p>{{ message }}</p>
       <div class="flex gap-2"></div>
@@ -9,6 +9,7 @@
 
 <script setup lang="ts">
 import { ref, defineProps } from 'vue';
+import { useConfirmDialog } from '@vueuse/core';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 
@@ -25,15 +26,21 @@ defineProps({
 
 const refDialogConfirmation = ref<InstanceType<typeof BaseDialog>>();
 
-const openDialog = () => {
+const { reveal, confirm, cancel } = useConfirmDialog();
+
+const openDialog = async () => {
   refDialogConfirmation.value?.open();
+
+  const result = await reveal();
+
+  closeDialog();
+
+  return result;
 };
 
 const closeDialog = () => {
   refDialogConfirmation.value?.close();
 };
-
-const onClose = () => {};
 
 defineExpose({
   open: openDialog,

@@ -178,7 +178,13 @@ const controls = computed(() =>
     {
       iconPath: mdiDelete,
       isLoading: isLoading.value[IsLoadingAction.Delete],
-      onClick: () => refDialogConfirmation.value?.open(),
+      onClick: async () => {
+        const result = await refDialogConfirmation.value?.open();
+
+        if (result) {
+          onConfirmDelete();
+        }
+      },
     },
   ].map(addId),
 );
