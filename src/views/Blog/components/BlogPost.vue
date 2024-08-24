@@ -36,7 +36,9 @@
     ref="refDialogConfirmation"
     :title="t('confirmDelete')"
     :message="t('deleteMessage')"
-    @confirm="onConfirmDelete"
+    @confirm="confirm"
+    @cancel="cancel"
+    @close="cancel"
   />
 </template>
 
@@ -57,15 +59,15 @@ import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
 import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
-import { onClickOutside } from '@vueuse/core';
+import { onClickOutside, useConfirmDialog } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 
 import PostData from './PostData.vue';
 import PostDataFooter from './PostDataFooter.vue';
-import DialogConfirmation from './DialogConfirmation.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon.vue';
+import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
 import { addId } from '@/utils/addId';
@@ -80,13 +82,15 @@ const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseBu
 
 const getInitialPostNew = () => clone(props.post);
 
-const refRoot = ref<HTMLDivElement>();
-const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
-const refDialogConfirmation = ref<InstanceType<typeof DialogConfirmation>>();
-
 const props = defineProps<{
   post: Post;
 }>();
+
+const { reveal, confirm, cancel } = useConfirmDialog();
+
+const refRoot = ref<HTMLDivElement>();
+const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
+const refDialogConfirmation = ref<InstanceType<typeof DialogConfirmation>>();
 
 onClickOutside(refRoot, () => {
   if (!isInEditMode.value) {
@@ -179,19 +183,19 @@ const controls = computed(() =>
       iconPath: mdiDelete,
       isLoading: isLoading.value[IsLoadingAction.Delete],
       onClick: async () => {
-        const result = await refDialogConfirmation.value?.open();
+        refDialogConfirmation.value?.open();
 
-        if (result) {
-          onConfirmDelete();
+        const { isCanceled } = await reveal();
+
+        if (isCanceled) {
+          return;
         }
+
+        return blogStore.deletePost(props.post.id);
       },
     },
   ].map(addId),
 );
-
-const onConfirmDelete = () => {
-  blogStore.deletePost(props.post.id);
-};
 
 const onClick = () => {
   if (isInEditMode.value) {

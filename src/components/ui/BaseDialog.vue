@@ -75,6 +75,7 @@ const emit = defineEmits<{
   open: [];
   close: [];
   confirm: [];
+  cancel: [];
 }>();
 
 const { t } = useI18n({ useScope: 'local' });
@@ -85,7 +86,10 @@ const buttons = computed(
     [
       {
         text: t('cancel'),
-        onClick: close,
+        onClick: () => {
+          emit('cancel');
+          close();
+        },
       },
       {
         text: t('confirm'),
