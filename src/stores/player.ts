@@ -3,7 +3,7 @@ import { isNotEmptyArray } from '@shared/src/utils';
 import { defineStore } from 'pinia';
 import { computed, ref, shallowRef } from 'vue';
 
-import { getRandomExceptCurrentIndex } from '@/utils';
+import { getRandomExceptCurrentIndex } from '@/utils/getRandomExceptCurrentIndex';
 
 export const usePlayerStore = defineStore('player', () => {
   const theTrack = shallowRef<ItemAudio | null>(null);

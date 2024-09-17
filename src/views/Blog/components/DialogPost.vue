@@ -31,7 +31,7 @@ import PostDataFooter from './PostDataFooter.vue';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
-import { wasEdited as _wasEdited } from '@/utils';
+import { wasEdited as _wasEdited } from '@/utils/post';
 import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
 

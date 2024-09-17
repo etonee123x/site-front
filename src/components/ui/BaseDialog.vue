@@ -43,7 +43,7 @@ import type { FunctionCallback, WithId } from '@shared/src/types';
 import { storeToRefs } from 'pinia';
 
 import { useComponentsStore } from '@/stores/components';
-import { addId } from '@/utils';
+import { addId } from '@/utils/addId';
 
 const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton.vue'));
 const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
@@ -75,6 +75,7 @@ const emit = defineEmits<{
   open: [];
   close: [];
   confirm: [];
+  cancel: [];
 }>();
 
 const { t } = useI18n({ useScope: 'local' });
@@ -85,7 +86,10 @@ const buttons = computed(
     [
       {
         text: t('cancel'),
-        onClick: close,
+        onClick: () => {
+          emit('cancel');
+          close();
+        },
       },
       {
         text: t('confirm'),

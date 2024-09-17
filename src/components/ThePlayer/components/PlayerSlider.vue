@@ -18,7 +18,7 @@
 import { computed, ref, watch } from 'vue';
 import { useMousePressed, useMouseInElement, promiseTimeout, useToggle } from '@vueuse/core';
 
-import { to0To1Borders } from '@/utils';
+import { to0To1Borders } from '@/utils/to0To1Borders';
 
 const props = withDefaults(
   defineProps<{
