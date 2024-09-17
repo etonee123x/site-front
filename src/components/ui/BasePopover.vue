@@ -1,14 +1,5 @@
 <template>
-  <Tippy
-    ref="refTippy"
-    :append-to="appendTo"
-    :interactive="isInteractive"
-    :trigger="trigger"
-    placement="bottom"
-    inline-positioning
-    max-width="none"
-    :z-index="0"
-  >
+  <Tippy ref="refTippy" v-bind="{ ...PROPS_TIPPY_DEFAULTS, ...propsTippy }" :trigger="trigger">
     <slot />
     <template #content>
       <slot name="content" />
@@ -20,17 +11,19 @@
 import { ref, computed } from 'vue';
 import { Tippy, type TippyComponent } from 'vue-tippy';
 
-const props = withDefaults(
-  defineProps<
-    Partial<{
-      isInteractive: boolean;
-      triggers: Array<'focus' | 'mouseenter' | 'click' | 'manual'>;
-    }>
-  >(),
-  {
-    isInteractive: true,
-  },
-);
+const props = defineProps<
+  Partial<{
+    propsTippy: TippyComponent['$props'];
+    triggers: Array<'focus' | 'mouseenter' | 'click' | 'manual'>;
+  }>
+>();
+
+const PROPS_TIPPY_DEFAULTS = Object.freeze({
+  appendTo: () => document.body,
+  interactive: true,
+  maxWidth: 'none',
+  duration: 0,
+});
 
 const refTippy = ref<TippyComponent>();
 
@@ -40,11 +33,10 @@ const show = () => refTippy.value?.show();
 
 const hide = () => refTippy.value?.hide();
 
-const appendTo = () => window.document.body;
-
 defineExpose({
   show,
   hide,
+  refTippy,
 });
 </script>
 
@@ -52,6 +44,6 @@ defineExpose({
 .tippy-content {
   --popover-content--max-width: 20rem;
   --popover-content--max-height: 25rem;
-  @apply bg-background border border-dark rounded p-2 max-w-[--popover-content--max-width] max-h-[--popover-content--max-height] overflow-x-hidden overflow-y-auto;
+  @apply bg-background border border-dark rounded p-2 w-max max-w-[--popover-content--max-width] max-h-[--popover-content--max-height] overflow-x-hidden overflow-y-auto;
 }
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div class="flex gap-4 flex-col">
     <div class="flex gap-4">
-      <BaseTextarea
-        ref="refTextarea"
-        v-model="model.text"
-        class="flex-1"
-        :placeholder="t('textareaPlaceholder')"
-        :errors="v$.text.$errors"
-        @submit="onSubmit"
-        @paste-file="onPasteFile"
-        @input="handleInput"
-      />
-      <BasePopover ref="refBasePopover">
+      <BasePopover ref="refBasePopover" :triggers="['manual']" class="flex-1">
+        <BaseTextarea
+          ref="refTextarea"
+          v-model="model.text"
+          :placeholder="t('textareaPlaceholder')"
+          :errors="v$.text.$errors"
+          @submit="onSubmit"
+          @paste-file="onPasteFile"
+          @input="handleInput"
+        />
+
         <template #content>эмоджики</template>
       </BasePopover>
       <div class="sticky top-2 flex flex-col gap-1 text-2xl">
@@ -40,6 +40,7 @@ En:
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { useTextSelection } from '@vueuse/core';
 import { ref, type UnwrapRef, defineAsyncComponent, nextTick } from 'vue';
 import type { PostData } from '@shared/src/types';
 import { isNotEmptyArray } from '@shared/src/utils';
@@ -82,6 +83,8 @@ const onPasteFile = (file: File) => {
 
 const searchTerm = ref('');
 
+const { rects, ...rest } = useTextSelection();
+
 const handleInput = () => {
   if (!refTextarea.value?.textarea) {
     return;
@@ -101,7 +104,15 @@ const handleInput = () => {
         console.log('Найденный термин после двоеточия:', term);
 
         term.length > 0 && !term.includes(' ')
-          ? (console.log('Отображаем поповер'), refBasePopover.value?.show())
+          ? (() => {
+              console.log({ rects, ...rest });
+              refBasePopover.value?.refTippy?.setProps({
+                getReferenceClientRect: () => rects.value[0],
+              });
+
+              console.log('Отображаем поповер');
+              refBasePopover.value?.show();
+            })()
           : (console.log('Поповер пустой или содержит пробел'), refBasePopover.value?.hide());
 
         searchTerm.value = term;

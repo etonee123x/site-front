@@ -1,5 +1,5 @@
 <template>
-  <BasePopover ref="refBasePopover" :triggers="['manual']">
+  <BasePopover ref="refBasePopover" :props-tippy="{ placement: 'bottom' }" :triggers="['manual']">
     <BaseIcon :path="mdiEmoticonConfusedOutline" @click="onClickActivator" />
     <template #content>
       <div v-for="(group, index) in dataByGroup" :key="group.slug">
