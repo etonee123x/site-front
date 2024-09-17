@@ -9,7 +9,11 @@
         :errors="v$.text.$errors"
         @submit="onSubmit"
         @paste-file="onPasteFile"
+        @input="handleInput"
       />
+      <BasePopover ref="refBasePopover">
+        <template #content>эмоджики</template>
+      </BasePopover>
       <div class="sticky top-2 flex flex-col gap-1 text-2xl">
         <BaseEmojis @select="onSelectEmoji" />
         <BaseInputFile v-model="files" />
@@ -45,6 +49,7 @@ import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
 import BaseEmojis from '@/components/ui/BaseEmojis.vue';
+import BasePopover from '@/components/ui/BasePopover.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
@@ -56,6 +61,7 @@ defineProps<{
 const { t } = useI18n({ useScope: 'local' });
 
 const refTextarea = ref<InstanceType<typeof BaseTextarea>>();
+const refBasePopover = ref<InstanceType<typeof BasePopover>>();
 
 const emit = defineEmits<{
   submit: [];
@@ -72,6 +78,35 @@ const onClickDeleteFiles = () => {
 
 const onPasteFile = (file: File) => {
   files.value.push(file);
+};
+
+const searchTerm = ref('');
+
+const handleInput = () => {
+  if (!refTextarea.value?.textarea) {
+    return;
+  }
+
+  const cursorPosition = refTextarea.value?.textarea.selectionStart;
+  const textBeforeCursor = model.value.text.slice(0, cursorPosition);
+  const lastColonIndex = textBeforeCursor.lastIndexOf(':');
+
+  console.log('Позиция курсора:', cursorPosition);
+  console.log('Текст до курсора:', textBeforeCursor);
+  console.log('Последний индекс двоеточия:', lastColonIndex);
+
+  lastColonIndex !== -1 && textBeforeCursor[lastColonIndex - 1] !== ' '
+    ? (() => {
+        const term = textBeforeCursor.slice(lastColonIndex + 1);
+        console.log('Найденный термин после двоеточия:', term);
+
+        term.length > 0 && !term.includes(' ')
+          ? (console.log('Отображаем поповер'), refBasePopover.value?.show())
+          : (console.log('Поповер пустой или содержит пробел'), refBasePopover.value?.hide());
+
+        searchTerm.value = term;
+      })()
+    : (console.log('Двоеточие не найдено или перед ним пробел'), refBasePopover.value?.hide());
 };
 
 const onSelectEmoji = (emoji: string) => {
