@@ -8,7 +8,7 @@
           {{ t('send') }}
         </LazyBaseButton>
       </LazyBaseForm>
-      <LazyBaseHr v-if="hasPosts" class="my-4" />
+      <hr v-if="hasPosts" class="my-4" />
     </template>
     <LazyBaseLoading
       v-if="blogStore.isLoadingGetAll && !hasPosts"
@@ -59,7 +59,6 @@ import { goToPage404 } from '@/composables/goToPage404';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
-const LazyBaseHr = defineAsyncComponent(() => import('@/components/ui/BaseHr.vue'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));

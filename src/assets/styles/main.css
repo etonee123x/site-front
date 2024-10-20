@@ -29,6 +29,11 @@
     @apply list-none;
   }
 
+
+  hr {
+    @apply m-0 border-none bg-dark min-h-[1px] min-w-[1px];
+  }
+
   a {
     @apply text-inherit;
     @apply with-hover:text-details-500;
@@ -161,6 +166,27 @@
     &.icon_size_sm {
       @apply size-4;
     }
+  }
+
+  .button {
+    all: unset;
+    @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center with-hover:bg-items-hovered;
+
+    &[disabled] {
+      @apply pointer-events-none bg-dark opacity-25 text-items;
+    }
+
+    &:active {
+      @apply text-details-500 border-details-500;
+    }
+
+    &:focus {
+      @apply on-focus;
+    }
+  }
+
+  .vr {
+    @apply inline-block self-stretch w-px min-h-4 bg-dark;
   }
 }
 

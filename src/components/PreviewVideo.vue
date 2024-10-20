@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center items-center max-w-full relative">
-    <BaseIcon class="absolute text-items w-1/3" :path="mdiPlayCircleOutline" />
+    <BaseIcon class="absolute text-items size-1/3" :path="mdiPlayCircleOutline" />
     <video class="max-w-full" :src />
   </div>
 </template>

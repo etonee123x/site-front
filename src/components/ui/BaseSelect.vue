@@ -15,9 +15,9 @@
     <template #selected-option-container="{ option, deselect }">
       <div v-if="isMultiple" class="outline outline-1 rounded flex gap-1 m-0.5 p-0.5">
         <div>{{ getOptionLabel(option) }}</div>
-        <button @click.prevent.stop="() => deselect(option)">
+        <BaseButton @click.prevent.stop="() => deselect(option)">
           <BaseIcon :path="mdiClose" />
-        </button>
+        </BaseButton>
       </div>
     </template>
     <template #option="option">
@@ -37,6 +37,7 @@ import { mdiCheck, mdiClose } from '@mdi/js';
 import VueSelect, { type VueSelectProps } from 'vue-select';
 
 import BaseIcon from '@/components/ui/BaseIcon';
+import BaseButton from '@/components/ui/BaseButton';
 
 import 'vue-select/dist/vue-select.css';
 

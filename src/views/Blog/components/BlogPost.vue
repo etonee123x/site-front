@@ -14,7 +14,7 @@
         <PostDataFooter :post @click.stop>
           <span class="text-sm text-dark flex items-center gap-0.5" :title="dateExact">
             <span>{{ createdAtHumanReadable }}</span>
-            <BaseIcon v-if="wasEdited" :path="mdiPencil" />
+            <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
           </span>
         </PostDataFooter>
       </template>
@@ -58,7 +58,7 @@ import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
-import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils';
 import { onClickOutside, useConfirmDialog } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
@@ -75,6 +75,7 @@ import { useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
 import { RouteName, router } from '@/router';
+import { ICON } from '@/helpers/ui';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -126,10 +127,8 @@ const { v$, handle } = useVuelidateBlogPostData(
 const dateExact = computed(() =>
   [
     String(new Date(props.post.createdAt)),
-    wasEdited.value && t('updatedAt', { date: String(new Date(props.post.updatedAt)) }),
-  ]
-    .filter(isTruthy)
-    .join('\n'),
+    ...(wasEdited.value ? [t('updatedAt', { date: String(new Date(props.post.updatedAt)) })] : []),
+  ].join('\n'),
 );
 const createdAtHumanReadable = computed(() => intlFormatDistance.value(props.post.createdAt, new Date()));
 

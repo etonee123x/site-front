@@ -5,9 +5,9 @@
 </template>
 
 <script setup lang="ts">
+// TODO: переписать на useSwipe?...
 import { type CSSProperties, reactive, ref, computed } from 'vue';
 import { useElementSize } from '@vueuse/core';
-import { isTruthy } from '@shared/src/utils';
 
 const props = withDefaults(
   defineProps<
@@ -67,7 +67,7 @@ const onTouchEnd = () => {
   }
 
   style.transition = `all ${props.disapearDelay}ms`;
-  style.transform = `translateX(${[wasSwipedLeft && '-', window.innerWidth].filter(isTruthy).join('')}px)`;
+  style.transform = `translateX(${window.innerWidth * (wasSwipedLeft ? -1 : 1)}px)`;
 
   setTimeout(() => emit('swiped'), Number(props.disapearDelay));
 };

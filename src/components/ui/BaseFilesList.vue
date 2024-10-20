@@ -8,9 +8,9 @@
         </BaseAlwaysScrollable>
         <div class="text-2xl flex gap-2 ms-auto items-center">
           <BaseIcon class="cursor-grab text-dark" :class="CLASS_HANDLE" :path="mdiSwapVertical" />
-          <button @click="() => onClickDeteleByIndex(index)">
+          <BaseButton @click="() => onClickDeteleByIndex(index)">
             <BaseIcon :path="mdiDelete" />
-          </button>
+          </BaseButton>
         </div>
       </div>
     </li>
@@ -23,9 +23,10 @@ import { isNil } from '@shared/src/utils';
 import Sortable from 'sortablejs';
 import { ref, watch } from 'vue';
 
-import BaseIcon from './BaseIcon';
-import FilesListFilePreview from './FilesListFilePreview.vue';
-import BaseAlwaysScrollable from './BaseAlwaysScrollable.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
+import FilesListFilePreview from '@/components/ui/FilesListFilePreview.vue';
+import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
+import BaseButton from '@/components/ui/BaseButton';
 
 const CLASS_HANDLE = '_handle';
 

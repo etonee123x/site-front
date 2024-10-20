@@ -11,9 +11,9 @@
       </ul>
       <ul class="text-2xl ms-auto flex gap-1">
         <li v-for="icon in icons" :key="icon.id">
-          <button @click="icon.onClick">
+          <BaseButton @click="icon.onClick">
             <BaseIcon :path="icon.path" />
-          </button>
+          </BaseButton>
         </li>
       </ul>
     </div>
@@ -42,6 +42,7 @@ import BaseIcon from '@/components/ui/BaseIcon';
 import { addId } from '@/utils/addId';
 import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
+import BaseButton from '@/components/ui/BaseButton';
 
 const { t } = useI18n({ useScope: 'local' });
 

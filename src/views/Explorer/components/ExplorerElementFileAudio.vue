@@ -35,7 +35,7 @@ Ru:
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 import { ItemAudio } from '@shared/src/types';
-import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
@@ -62,28 +62,42 @@ const metadataList = computed(() =>
       path: mdiClockOutline,
       value: formatDuration(props.element.metadata.duration * 1000),
     },
-    isNotEmptyArray(props.element.metadata.artists) && {
-      title: t('artists'),
-      path: mdiAccountOutline,
-      value: props.element.metadata.artists.join(' & '),
-    },
-    props.element.metadata.album && {
-      title: t('album'),
-      path: mdiAlbum,
-      value: props.element.metadata.album,
-    },
-    props.element.metadata.year && {
-      title: t('year'),
-      path: mdiCalendarBlankOutline,
-      value: String(props.element.metadata.year),
-    },
-    props.element.metadata.bpm && {
-      title: t('bpm'),
-      path: mdiMetronome,
-      value: String(props.element.metadata.bpm),
-    },
-  ]
-    .filter(isTruthy)
-    .map(addId),
+    ...(isNotEmptyArray(props.element.metadata.artists)
+      ? [
+          {
+            title: t('artists'),
+            path: mdiAccountOutline,
+            value: props.element.metadata.artists.join(' & '),
+          },
+        ]
+      : []),
+    ...(props.element.metadata.album
+      ? [
+          {
+            title: t('album'),
+            path: mdiAlbum,
+            value: props.element.metadata.album,
+          },
+        ]
+      : []),
+    ...(props.element.metadata.year
+      ? [
+          {
+            title: t('year'),
+            path: mdiCalendarBlankOutline,
+            value: String(props.element.metadata.year),
+          },
+        ]
+      : []),
+    ...(props.element.metadata.bpm
+      ? [
+          {
+            title: t('bpm'),
+            path: mdiMetronome,
+            value: String(props.element.metadata.bpm),
+          },
+        ]
+      : []),
+  ].map(addId),
 );
 </script>

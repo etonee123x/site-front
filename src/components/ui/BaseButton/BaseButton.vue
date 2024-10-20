@@ -1,5 +1,5 @@
 <template>
-  <button type="button" :disabled="isDisabled" @click="onCLick">
+  <button type="button" :class="BUTTON.default" :disabled="isDisabled" @click="onCLick">
     <div class="flex justify-between relative">
       <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
         <div v-if="$slots.prepend || propsIconPrepend" class="flex">
@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 import type { Props as PropsIcon } from '@/components/ui/BaseIcon';
+import { BUTTON } from '@/helpers/ui';
 
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
@@ -49,14 +50,3 @@ const onCLick = (e: Event) => {
   emit('click', e);
 };
 </script>
-
-<style>
-button {
-  all: unset;
-  @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center;
-  @apply with-hover:bg-items-hovered;
-  @apply focus:on-focus;
-  @apply disabled:pointer-events-none disabled:bg-dark disabled:opacity-25 disabled:text-items;
-  @apply active:text-details-500 active:border-details-500;
-}
-</style>

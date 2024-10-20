@@ -4,13 +4,13 @@
     @swiped="onSwiped"
   >
     <div class="l-container flex flex-col gap-1 justify-center">
-      <button @click="onClickClose">
-        <BaseIcon
-          v-if="shouldRenderButtonClose"
-          class="text-xl absolute end-2 top-2 no-hover:hidden"
-          :path="mdiClose"
-        />
-      </button>
+      <BaseButton
+        v-if="shouldRenderButtonClose"
+        class="text-xl absolute end-2 top-2 no-hover:hidden"
+        @click="onClickClose"
+      >
+        <BaseIcon :path="mdiClose" />
+      </BaseButton>
       <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
         <div
           class="pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"

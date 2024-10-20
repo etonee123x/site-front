@@ -9,9 +9,9 @@
       <span class="text-lg relative flex items-center justify-center gap-2">
         <BaseIcon :path="getIconPath(toast)" />
         <span class="text-[initial]">{{ toast.text }}</span>
-        <button @click="() => onClickClose(toast)">
+        <BaseButton @click="() => onClickClose(toast)">
           <BaseIcon :path="mdiClose" class="cursor-pointer items-center justify-center absolute end-0 text-[initial]" />
-        </button>
+        </BaseButton>
       </span>
     </li>
   </ul>
@@ -24,6 +24,7 @@ import { computed } from 'vue';
 import { ToastType, useToastsStore, type Toast } from '@/stores/toasts';
 import { useComponentsStore } from '@/stores/components';
 import BaseIcon from '@/components/ui/BaseIcon';
+import BaseButton from '@/components/ui/BaseButton';
 
 const toastsStore = useToastsStore();
 
