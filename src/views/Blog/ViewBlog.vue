@@ -3,7 +3,7 @@
     <DialogPost />
     <template v-if="authStore.isAdmin">
       <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
-        <LazyBlogEditPost :v$ ref="refLazyBlogEditPost" v-model="postData" v-model:files="files" @submit="onSubmit" />
+        <LazyBlogEditPost :v$ ref="lazyBlogEditPost" v-model="postData" v-model:files="files" @submit="onSubmit" />
         <LazyBaseButton :isLoading="blogStore.isLoadingPost" @click="onClickButton">
           {{ t('send') }}
         </LazyBaseButton>
@@ -43,7 +43,7 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
-import { ref, defineAsyncComponent, watch, computed } from 'vue';
+import { ref, defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { isNil, isNotEmptyArray } from '@shared/src/utils';
 import { toId } from '@shared/src/types';
@@ -93,7 +93,7 @@ const files = ref<Array<File>>([]);
 
 const postData = ref(getInitialPostData());
 
-const refLazyBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
+const lazyBlogEditPost = useTemplateRef('lazyBlogEditPost');
 
 const { v$, handle } = useVuelidateBlogPostData(
   () => {
@@ -104,7 +104,7 @@ const { v$, handle } = useVuelidateBlogPostData(
 
     postData.value = getInitialPostData();
 
-    refLazyBlogEditPost.value?.focusTextarea();
+    lazyBlogEditPost.value?.focusTextarea();
   },
   postData,
   files,

@@ -8,7 +8,7 @@
       <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
-    <BaseDialog :title="t('title')" ref="refBaseDialog" @confirm="onConfirm" @close="onClose" @click.stop>
+    <BaseDialog :title="t('title')" ref="baseDialog" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
       <BaseButton class="mx-auto my-4" :propsIconPrepend="{ path: mdiPlus }" @click="onClickAdd">
         {{ t('add') }}
@@ -27,7 +27,7 @@ En:
 </i18n>
 
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue';
+import { ref, defineAsyncComponent, useTemplateRef } from 'vue';
 import { useFileDialog } from '@vueuse/core';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
@@ -44,7 +44,7 @@ const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue
 
 const { t } = useI18n({ useScope: 'local' });
 
-const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
+const baseDialog = useTemplateRef('baseDialog');
 
 const { onFocus, onBlur, isFocused } = useIsFocused();
 
@@ -57,7 +57,7 @@ onChangeInitial((files) => {
 
   model.value = Array.from(files);
 
-  refBaseDialog.value?.open();
+  baseDialog.value?.open();
   resetInitial();
 });
 

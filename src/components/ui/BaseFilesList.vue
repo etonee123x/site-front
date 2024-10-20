@@ -1,5 +1,5 @@
 <template>
-  <ol class="flex gap-4 flex-col ps-8" ref="refUl">
+  <ol class="flex gap-4 flex-col ps-8" ref="ol">
     <li v-for="(file, index) in model" :key="getKeyByFile(file)">
       <div class="flex items-center gap-2">
         <FilesListFilePreview :file />
@@ -21,7 +21,7 @@
 import { mdiDelete, mdiSwapVertical } from '@mdi/js';
 import { isNil } from '@shared/src/utils';
 import Sortable from 'sortablejs';
-import { ref, watch } from 'vue';
+import { useTemplateRef, watch } from 'vue';
 
 import BaseIcon from '@/components/ui/BaseIcon';
 import FilesListFilePreview from '@/components/ui/FilesListFilePreview.vue';
@@ -32,7 +32,7 @@ const CLASS_HANDLE = '_handle';
 
 const model = defineModel<Array<File>>({ required: true });
 
-const refUl = ref<HTMLUListElement>();
+const ol = useTemplateRef('ol');
 let sortable: null | Sortable = null;
 
 const onClickDeteleByIndex = (index: number) => {
@@ -41,7 +41,7 @@ const onClickDeteleByIndex = (index: number) => {
 
 const getKeyByFile = (file: File) => [file.name, file.type, file.lastModified, file.size].join('-');
 
-watch(refUl, (v) => {
+watch(ol, (v) => {
   if (!v) {
     return sortable?.destroy();
   }

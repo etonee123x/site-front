@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog isHiddenHeader style="height: min-content" ref="refBaseDialog" @close="onDialogClose">
+  <BaseDialog isHiddenHeader style="height: min-content" ref="baseDialog" @close="onDialogClose">
     <LazyPostData v-if="blogStore.byId" :post="blogStore.byId" />
     <template #footer>
       <PostDataFooter v-if="blogStore.byId" :post="blogStore.byId">
@@ -22,7 +22,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref, watch } from 'vue';
+import { computed, defineAsyncComponent, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -46,7 +46,7 @@ const blogStore = useBlogStore();
 
 const { format } = useDateFns();
 
-const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
+const baseDialog = useTemplateRef('baseDialog');
 
 const dates = computed(() =>
   blogStore.byId
@@ -68,6 +68,6 @@ const onDialogClose = () => {
 
 watch(
   () => blogStore.byId,
-  () => (blogStore.byId ? refBaseDialog.value?.open() : refBaseDialog.value?.close()),
+  () => (blogStore.byId ? baseDialog.value?.open() : baseDialog.value?.close()),
 );
 </script>

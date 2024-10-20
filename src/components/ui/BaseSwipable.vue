@@ -1,12 +1,12 @@
 <template>
-  <div :style ref="refElement" @touchstart="onTouchStart" @touchmove.prevent="onTouchMove" @touchend="onTouchEnd">
+  <div :style ref="root" @touchstart="onTouchStart" @touchmove.prevent="onTouchMove" @touchend="onTouchEnd">
     <slot />
   </div>
 </template>
 
 <script setup lang="ts">
 // TODO: переписать на useSwipe?...
-import { type CSSProperties, reactive, ref, computed } from 'vue';
+import { type CSSProperties, reactive, computed, useTemplateRef } from 'vue';
 import { useElementSize } from '@vueuse/core';
 
 const props = withDefaults(
@@ -26,9 +26,9 @@ const emit = defineEmits<{
   swiped: [];
 }>();
 
-const refElement = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 
-const { width } = useElementSize(refElement, undefined, { box: 'border-box' });
+const { width } = useElementSize(root, undefined, { box: 'border-box' });
 
 const threshold = computed(() => width.value * Number(props.threshold));
 

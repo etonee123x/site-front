@@ -1,19 +1,19 @@
 <template>
   <div class="flex flex-col bg-background h-[100dvh] overflow-hidden">
     <TheHeader />
-    <main class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1" ref="refMain">
+    <main class="[scrollbar-gutter:stable_both-edges] relative overflow-y-auto flex flex-col flex-1" ref="templateMain">
       <RouterView />
       <LazyTheToasts v-if="toastsStore.hasToasts" />
       <TheDialogGallery />
     </main>
-    <LazyThePlayer v-if="playerStore.isTrackLoaded" ref="refThePlayer" />
+    <LazyThePlayer v-if="playerStore.isTrackLoaded" ref="templateThePlayer" />
     <TheFooter v-else />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core';
-import { defineAsyncComponent, ref, watch } from 'vue';
+import { defineAsyncComponent, useTemplateRef, watch } from 'vue';
 
 import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
@@ -33,14 +33,14 @@ const componentsStore = useComponentsStore();
 
 useTitle(String(import.meta.env.VITE_SITE_TITLE));
 
-const refThePlayer = ref(null);
-const refMain = ref(null);
+const templateThePlayer = useTemplateRef('templateThePlayer');
+const templateMain = useTemplateRef('templateMain');
 
-watch(refThePlayer, (v) => {
+watch(templateThePlayer, (v) => {
   componentsStore.thePlayer = v;
 });
 
-watch(refMain, (v) => {
+watch(templateMain, (v) => {
   componentsStore.main = v;
 });
 </script>

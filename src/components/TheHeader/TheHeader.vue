@@ -17,7 +17,7 @@
         </li>
       </ul>
     </div>
-    <DialogSettings ref="refDialogSettings" />
+    <DialogSettings ref="dialogSettings" />
   </header>
 </template>
 
@@ -32,21 +32,20 @@ En:
 
 <script setup lang="ts">
 import { mdiAccountCircleOutline, mdiCog } from '@mdi/js';
-import { computed, ref } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import DialogSettings from './components/DialogSettings.vue';
 
 import { logout } from '@/helpers/logout';
 import BaseIcon from '@/components/ui/BaseIcon';
-import { addId } from '@/utils/addId';
 import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
 import BaseButton from '@/components/ui/BaseButton';
 
 const { t } = useI18n({ useScope: 'local' });
 
-const refDialogSettings = ref<InstanceType<typeof DialogSettings>>();
+const dialogSettings = useTemplateRef('dialogSettings');
 
 const authStore = useAuthStore();
 
@@ -54,27 +53,25 @@ const siteTitle = String(import.meta.env.VITE_SITE_TITLE);
 
 const to = { name: RouteName.Home };
 
-const links = computed(() =>
-  [
-    { text: t('content'), to: { name: RouteName.Explorer } },
-    { text: t('blog'), to: { name: RouteName.Blog } },
-  ].map(addId),
-);
+const links = computed(() => [
+  { text: t('content'), to: { name: RouteName.Explorer }, id: 0 },
+  { text: t('blog'), to: { name: RouteName.Blog }, id: 1 },
+]);
 
-const icons = computed(() =>
-  [
-    ...(authStore.isAdmin
-      ? [
-          {
-            path: mdiAccountCircleOutline,
-            onClick: logout,
-          },
-        ]
-      : []),
-    {
-      path: mdiCog,
-      onClick: () => refDialogSettings.value?.open(),
-    },
-  ].map(addId),
-);
+const icons = computed(() => [
+  ...(authStore.isAdmin
+    ? [
+        {
+          id: 0,
+          path: mdiAccountCircleOutline,
+          onClick: logout,
+        },
+      ]
+    : []),
+  {
+    id: 1,
+    path: mdiCog,
+    onClick: () => dialogSettings.value?.open(),
+  },
+]);
 </script>

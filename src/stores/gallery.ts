@@ -51,7 +51,7 @@ export const useGalleryStore = defineStore('gallery', () => {
   const loadGalleryItemFromCurrentExplorerFolder = (explorerElement: ItemImage | ItemVideo) =>
     loadGalleryItem(
       pick(explorerElement, ['name', 'src']),
-      explorerStore.folderElements.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>(
+      explorerStore.folderElements.reduce<Array<GalleryItem>>(
         (acc, folderElement) =>
           isItemImage(folderElement) || isItemVideo(folderElement)
             ? [...acc, pick(folderElement, ['name', 'src'])]

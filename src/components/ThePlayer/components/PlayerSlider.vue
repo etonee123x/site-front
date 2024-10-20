@@ -2,7 +2,7 @@
   <div
     tabindex="0"
     class="w-full py-0.5 cursor-pointer focus:on-focus focus:outline-2"
-    ref="refSlider"
+    ref="slider"
     @pointerdown.stop
     @dragstart.stop
     @mousedown.stop
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useMousePressed, useMouseInElement, promiseTimeout, useToggle } from '@vueuse/core';
 
 import { to0To1Borders } from '@/utils/to0To1Borders';
@@ -40,10 +40,10 @@ const style = computed(() => ({
   width: `${Number(((isUsingPosition.value ? position.value : props.modelValue) * 100) / props.multiplier).toFixed(2)}%`,
 }));
 
-const refSlider = ref<HTMLDivElement>();
+const slider = useTemplateRef('slider');
 
-const { pressed: isPressed } = useMousePressed({ target: refSlider });
-const { elementWidth, elementX } = useMouseInElement(refSlider);
+const { pressed: isPressed } = useMousePressed({ target: slider });
+const { elementWidth, elementX } = useMouseInElement(slider);
 
 watch(isPressed, () => (props.isLazy ? onIsPressedChangeLazy() : onIsPressedChange()));
 

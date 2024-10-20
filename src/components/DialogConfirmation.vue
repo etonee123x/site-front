@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :title ref="refBaseDialog">
+  <BaseDialog :title ref="baseDialog">
     <div class="flex flex-col gap-4">
       <p>{{ message }}</p>
       <div class="flex gap-2"></div>
@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useTemplateRef } from 'vue';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 
@@ -17,10 +17,10 @@ defineProps<{
   message: string;
 }>();
 
-const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
+const baseDialog = useTemplateRef('baseDialog');
 
 defineExpose({
-  open: () => refBaseDialog.value?.open(),
-  close: () => refBaseDialog.value?.close(),
+  open: () => baseDialog.value?.open(),
+  close: () => baseDialog.value?.close(),
 });
 </script>

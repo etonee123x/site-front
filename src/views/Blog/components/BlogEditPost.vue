@@ -5,7 +5,7 @@
         class="flex-1"
         :placeholder="t('textareaPlaceholder')"
         :errors="v$.text.$errors"
-        ref="refTextarea"
+        ref="baseTextarea"
         v-model="model.text"
         @submit="onSubmit"
         @pasteFile="onPasteFile"
@@ -33,7 +33,7 @@ En:
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref, type UnwrapRef, defineAsyncComponent } from 'vue';
+import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
 import type { PostData } from '@shared/src/types';
 import { isNotEmptyArray } from '@shared/src/utils';
 import { mdiDelete } from '@mdi/js';
@@ -49,7 +49,7 @@ defineProps<{ v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']> }
 
 const { t } = useI18n({ useScope: 'local' });
 
-const refTextarea = ref<InstanceType<typeof BaseTextarea>>();
+const baseTextarea = useTemplateRef('baseTextarea');
 
 const emit = defineEmits<{
   submit: [];
@@ -69,6 +69,6 @@ const onPasteFile = (file: File) => {
 };
 
 defineExpose({
-  focusTextarea: () => refTextarea.value?.focus(),
+  focusTextarea: () => baseTextarea.value?.focus(),
 });
 </script>

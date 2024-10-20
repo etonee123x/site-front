@@ -1,10 +1,10 @@
 <template>
-  <div class="w-full border border-dark rounded cursor-pointer" ref="refRoot" @click="onClick">
+  <div class="w-full border border-dark rounded cursor-pointer" ref="root" @click="onClick">
     <div class="p-4 flex flex-col">
       <LazyBlogEditPost
         v-if="isInEditMode"
         :v$
-        ref="refBlogEditPost"
+        ref="blogEditPost"
         v-model="postNew"
         v-model:files="files"
         @submit="onSubmit"
@@ -35,7 +35,7 @@
   <DialogConfirmation
     :title="t('confirmDelete')"
     :message="t('deleteMessage')"
-    ref="refDialogConfirmation"
+    ref="dialogConfirmation"
     @confirm="confirm"
     @cancel="cancel"
     @close="cancel"
@@ -57,7 +57,7 @@ Ru:
 import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
-import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
+import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
 import { isNotEmptyArray } from '@shared/src/utils';
 import { onClickOutside, useConfirmDialog } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
@@ -69,7 +69,6 @@ import BaseIcon from '@/components/ui/BaseIcon';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
-import { addId } from '@/utils/addId';
 import { wasEdited as _wasEdited } from '@/utils/post';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
@@ -88,11 +87,11 @@ const props = defineProps<{
 
 const { reveal, confirm, cancel } = useConfirmDialog();
 
-const refRoot = ref<HTMLDivElement>();
-const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
-const refDialogConfirmation = ref<InstanceType<typeof DialogConfirmation>>();
+const root = useTemplateRef('root');
+const blogEditPost = useTemplateRef('blogEditPost');
+const dialogConfirmation = useTemplateRef('dialogConfirmation');
 
-onClickOutside(refRoot, () => {
+onClickOutside(root, () => {
   if (!isInEditMode.value) {
     return;
   }
@@ -144,54 +143,56 @@ const closeEditMode = () => {
   blogStore.editModeFor = null;
 };
 
-const controls = computed(() =>
-  [
-    ...(isInEditMode.value
-      ? [
-          {
-            iconPath: mdiCancel,
-            isLoading: false,
-            onClick: closeEditMode,
+const controls = computed(() => [
+  ...(isInEditMode.value
+    ? [
+        {
+          id: 0,
+          iconPath: mdiCancel,
+          isLoading: false,
+          onClick: closeEditMode,
+        },
+        {
+          id: 1,
+          iconPath: mdiContentSave,
+          isDisabled: !hasChanges.value,
+          isLoading: blogStore.isLoadingPutById,
+          onClick: handle,
+        },
+      ]
+    : []),
+  // TODO: Надо придумать как редактировать посты с вложениями...
+  ...(!(isInEditMode.value || isNotEmptyArray(props.post.filesUrls))
+    ? [
+        {
+          id: 2,
+          iconPath: mdiPencil,
+          isLoading: blogStore.isLoadingPutById,
+          onClick: () => {
+            blogStore.editModeFor = props.post.id;
+
+            nextTick(() => blogEditPost.value?.focusTextarea());
           },
-          {
-            iconPath: mdiContentSave,
-            isDisabled: !hasChanges.value,
-            isLoading: blogStore.isLoadingPutById,
-            onClick: handle,
-          },
-        ]
-      : []),
-    // TODO: Надо придумать как редактировать посты с вложениями...
-    ...(!(isInEditMode.value || isNotEmptyArray(props.post.filesUrls))
-      ? [
-          {
-            iconPath: mdiPencil,
-            isLoading: blogStore.isLoadingPutById,
-            onClick: () => {
-              blogStore.editModeFor = props.post.id;
+        },
+      ]
+    : []),
+  {
+    id: 3,
+    iconPath: mdiDelete,
+    isLoading: blogStore.isLoadingDeleteById,
+    onClick: async () => {
+      dialogConfirmation.value?.open();
 
-              nextTick(() => refBlogEditPost.value?.focusTextarea());
-            },
-          },
-        ]
-      : []),
-    {
-      iconPath: mdiDelete,
-      isLoading: blogStore.isLoadingDeleteById,
-      onClick: async () => {
-        refDialogConfirmation.value?.open();
+      const { isCanceled } = await reveal();
 
-        const { isCanceled } = await reveal();
+      if (isCanceled) {
+        return;
+      }
 
-        if (isCanceled) {
-          return;
-        }
-
-        return blogStore.deleteById(props.post.id).then(() => blogStore.getAll({ shouldReset: true }));
-      },
+      return blogStore.deleteById(props.post.id).then(() => blogStore.getAll({ shouldReset: true }));
     },
-  ].map(addId),
-);
+  },
+]);
 
 const onClick = () => {
   if (isInEditMode.value) {

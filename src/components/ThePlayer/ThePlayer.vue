@@ -21,7 +21,7 @@
           <BaseIcon :path="mdiLinkVariant" />
         </div>
       </BaseAlwaysScrollable>
-      <audio :src="playerStore.src" autoplay ref="refAudio" @ended="onEnded" />
+      <audio :src="playerStore.src" autoplay ref="audio" @ended="onEnded" />
       <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
         <span>
           {{ formattedCurrentTime }}
@@ -80,7 +80,7 @@ import {
   mdiSkipBackward,
   mdiSkipForward,
 } from '@mdi/js';
-import { ref, computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import PlayerSlider from './components/PlayerSlider.vue';
@@ -92,7 +92,6 @@ import BaseToggler from '@/components/ui/BaseToggler.vue';
 import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
 import { formatDuration } from '@/utils/formatDuration';
-import { addId } from '@/utils/addId';
 import { to0To1Borders } from '@/utils/to0To1Borders';
 import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
 
@@ -102,29 +101,30 @@ const playerStore = usePlayerStore();
 
 const toastsStore = useToastsStore();
 
-const refAudio = ref<HTMLAudioElement>();
+const audio = useTemplateRef('audio');
 
-const { playing: isPlaying, waiting: isWaiting, currentTime, duration, volume } = useMediaControls(refAudio);
+const { playing: isPlaying, waiting: isWaiting, currentTime, duration, volume } = useMediaControls(audio);
 
 const shouldRenderButtonClose = computed(() => !(isPlaying.value || isWaiting.value));
 
-const controlButtons = computed(() =>
-  [
-    {
-      icon: mdiSkipBackward,
-      onClick: playerStore.loadPrev,
-      isDisabled: playerStore.isShuffleModeEnabled && !playerStore.isNotEmptyHistory,
-    },
-    {
-      icon: isPlaying.value ? mdiPause : mdiPlay,
-      onClick: onClickPlayPause,
-    },
-    {
-      icon: mdiSkipForward,
-      onClick: playerStore.loadNext,
-    },
-  ].map(addId),
-);
+const controlButtons = computed(() => [
+  {
+    id: 0,
+    icon: mdiSkipBackward,
+    onClick: playerStore.loadPrev,
+    isDisabled: playerStore.isShuffleModeEnabled && !playerStore.isNotEmptyHistory,
+  },
+  {
+    id: 1,
+    icon: isPlaying.value ? mdiPause : mdiPlay,
+    onClick: onClickPlayPause,
+  },
+  {
+    id: 2,
+    icon: mdiSkipForward,
+    onClick: playerStore.loadNext,
+  },
+]);
 
 const formatedDuration = computed(() => formatDuration(duration.value * 1000));
 const formattedCurrentTime = computed(() => formatDuration(currentTime.value * 1000));

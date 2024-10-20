@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog :title="t('settings')" style="max-width: 25rem" ref="refBaseDialog" @confirm="onConfirm" @close="onClose">
+  <BaseDialog :title="t('settings')" style="max-width: 25rem" ref="baseDialog" @confirm="onConfirm" @close="onClose">
     <div class="flex flex-col gap-4 mb-6">
       <div class="flex justify-between items-center">
         <span>{{ t('color') }}</span>
@@ -45,7 +45,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { propFn } from '@shared/src/utils';
 
@@ -56,7 +56,7 @@ import BaseSelect from '@/components/ui/BaseSelect.vue';
 import { clone } from '@/utils/clone';
 import { Language, ThemeColor } from '@/api/config';
 
-const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
+const baseDialog = useTemplateRef('baseDialog');
 
 const settingsStore = useSettingsStore();
 
@@ -83,8 +83,8 @@ const onClickResetSettings = () => {
 };
 
 defineExpose({
-  open: () => refBaseDialog.value?.open(),
-  close: () => refBaseDialog.value?.close(),
-  isOpened: computed(() => refBaseDialog.value?.isOpened),
+  open: () => baseDialog.value?.open(),
+  close: () => baseDialog.value?.close(),
+  isOpened: computed(() => baseDialog.value?.isOpened),
 });
 </script>
