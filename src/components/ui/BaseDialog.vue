@@ -1,11 +1,11 @@
 <template>
   <dialog
-    ref="refDialog"
     class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
+    ref="refDialog"
     @close="onClose"
     @cancel.prevent="onClose"
   >
-    <div ref="refDialogInner" class="p-4 flex flex-col h-full w-full [scrollbar-gutter:stable_both-edges]">
+    <div class="p-4 flex flex-col h-full w-full [scrollbar-gutter:stable_both-edges]" ref="refDialogInner">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
@@ -40,21 +40,19 @@ import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray, isNotNil } from '@shared/src/utils';
 import type { FunctionCallback, WithId } from '@shared/src/types';
-import { storeToRefs } from 'pinia';
 
 import { useComponentsStore } from '@/stores/components';
 import { addId } from '@/utils/addId';
 
-const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton.vue'));
-const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
+const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton'));
+const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon'));
 
 const refDialog = ref<HTMLDialogElement>();
 const refDialogInner = ref<HTMLDivElement>();
 
 const componentsStore = useComponentsStore();
-const { main } = storeToRefs(componentsStore);
 
-const isLocked = useScrollLock(main);
+const isLocked = useScrollLock(() => componentsStore.main);
 const toggleIsLocked = useToggle(isLocked);
 
 interface Button extends WithId {

@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import { enGB, ru } from 'date-fns/locale';
 
 import { i18n } from '@/i18n';
-import { type Settings, ThemeColor, Language } from '@/types';
+import { Language, ThemeColor, type Settings } from '@/api/config';
 
 const CLASS_TITLES = Object.freeze({
   THEME: 'theme',
@@ -71,6 +71,7 @@ export const useSettingsStore = defineStore('settings', () => {
     type ThemeColorWithoutRandom = Exclude<ThemeColor, ThemeColor.Random>;
 
     let _color: ThemeColorWithoutRandom | null = null;
+
     if (color === ThemeColor.Random) {
       const colorsWithoutRandom = Object.values(ThemeColor).filter(
         (c): c is ThemeColorWithoutRandom => c !== ThemeColor.Random,

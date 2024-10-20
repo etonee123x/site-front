@@ -2,6 +2,7 @@ declare module '*.vue' {
   import type { ComponentPublicInstance } from 'vue';
 
   const component: ComponentPublicInstance;
+
   export default component;
 }
 
@@ -11,5 +12,6 @@ declare module '*.yaml' {
   type ObjectValue = Record<string, Value>;
 
   const content: ObjectValue;
+
   export default content;
 }

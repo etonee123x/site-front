@@ -1,11 +1,5 @@
 <template>
-  <div
-    ref="refElement"
-    :style="style"
-    @touchstart="onTouchStart"
-    @touchmove.prevent="onTouchMove"
-    @touchend="onTouchEnd"
-  >
+  <div :style ref="refElement" @touchstart="onTouchStart" @touchmove.prevent="onTouchMove" @touchend="onTouchEnd">
     <slot />
   </div>
 </template>
@@ -68,6 +62,7 @@ const onTouchEnd = () => {
   if (!(wasSwipedLeft || wasSwipedRight)) {
     style.transition = 'all 500ms';
     style.transform = `translateX(0px)`;
+
     return;
   }
 

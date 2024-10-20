@@ -63,7 +63,7 @@ export const usePlayerStore = defineStore('player', () => {
 
   const loadPrev = () => {
     currentPlayingNumber.value = isNotEmptyHistory.value
-      ? historyItems.value.pop() ?? 0
+      ? (historyItems.value.pop() ?? 0)
       : (currentPlayingNumber.value - 1 + playlistReal.value.length) % playlistReal.value.length;
 
     theTrack.value = playlistReal.value[currentPlayingNumber.value];

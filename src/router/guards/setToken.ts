@@ -5,6 +5,7 @@ import { TOKEN } from '@/constants';
 
 export const setToken: NavigationGuard = async (...[to, , next]) => {
   const maybeToken = to.query[TOKEN];
+
   if (!maybeToken) {
     return;
   }

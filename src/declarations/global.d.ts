@@ -1,4 +1,4 @@
-import { type Settings } from '@/types';
+import type { Settings } from '@/api/config';
 
 declare global {
   interface Window {

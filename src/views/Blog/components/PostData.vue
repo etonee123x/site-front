@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col gap-4">
-    <BaseHtml :html="html" />
+    <BaseHtml :html />
     <ul v-if="isNotEmptyArray(post.filesUrls)">
       <li v-for="(fileUrl, index) in post.filesUrls" :key="index">
-        <PostDataAttachment :file-url="fileUrl" />
+        <PostDataAttachment :fileUrl />
       </li>
     </ul>
   </div>

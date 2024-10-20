@@ -1,5 +1,5 @@
 <template>
-  <ElementFileWrapper :element="element" @click="onClick">
+  <ElementFileWrapper :element @click="onClick">
     <PreviewVideo :src="element.src" />
   </ElementFileWrapper>
 </template>

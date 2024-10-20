@@ -2,15 +2,15 @@
   <button type="button" :disabled="isDisabled" @click="onCLick">
     <div class="flex justify-between relative">
       <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
-        <div v-if="$slots.prepend || prependIcon" class="flex">
+        <div v-if="$slots.prepend || propsIconPrepend" class="flex">
           <slot name="prepend">
-            <LazyBaseIcon v-if="prependIcon" v-bind="prependIcon" />
+            <LazyBaseIcon v-if="propsIconPrepend" v-bind="propsIconPrepend" />
           </slot>
         </div>
         <slot />
-        <div v-if="$slots.append || appendIcon" class="flex">
+        <div v-if="$slots.append || propsIconAppend" class="flex">
           <slot name="append">
-            <LazyBaseIcon v-if="appendIcon" v-bind="appendIcon" />
+            <LazyBaseIcon v-if="propsIconAppend" v-bind="propsIconAppend" />
           </slot>
         </div>
       </div>
@@ -21,20 +21,17 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
+import type { Props as PropsIcon } from '@/components/ui/BaseIcon';
 
-import type { ExtractProps } from '@/types';
-
-const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon.vue'));
-const LazyBaseLoading = defineAsyncComponent(() => import('./BaseLoading.vue'));
-
-type IconProps = Omit<ExtractProps<InstanceType<typeof LazyBaseIcon>>, 'onClick'>;
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
+const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const props = defineProps<
   Partial<{
     isDisabled: boolean;
     isLoading: boolean;
-    prependIcon: IconProps;
-    appendIcon: IconProps;
+    propsIconPrepend: PropsIcon;
+    propsIconAppend: PropsIcon;
   }>
 >();
 

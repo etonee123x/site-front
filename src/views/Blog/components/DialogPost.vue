@@ -1,8 +1,8 @@
 <template>
-  <BaseDialog ref="refBaseDialog" is-hidden-header style="height: min-content" @close="onDialogClose">
-    <LazyPostData v-if="postSelected" :post="postSelected" />
+  <BaseDialog isHiddenHeader style="height: min-content" ref="refBaseDialog" @close="onDialogClose">
+    <LazyPostData v-if="blogStore.byId" :post="blogStore.byId" />
     <template #footer>
-      <PostDataFooter v-if="postSelected" :post="postSelected">
+      <PostDataFooter v-if="blogStore.byId" :post="blogStore.byId">
         <div class="text-sm text-dark flex flex-col items-end">
           <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
           <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
@@ -22,7 +22,6 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { computed, defineAsyncComponent, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -44,17 +43,16 @@ const { t } = useI18n({ useScope: 'local' });
 const router = useRouter();
 
 const blogStore = useBlogStore();
-const { postSelected } = storeToRefs(blogStore);
 
 const { format } = useDateFns();
 
 const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
 
 const dates = computed(() =>
-  postSelected.value
+  blogStore.byId
     ? {
-        createdAt: format.value(postSelected.value.createdAt, FORMAT_TEMPALTE),
-        updatedAt: format.value(postSelected.value.updatedAt, FORMAT_TEMPALTE),
+        createdAt: format.value(blogStore.byId.createdAt, FORMAT_TEMPALTE),
+        updatedAt: format.value(blogStore.byId.updatedAt, FORMAT_TEMPALTE),
       }
     : {
         createdAt: null,
@@ -62,17 +60,14 @@ const dates = computed(() =>
       },
 );
 
-const wasEdited = computed(() => Boolean(postSelected.value && _wasEdited(postSelected.value)));
+const wasEdited = computed(() => Boolean(blogStore.byId && _wasEdited(blogStore.byId)));
 
 const onDialogClose = () => {
   router.push({ name: RouteName.Blog });
 };
 
-watch(postSelected, () => {
-  if (postSelected.value) {
-    refBaseDialog.value?.open();
-  } else {
-    refBaseDialog.value?.close();
-  }
-});
+watch(
+  () => blogStore.byId,
+  () => (blogStore.byId ? refBaseDialog.value?.open() : refBaseDialog.value?.close()),
+);
 </script>

@@ -1,23 +1,16 @@
 <template>
   <VueSelect
     v-bind="vueSelect"
-    v-model="model"
-    :close-on-select="!isMultiple"
+    :closeOnSelect="!isMultiple"
     :searchable="false"
     :clearable="false"
-    :deselect-from-dropdown="isMultiple"
+    :deselectFromDropdown="isMultiple"
     :multiple="isMultiple"
     :reduce
     :options
     :label
-    :class="[
-      '[--vs-dropdown-option-padding:0.5rem]',
-      '[--vs-border-color:--color-dark]',
-      '[--vs-controls-color:--color-dark]',
-      '[--vs-dropdown-min-width:100%]',
-      '[--vs-dropdown-option--active-bg:--color-details-500]',
-      '[--vs-selected-color:--color-text]',
-    ]"
+    class="[--vs-dropdown-option-padding:0.5rem] [--vs-border-color:--color-dark] [--vs-controls-color:--color-dark] [--vs-dropdown-min-width:100%] [--vs-dropdown-option--active-bg:--color-details-500] [--vs-selected-color:--color-text]"
+    v-model="model"
   >
     <template #selected-option-container="{ option, deselect }">
       <div v-if="isMultiple" class="outline outline-1 rounded flex gap-1 m-0.5 p-0.5">
@@ -41,7 +34,7 @@ import { mdiCheck, mdiClose } from '@mdi/js';
 // @ts-ignore
 import VueSelect, { type VueSelectProps } from 'vue-select';
 
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 
 import 'vue-select/dist/vue-select.css';
 

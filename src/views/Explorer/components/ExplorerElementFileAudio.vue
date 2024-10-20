@@ -1,11 +1,11 @@
 <template>
-  <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
+  <ElementFileWrapper :element @keydown.enter="onClick" @click="onClick">
     <div class="flex gap-4 overflow-x-auto">
       <div
         v-for="metadata in metadataList"
-        :key="metadata.id"
         :title="metadata.title"
         class="flex flex-col items-center"
+        :key="metadata.id"
       >
         <BaseIcon class="text-2xl h-6" :path="metadata.path" />
         <div class="text-center max-w-40">
@@ -43,7 +43,7 @@ import ElementFileWrapper from './_ElementFileWrapper.vue';
 import { formatDuration } from '@/utils/formatDuration';
 import { addId } from '@/utils/addId';
 import { usePlayerStore } from '@/stores/player';
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 
 const props = defineProps<{
   element: ItemAudio;

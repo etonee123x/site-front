@@ -1,17 +1,19 @@
 <template>
   <header class="border-b border-b-details-500">
     <div class="l-container flex items-center py-2 gap-4">
-      <RouterLink :to="to" class="text-xl">{{ siteTitle }}</RouterLink>
+      <RouterLink :to class="text-xl">{{ siteTitle }}</RouterLink>
       <ul class="flex gap-2">
         <li v-for="link in links" :key="link.id">
-          <RouterLink :to="link.to" active-class="text-details-500">
+          <RouterLink :to="link.to" activeClass="text-details-500">
             {{ link.text }}
           </RouterLink>
         </li>
       </ul>
       <ul class="text-2xl ms-auto flex gap-1">
         <li v-for="icon in icons" :key="icon.id">
-          <BaseIcon :path="icon.path" @click="icon.onClick" />
+          <button @click="icon.onClick">
+            <BaseIcon :path="icon.path" />
+          </button>
         </li>
       </ul>
     </div>
@@ -32,12 +34,11 @@ En:
 import { mdiAccountCircleOutline, mdiCog } from '@mdi/js';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
 
 import DialogSettings from './components/DialogSettings.vue';
 
 import { logout } from '@/helpers/logout';
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 import { addId } from '@/utils/addId';
 import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
@@ -47,7 +48,6 @@ const { t } = useI18n({ useScope: 'local' });
 const refDialogSettings = ref<InstanceType<typeof DialogSettings>>();
 
 const authStore = useAuthStore();
-const { isAdmin } = storeToRefs(authStore);
 
 const siteTitle = String(import.meta.env.VITE_SITE_TITLE);
 
@@ -62,7 +62,7 @@ const links = computed(() =>
 
 const icons = computed(() =>
   [
-    ...(isAdmin.value
+    ...(authStore.isAdmin
       ? [
           {
             path: mdiAccountCircleOutline,

@@ -2,15 +2,15 @@
   <div class="flex gap-4 flex-col">
     <div class="flex gap-4">
       <BaseTextarea
-        ref="refTextarea"
-        v-model="model.text"
         class="flex-1"
         :placeholder="t('textareaPlaceholder')"
         :errors="v$.text.$errors"
+        ref="refTextarea"
+        v-model="model.text"
         @submit="onSubmit"
-        @paste-file="onPasteFile"
+        @pasteFile="onPasteFile"
       />
-      <BaseInputFile v-model="files" class="sticky top-2 h-min w-min" />
+      <BaseInputFile class="sticky top-2 h-min w-min" v-model="files" />
     </div>
     <div v-if="isNotEmptyArray(files)">
       <div class="mb-3 flex items-center gap-2">
@@ -43,11 +43,9 @@ import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
 
-defineProps<{
-  v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']>;
-}>();
+defineProps<{ v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']> }>();
 
 const { t } = useI18n({ useScope: 'local' });
 

@@ -4,31 +4,32 @@
     @swiped="onSwiped"
   >
     <div class="l-container flex flex-col gap-1 justify-center">
-      <BaseIcon
-        v-if="shouldRenderButtonClose"
-        class="text-xl absolute end-2 top-2 no-hover:hidden"
-        :path="mdiClose"
-        @click="onClickClose"
-      />
+      <button @click="onClickClose">
+        <BaseIcon
+          v-if="shouldRenderButtonClose"
+          class="text-xl absolute end-2 top-2 no-hover:hidden"
+          :path="mdiClose"
+        />
+      </button>
       <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
         <div
           class="pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
           title="Copy link"
           @click="onClickTitle"
         >
-          <span>{{ name }}</span>
+          <span>{{ playerStore.name }}</span>
           <BaseIcon :path="mdiLinkVariant" />
         </div>
       </BaseAlwaysScrollable>
-      <audio ref="refAudio" :src="src" autoplay @ended="onEnded" />
+      <audio :src="playerStore.src" autoplay ref="refAudio" @ended="onEnded" />
       <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
         <span>
           {{ formattedCurrentTime }}
         </span>
         <PlayerSlider
-          v-model="currentTime"
           :multiplier="duration"
-          is-lazy
+          isLazy
+          v-model="currentTime"
           @keydown.right="onKeyDownRightTime"
           @keydown.left="onKeyDownLeftTime"
         />
@@ -38,16 +39,16 @@
       </div>
       <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
         <div class="flex justify-end">
-          <BaseToggler v-model="isShuffleModeEnabled" class="whitespace-nowrap min-w-6">
+          <BaseToggler class="whitespace-nowrap min-w-6" v-model="playerStore.isShuffleModeEnabled">
             <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
           </BaseToggler>
         </div>
         <div class="flex justify-center gap-2">
           <BaseButton
             v-for="controlButton in controlButtons"
-            :key="controlButton.id"
-            :is-disabled="controlButton.isDisabled"
+            :isDisabled="controlButton.isDisabled"
             class="whitespace-nowrap min-w-6 h-6 w-8"
+            :key="controlButton.id"
             @click="controlButton.onClick"
           >
             <BaseIcon class="text-2xl" :path="controlButton.icon" />
@@ -80,13 +81,12 @@ import {
   mdiSkipForward,
 } from '@mdi/js';
 import { ref, computed } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
 import PlayerSlider from './components/PlayerSlider.vue';
 
-import BaseButton from '@/components/ui/BaseButton.vue';
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseButton from '@/components/ui/BaseButton';
+import BaseIcon from '@/components/ui/BaseIcon';
 import BaseSwipable from '@/components/ui/BaseSwipable.vue';
 import BaseToggler from '@/components/ui/BaseToggler.vue';
 import { usePlayerStore } from '@/stores/player';
@@ -99,7 +99,6 @@ import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
 const { t } = useI18n({ useScope: 'local' });
 
 const playerStore = usePlayerStore();
-const { name, src, url, isShuffleModeEnabled, isNotEmptyHistory } = storeToRefs(playerStore);
 
 const toastsStore = useToastsStore();
 
@@ -114,7 +113,7 @@ const controlButtons = computed(() =>
     {
       icon: mdiSkipBackward,
       onClick: playerStore.loadPrev,
-      isDisabled: isShuffleModeEnabled.value && !isNotEmptyHistory.value,
+      isDisabled: playerStore.isShuffleModeEnabled && !playerStore.isNotEmptyHistory,
     },
     {
       icon: isPlaying.value ? mdiPause : mdiPlay,
@@ -141,7 +140,7 @@ const onClickClose = playerStore.unloadTrack;
 const onSwiped = playerStore.unloadTrack;
 
 const urlFull = computed(() => {
-  let _url = [window.location.origin, url.value].join('');
+  let _url = [window.location.origin, playerStore.url].join('');
 
   try {
     _url = encodeURI(_url);

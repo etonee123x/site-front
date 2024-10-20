@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog ref="refBaseDialog" :title="title">
+  <BaseDialog :title ref="refBaseDialog">
     <div class="flex flex-col gap-4">
       <p>{{ message }}</p>
       <div class="flex gap-2"></div>
@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 

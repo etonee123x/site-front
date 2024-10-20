@@ -11,7 +11,7 @@
 import { mdiFileOutline } from '@mdi/js';
 import { computed } from 'vue';
 
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
 
 const props = defineProps<{

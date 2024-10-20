@@ -1,5 +1,5 @@
 <template>
-  <ElementFileWrapper :element="element" @keydown.enter="onClick" @click="onClick">
+  <ElementFileWrapper :element @keydown.enter="onClick" @click="onClick">
     <div class="flex justify-center max-w-full">
       <img class="max-w-full" :src="element.src" />
     </div>

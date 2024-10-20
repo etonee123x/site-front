@@ -1,26 +1,23 @@
 import { defineStore } from 'pinia';
-import { computed, shallowRef } from 'vue';
+import { computed } from 'vue';
 
-import { getAuthData as _getAuthData } from '@/api';
-import { type AuthData, Role } from '@/types';
+import { getAuthData as _getAuthData, Role } from '@/api/auth';
+import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 
 export const useAuthStore = defineStore('auth', () => {
-  const authData = shallowRef<AuthData | null>(null);
+  const {
+    state: authData,
+    execute: getAuthData,
+    isLoading: isLoadingGetAuthData,
+  } = useAsyncStateApi(_getAuthData, null);
 
   const isAdmin = computed(() => Boolean(authData.value && authData.value.role === Role.Admin));
 
-  const getAuthData = () =>
-    _getAuthData()
-      .then((_authData) => {
-        authData.value = _authData;
-      })
-      .catch(() => {
-        authData.value = null;
-      });
-
   return {
-    isAdmin,
-
+    authData,
     getAuthData,
+    isLoadingGetAuthData,
+
+    isAdmin,
   };
 });

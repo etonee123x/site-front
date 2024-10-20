@@ -1,9 +1,9 @@
 <template>
-  <div ref="refContainer" class="overflow-hidden relative inline-flex">
+  <div class="overflow-hidden relative inline-flex" ref="refContainer">
     <div
-      ref="refContent"
       class="whitespace-nowrap [margin:var(--base-always-scrollable--content--margin)]"
       :class="isAnimated && $s.animated"
+      ref="refContent"
     >
       <slot />
     </div>

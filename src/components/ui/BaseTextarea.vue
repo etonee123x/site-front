@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col gap-1">
     <textarea
+      class="f-body-2 rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-none resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
+      :placeholder
       ref="textarea"
       v-model="model"
-      class="f-body-2 rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-none resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
-      :placeholder="placeholder"
       @keydown.enter.shift.prevent="onEnter"
       @paste="onPaste"
     />

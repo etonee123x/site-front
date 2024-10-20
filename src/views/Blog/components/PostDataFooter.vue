@@ -20,7 +20,7 @@ import { useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
 import BaseVr from '@/components/ui/BaseVr.vue';
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 import { useToastsStore } from '@/stores/toasts';
 
 const props = defineProps<{

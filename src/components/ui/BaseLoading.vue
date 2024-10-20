@@ -17,9 +17,7 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 
-defineProps<{
-  isFull?: boolean;
-}>();
+defineProps<{ isFull?: boolean }>();
 
 const { t } = useI18n({ useScope: 'local' });
 

@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div ref="refRoot" :class="$s.html" class="whitespace-break-spaces break-words" v-html="html" />
+  <div :class="$s.html" class="whitespace-break-spaces break-words" ref="refRoot" v-html="html" />
 </template>
 
 <script setup lang="ts">
