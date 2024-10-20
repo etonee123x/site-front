@@ -15,7 +15,9 @@
     <template #selected-option-container="{ option, deselect }">
       <div v-if="isMultiple" class="outline outline-1 rounded flex gap-1 m-0.5 p-0.5">
         <div>{{ getOptionLabel(option) }}</div>
-        <BaseIcon :path="mdiClose" @click.prevent.stop="() => deselect(option)" />
+        <button @click.prevent.stop="() => deselect(option)">
+          <BaseIcon :path="mdiClose" />
+        </button>
       </div>
     </template>
     <template #option="option">

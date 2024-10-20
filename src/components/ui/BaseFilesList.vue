@@ -8,7 +8,9 @@
         </BaseAlwaysScrollable>
         <div class="text-2xl flex gap-2 ms-auto items-center">
           <BaseIcon class="cursor-grab text-dark" :class="CLASS_HANDLE" :path="mdiSwapVertical" />
-          <BaseIcon :path="mdiDelete" @click="() => onClickDeteleByIndex(index)" />
+          <button @click="() => onClickDeteleByIndex(index)">
+            <BaseIcon :path="mdiDelete" />
+          </button>
         </div>
       </div>
     </li>
