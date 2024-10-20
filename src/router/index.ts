@@ -22,7 +22,7 @@ export const router = createRouter({
     {
       name: RouteName.Home,
       path: '/',
-      redirect: '/explorer/',
+      redirect: '/blog',
     },
     {
       name: RouteName.Blog,

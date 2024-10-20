@@ -69,7 +69,7 @@ import BaseIcon from '@/components/ui/BaseIcon';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
-import { wasEdited as _wasEdited } from '@/utils/post';
+import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
