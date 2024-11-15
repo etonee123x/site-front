@@ -185,8 +185,37 @@
     }
   }
 
+  .text-input-base {
+    @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-white border border-current rounded px-3 text-xs cursor-text justify-between box-border;
+
+    input {
+      all: unset;
+      @apply text-initial flex-1 min-w-0;
+    }
+  }
+
+  .checkbox {
+    @apply inline-flex items-center gap-2 cursor-pointer has-[input:disabled]:pointer-events-none text-dark has-[input:disabled]:text-dark has-[input:checked]:has-[input:disabled]:text-dark hover:text-details-200 has-[input:checked]:text-details-200;
+
+    &.checkbox_size_sm {
+      .icon {
+        @apply size-4;
+      }
+    }
+
+    &.checkbox_size_xs {
+      .icon {
+        @apply size-3;
+      }
+    }
+  }
+
   .vr {
     @apply inline-block self-stretch w-px min-h-4 bg-dark;
+  }
+
+  .element-title {
+    @apply text-dark text-xs;
   }
 }
 

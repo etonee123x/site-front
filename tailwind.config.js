@@ -5,6 +5,7 @@ export default {
     screens: {},
     extend: {
       colors: {
+        initial: 'initial',
         details: {
           1: 'var(--color-details-1)',
           10: 'var(--color-details-10)',

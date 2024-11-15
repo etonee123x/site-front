@@ -1,6 +1,6 @@
 import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { toId, type Id, type WithId } from '@shared/src/types';
 
 export enum ToastType {

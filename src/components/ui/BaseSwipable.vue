@@ -39,17 +39,25 @@ let wasStarted = false;
 const style = reactive<CSSProperties>({});
 
 const onTouchStart = (e: TouchEvent) => {
+  const maybeChangedTouch = e.changedTouches[0];
+
+  if (!maybeChangedTouch) {
+    return;
+  }
+
   wasStarted = true;
-  touchStartX = e.changedTouches[0].screenX;
+  touchStartX = maybeChangedTouch.screenX;
   style.transition = 'all 0ms';
 };
 
 const onTouchMove = (e: TouchEvent) => {
-  if (!wasStarted) {
+  const maybeTouch = e.touches[0];
+
+  if (!(wasStarted && maybeTouch)) {
     return;
   }
 
-  diff = e.touches[0].screenX - touchStartX;
+  diff = maybeTouch.screenX - touchStartX;
   style.transform = `translateX(${diff}px)`;
 };
 

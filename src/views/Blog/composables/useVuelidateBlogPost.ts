@@ -1,6 +1,6 @@
 import { type MaybeRefOrGetter, type Ref, toValue } from 'vue';
 import type { FunctionCallback, PostData } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { helpers } from '@vuelidate/validators';
 
 import { i18n } from '@/i18n';

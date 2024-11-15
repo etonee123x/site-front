@@ -25,8 +25,10 @@
     "sortablejs": "^1.15.3",
     "vue": "^3.5.12",
     "vue-i18n": "^10.0.4",
+    "vue-multiselect": "^3.1.0",
     "vue-router": "^4.4.5",
-    "vue-select": "^4.0.0-beta.6"
+    "vue-select": "^4.0.0-beta.6",
+    "vue-tippy": "^6.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

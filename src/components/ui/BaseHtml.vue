@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { isString } from '@shared/src/utils';
+import { isString } from '@shared/src/utils/isString';
 import { onMounted, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
 

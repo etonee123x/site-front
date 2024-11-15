@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { isExtAudio, isExtImage, isExtVideo } from '@shared/src/types';
-import { pick } from '@shared/src/utils';
+import { pick } from '@shared/src/utils/pick';
 import { computed, defineAsyncComponent } from 'vue';
 
 import { getFileUrlExt, getLastParameter } from '@/utils/url';

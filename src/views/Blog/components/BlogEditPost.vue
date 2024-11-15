@@ -35,7 +35,7 @@ En:
 import { useI18n } from 'vue-i18n';
 import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
 import type { PostData } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { mdiDelete } from '@mdi/js';
 
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';

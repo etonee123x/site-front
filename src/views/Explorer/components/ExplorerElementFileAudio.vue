@@ -35,7 +35,7 @@ Ru:
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 import { ItemAudio } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';

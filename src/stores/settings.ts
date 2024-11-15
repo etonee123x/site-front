@@ -77,7 +77,7 @@ export const useSettingsStore = defineStore('settings', () => {
         (c): c is ThemeColorWithoutRandom => c !== ThemeColor.Random,
       );
 
-      _color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)];
+      _color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)] ?? null;
     }
 
     const bodyClassList = document.querySelector('body')?.classList;

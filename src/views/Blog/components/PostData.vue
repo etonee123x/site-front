@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { type Post } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { computed } from 'vue';
 
 import PostDataAttachment from './PostDataAttachment.vue';

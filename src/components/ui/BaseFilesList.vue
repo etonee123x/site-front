@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { mdiDelete, mdiSwapVertical } from '@mdi/js';
-import { isNil } from '@shared/src/utils';
+import { isNil } from '@shared/src/utils/isNil';
 import Sortable from 'sortablejs';
 import { useTemplateRef, watch } from 'vue';
 

@@ -2,7 +2,7 @@ import type { Id, Post, PostData } from '@shared/src/types';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useCounter, useToggle } from '@vueuse/core';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 
 import {
   getPosts as _getPosts,

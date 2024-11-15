@@ -31,7 +31,7 @@ import { ref, defineAsyncComponent, useTemplateRef } from 'vue';
 import { useFileDialog } from '@vueuse/core';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 
 import BaseButton from './BaseButton';
 import BaseIcon from './BaseIcon';

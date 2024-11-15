@@ -58,7 +58,7 @@ import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
 import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { onClickOutside, useConfirmDialog } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 

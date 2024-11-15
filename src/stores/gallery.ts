@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { isExtVideo, isItemImage, isItemVideo, type ItemImage, type ItemVideo } from '@shared/src/types';
 import { useCycleList } from '@vueuse/core';
-import { pick } from '@shared/src/utils';
+import { pick } from '@shared/src/utils/pick';
 
 import { useExplorerStore } from './explorer';
 

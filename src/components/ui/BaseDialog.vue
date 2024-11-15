@@ -38,7 +38,8 @@ import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } 
 import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { isNotEmptyArray, isNotNil } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import { isNotNil } from '@shared/src/utils/isNotNil';
 import type { FunctionCallback, WithId } from '@shared/src/types';
 
 import { useComponentsStore } from '@/stores/components';
