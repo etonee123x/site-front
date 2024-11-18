@@ -14,36 +14,29 @@ import {
 import { postUpload } from '@/api/upload';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 
-export enum IsLoadingAction {
-  Get = 'Get',
-  Post = 'Post',
-  Put = 'Put',
-  Delete = 'Delete',
-}
-
 export const useBlogStore = defineStore('blog', () => {
   const { inc, reset: _reset, count: page } = useCounter();
   const [isEnd, toggleIsEnd] = useToggle();
 
-  const {
-    state: all,
-    execute: getAll,
-    isLoading: isLoadingGetAll,
-  } = useAsyncStateApi(async (options: { shouldReset?: boolean } = {}) => {
-    if (options.shouldReset) {
-      all.value = [];
-      toggleIsEnd(false);
-      _reset();
-    }
+  const all = ref<Array<Post>>([]);
+  const { execute: getAll, isLoading: isLoadingGetAll } = useAsyncStateApi(
+    async (options: { shouldReset?: boolean } = {}) => {
+      if (options.shouldReset) {
+        all.value = [];
+        toggleIsEnd(false);
+        _reset();
+      }
 
-    return _getPosts(page.value).then(({ data: _posts, meta: { isEnd: _isEnd } }): Array<Post> => {
-      all.value = all.value.concat(_posts);
-      toggleIsEnd(_isEnd);
-      inc();
+      return _getPosts(page.value).then(({ data: _posts, meta: { isEnd: _isEnd } }): Array<Post> => {
+        all.value = all.value.concat(_posts);
+        toggleIsEnd(_isEnd);
+        inc();
 
-      return all.value;
-    });
-  }, []);
+        return all.value;
+      });
+    },
+    [],
+  );
 
   const { execute: post, isLoading: isLoadingPost } = useAsyncStateApi(
     async (postData: PostData, files: Array<File> = []) => {
