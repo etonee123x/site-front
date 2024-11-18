@@ -1,14 +1,16 @@
 <template>
   <header class="border-b border-b-details-500">
     <div class="l-container flex items-center py-2 gap-4">
-      <RouterLink :to class="text-xl">{{ siteTitle }}</RouterLink>
-      <ul class="flex gap-2">
-        <li v-for="link in links" :key="link.id">
-          <RouterLink :to="link.to" activeClass="text-details-500">
-            {{ link.text }}
-          </RouterLink>
-        </li>
-      </ul>
+      <nav class="flex items-end gap-4">
+        <RouterLink :to class="text-xl">{{ siteTitle }}</RouterLink>
+        <ul class="flex gap-2">
+          <li v-for="link in links" :key="link.id">
+            <RouterLink :to="link.to" activeClass="text-details-500">
+              {{ link.text }}
+            </RouterLink>
+          </li>
+        </ul>
+      </nav>
       <ul class="text-2xl ms-auto flex gap-1">
         <li v-for="icon in icons" :key="icon.id">
           <BaseButton @click="icon.onClick">
