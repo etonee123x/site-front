@@ -1,11 +1,10 @@
 <template>
   <div>
     <div
-      class="flex justify-center items-center cursor-pointer p-4 border border-dark rounded-lg bg-items with-hover:bg-items-hovered"
-      :class="isFocused && 'on-focus'"
+      class="flex justify-center items-center cursor-pointer p-4 border border-dark has-[input:focus]:on-focus rounded-lg bg-items with-hover:bg-items-hovered"
       @click="onClick"
     >
-      <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
+      <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent />
       <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog :title="t('title')" ref="baseDialog" @confirm="onConfirm" @close="onClose" @click.stop>
@@ -38,15 +37,12 @@ import BaseIcon from './BaseIcon';
 import BaseDialog from './BaseDialog.vue';
 
 import { useIsUniqueFileCheck } from '@/composables/useIsUniqueFileCheck';
-import { useIsFocused } from '@/composables/useIsFocused';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 
 const baseDialog = useTemplateRef('baseDialog');
-
-const { onFocus, onBlur, isFocused } = useIsFocused();
 
 const { open: openInitial, onChange: onChangeInitial, reset: resetInitial } = useFileDialog();
 
