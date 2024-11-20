@@ -1,21 +1,19 @@
 <template>
   <button type="button" :class="BUTTON.default" :disabled="isDisabled" @click="onCLick">
-    <div class="flex justify-between relative">
-      <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
-        <div v-if="$slots.prepend || propsIconPrepend" class="flex">
-          <slot name="prepend">
-            <LazyBaseIcon v-if="propsIconPrepend" v-bind="propsIconPrepend" />
-          </slot>
-        </div>
-        <slot />
-        <div v-if="$slots.append || propsIconAppend" class="flex">
-          <slot name="append">
-            <LazyBaseIcon v-if="propsIconAppend" v-bind="propsIconAppend" />
-          </slot>
-        </div>
+    <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
+      <div v-if="$slots.prepend || propsIconPrepend" class="flex">
+        <slot name="prepend">
+          <LazyBaseIcon v-if="propsIconPrepend" v-bind="propsIconPrepend" />
+        </slot>
       </div>
-      <LazyBaseLoading v-if="isLoading" class="absolute left-1/2" />
+      <slot />
+      <div v-if="$slots.append || propsIconAppend" class="flex">
+        <slot name="append">
+          <LazyBaseIcon v-if="propsIconAppend" v-bind="propsIconAppend" />
+        </slot>
+      </div>
     </div>
+    <LazyBaseLoading v-if="isLoading" class="absolute left-1/2" />
   </button>
 </template>
 

@@ -53,10 +53,11 @@ import DialogPost from './components/DialogPost.vue';
 import BlogPost from './components/BlogPost.vue';
 
 import { useBlogStore } from '@/stores/blog';
-import { useComponentsStore } from '@/stores/components';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
 import { goToPage404 } from '@/composables/goToPage404';
+import { MAIN } from '@/constants/selectors';
+import { useElementFinder } from '@/composables/useElementFinder';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -72,18 +73,14 @@ const blogStore = useBlogStore();
 
 const authStore = useAuthStore();
 
-const componentsStore = useComponentsStore();
-
 const hasPosts = computed(() => isNotEmptyArray(blogStore.all));
 
-useInfiniteScroll(
-  () => componentsStore.main,
-  () => new Promise((resolve) => blogStore.getAll().then(() => resolve())),
-  {
-    canLoadMore: () => !blogStore.isEnd,
-    distance: 100,
-  },
-);
+const elementMain = useElementFinder(() => document.getElementById(MAIN));
+
+useInfiniteScroll(elementMain, () => new Promise((resolve) => blogStore.getAll().then(() => resolve())), {
+  canLoadMore: () => !blogStore.isEnd,
+  distance: 100,
+});
 
 const getInitialPostData = () => ({
   text: '',

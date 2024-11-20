@@ -41,8 +41,7 @@ import { useI18n } from 'vue-i18n';
 import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { isNotNil } from '@shared/src/utils/isNotNil';
 import type { FunctionCallback, WithId } from '@shared/src/types';
-
-import { useComponentsStore } from '@/stores/components';
+import { MAIN } from '@/constants/selectors';
 
 const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton'));
 const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon'));
@@ -50,9 +49,7 @@ const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon'));
 const dialog = useTemplateRef('dialog');
 const dialogInner = useTemplateRef('dialogInner');
 
-const componentsStore = useComponentsStore();
-
-const isLocked = useScrollLock(() => componentsStore.main);
+const isLocked = useScrollLock(document.getElementById(MAIN));
 const toggleIsLocked = useToggle(isLocked);
 
 interface Button extends WithId {

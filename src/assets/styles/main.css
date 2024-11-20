@@ -6,6 +6,11 @@
 
 @layer base {
 
+  :root {
+    --color-success: #00ff00;
+    --color-error: #ff0000;
+  }
+
   * {
     @apply box-border;
   }
@@ -170,7 +175,7 @@
 
   .button {
     all: unset;
-    @apply bg-items border border-dark border-solid rounded p-2 text-center cursor-pointer select-none flex justify-center items-center with-hover:bg-items-hovered;
+    @apply bg-items border border-dark border-solid rounded p-1 text-center cursor-pointer select-none flex justify-center relative items-center with-hover:bg-items-hovered;
 
     &[disabled] {
       @apply pointer-events-none bg-dark opacity-25 text-items;
