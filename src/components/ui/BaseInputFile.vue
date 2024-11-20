@@ -5,7 +5,7 @@
       @click="onClick"
     >
       <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent />
-      <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
+      <BaseIcon :class="ICON.SIZE.LG" :path="mdiFilePlusOutline" />
     </div>
     <BaseDialog :title="t('title')" ref="baseDialog" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
@@ -37,6 +37,7 @@ import BaseIcon from './BaseIcon';
 import BaseDialog from './BaseDialog.vue';
 
 import { useIsUniqueFileCheck } from '@/composables/useIsUniqueFileCheck';
+import { ICON } from '@/helpers/ui';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue'));
 
