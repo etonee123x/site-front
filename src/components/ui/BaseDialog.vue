@@ -9,7 +9,9 @@
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
-          <LazyBaseIcon :path="mdiClose" class="text-xl ms-auto" @click="onClickCloseIcon" />
+          <LazyBaseButton class="ms-auto" @click="onClickCloseIcon">
+            <LazyBaseIcon :path="mdiClose" />
+          </LazyBaseButton>
         </div>
       </slot>
       <slot v-bind="{ close }" />
