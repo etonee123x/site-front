@@ -1,12 +1,9 @@
 <template>
   <div>
-    <div
-      class="flex justify-center items-center cursor-pointer p-4 border border-dark has-[input:focus]:on-focus rounded-lg bg-items with-hover:bg-items-hovered"
-      @click="onClick"
-    >
-      <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent />
-      <BaseIcon :class="ICON.SIZE.LG" :path="mdiFilePlusOutline" />
-    </div>
+    <button type="button" :class="INPUT.default" @click="onClick">
+      <input tabindex="-1" class="fixed start-0 translate-x-[-200%] pointer-events-none" type="file" />
+      <BaseIcon :path="mdiFilePlusOutline" />
+    </button>
     <BaseDialog :title="t('title')" ref="baseDialog" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
       <BaseButton class="mx-auto my-4" :propsIconPrepend="{ path: mdiPlus }" @click="onClickAdd">
@@ -37,7 +34,7 @@ import BaseIcon from './BaseIcon';
 import BaseDialog from './BaseDialog.vue';
 
 import { useIsUniqueFileCheck } from '@/composables/useIsUniqueFileCheck';
-import { ICON } from '@/helpers/ui';
+import { INPUT } from '@/helpers/ui';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue'));
 

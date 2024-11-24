@@ -10,7 +10,10 @@
         @submit="onSubmit"
         @pasteFile="onPasteFile"
       />
-      <BaseInputFile class="sticky top-2 h-min w-min" v-model="files" />
+      <div class="sticky top-2 flex flex-col gap-2 h-min">
+        <BaseInputFile @update:modelValue="onUpdateModelValueInputFile" />
+        <BaseAudioRecorder @update:modelValue="onUpdateModelValueAudioRecorder" />
+      </div>
     </div>
     <div v-if="isNotEmptyArray(files)">
       <div class="mb-3 flex items-center gap-2">
@@ -41,6 +44,7 @@ import { mdiDelete } from '@mdi/js';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
+import BaseAudioRecorder from '@/components/ui/BaseAudioRecorder.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
@@ -66,6 +70,14 @@ const onClickDeleteFiles = () => {
 
 const onPasteFile = (file: File) => {
   files.value.push(file);
+};
+
+const onUpdateModelValueInputFile: InstanceType<typeof BaseInputFile>['onUpdate:model-value'] = (_files) => {
+  files.value = files.value.concat(_files);
+};
+
+const onUpdateModelValueAudioRecorder: InstanceType<typeof BaseAudioRecorder>['onUpdate:model-value'] = (blob) => {
+  files.value.push(new File([blob], 'test.ogg', { type: blob.type }));
 };
 
 defineExpose({

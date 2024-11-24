@@ -180,18 +180,9 @@
   .button {
     all: unset;
     @apply bg-items border border-dark border-solid rounded p-1 text-center cursor-pointer select-none flex justify-center relative items-center with-hover:bg-items-hovered;
-
-    &[disabled] {
-      @apply pointer-events-none bg-dark opacity-25 text-items;
-    }
-
-    &:active {
-      @apply text-details-500 border-details-500;
-    }
-
-    &:focus {
-      @apply on-focus;
-    }
+    @apply disabled:pointer-events-none disabled:bg-dark disabled:opacity-25 disabled:text-items;
+    @apply active:text-details-500 active:border-details-500;
+    @apply focus:on-focus;
   }
 
   .text-input-base {
@@ -216,6 +207,16 @@
       .icon {
         @apply size-3;
       }
+    }
+  }
+
+  .input {
+    @apply flex justify-center items-center p-4 border border-dark rounded-lg bg-items;
+    @apply focus:on-focus;
+    @apply with-hover:bg-items-hovered;
+
+    .icon {
+      @apply size-8;
     }
   }
 

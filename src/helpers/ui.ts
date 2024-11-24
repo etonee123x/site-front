@@ -10,6 +10,10 @@ export const BUTTON = Object.freeze({
   default: 'button',
 });
 
+export const INPUT = Object.freeze({
+  default: 'input',
+});
+
 export const CHECKBOX = Object.freeze({
   default: 'checkbox',
   SIZE: Object.freeze({
