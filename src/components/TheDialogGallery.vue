@@ -14,7 +14,7 @@
         <component
           :is="component.is"
           v-bind="component.binds"
-          class="h-full object-contain outline-none border-none"
+          class="h-full object-contain outline-hidden border-none"
           :src="galleryStore.galleryItem.src"
         />
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full border border-dark rounded cursor-pointer" ref="root" @click="onClick">
+  <div class="w-full border border-dark rounded-sm cursor-pointer" ref="root" @click="onClick">
     <div class="p-4 flex flex-col">
       <LazyBlogEditPost
         v-if="isInEditMode"

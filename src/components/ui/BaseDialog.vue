@@ -1,6 +1,6 @@
 <template>
   <dialog
-    class="l-container p-0 border border-details-500 outline-none rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
+    class="l-container p-0 border border-details-500 outline-hidden rounded-lg bg-background m-[auto_!important] backdrop:bg-[rgba(0,0,0,0.33)]"
     ref="dialog"
     @close="onClose"
     @cancel.prevent="onClose"

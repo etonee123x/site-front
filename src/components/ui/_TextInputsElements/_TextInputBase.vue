@@ -15,7 +15,7 @@
       <slot>
         <button
           tabindex="-1"
-          class="hidden active:block group-has-[input:focus]:group-has-[input:read-only]:hidden group-has-[input:focus]:block cursor-pointer"
+          class="hidden active:block group-has-[input:read-only]:group-has-[input:focus]:hidden group-has-[input:focus]:block cursor-pointer"
           @click="onClickButtonClear"
         >
           <BaseIcon :path="mdiCross" />
@@ -69,7 +69,7 @@ const onClickButtonClear = () => {
 };
 
 const onFocus = () => emit('focus');
-const onBlur = () => emit('blur');
+const onBlur = () => emit('blur-sm');
 
 defineExpose({
   blur: () => input.value?.blur(),
