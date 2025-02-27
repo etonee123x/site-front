@@ -2,7 +2,7 @@
   <ul class="flex flex-col gap-2">
     <li
       v-for="toast in toastsStore.toasts.slice(0, 5)"
-      class="select-none p-2 mx-auto w-fit min-w-[min(20rem,80vw)] bg-background border border-dark rounded-sm with-hover:scale-[1.02]"
+      class="select-none p-2 mx-auto w-fit min-w-[min(20rem,80vw)] bg-background border border-dark rounded-sm hover:scale-[1.02]"
       :class="isSuccess(toast) ? 'text-success' : 'text-error'"
       :key="toast.id"
     >

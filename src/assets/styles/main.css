@@ -4,6 +4,40 @@
 
 @import 'tailwindcss';
 
+@theme {
+  --color-initial: initial;
+
+  --color-success: #00ff00;
+  --color-error: #ff0000;
+
+  --color-text: black;
+
+  --color-items: var(--color-details-1);
+  --color-items-hovered: var(--color-details-10);
+
+  --color-folders: var(--color-details-75);
+  --color-folders-hovered: var(--color-details-100);
+
+  --color-dark: var(--color-details-900);
+
+  --color-bg: white;
+
+  --color-details-1: var(--color-details-1);
+  --color-details-10: var(--color-details-10);
+  --color-details-50: var(--color-details-50);
+  --color-details-75: var(--color-details-75);
+  --color-details-100: var(--color-details-100);
+  --color-details-200: var(--color-details-200);
+  --color-details-300: var(--color-details-300);
+  --color-details-400: var(--color-details-400);
+  --color-details-500: var(--color-details-500);
+  --color-details-600: var(--color-details-600);
+  --color-details-700: var(--color-details-700);
+  --color-details-800: var(--color-details-800);
+  --color-details-900: var(--color-details-900);
+}
+
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -21,99 +55,10 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
-}
-
-@utility on-focus {
-  outline: var(--color-dark) solid 1px;
-  outline-offset: 0;
-}
-
-@utility l-container {
-  maxWidth: 75rem;
-  width: 90%;
-  margin: 0 auto;
-}
-
-@utility icon {
-  @apply size-6;
-
-  &.icon_size_sm {
-    @apply size-4;
-  }
-
-  &.icon_size_lg {
-    @apply size-8;
-  }
-}
-
-@utility {}
-
-@utility button {
-  all: unset;
-  @apply bg-items border border-dark border-solid rounded-sm p-1 text-center cursor-pointer select-none flex justify-center relative items-center with-hover:bg-items-hovered;
-  @apply disabled:pointer-events-none disabled:bg-dark disabled:opacity-25 disabled:text-items;
-  @apply active:text-details-500 active:border-details-500;
-  @apply focus:on-focus;
-}
-
-@utility text-input-base {
-  @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-white border border-current rounded-sm px-3 text-xs cursor-text justify-between box-border;
-
-  input {
-    all: unset;
-    @apply text-initial flex-1 min-w-0;
-  }
-}
-
-@utility checkbox {
-  @apply inline-flex items-center gap-2 cursor-pointer has-[input:disabled]:pointer-events-none text-dark has-[input:disabled]:text-dark has-[input:checked]:has-[input:disabled]:text-dark hover:text-details-200 has-[input:checked]:text-details-200;
-
-  &.checkbox_size_sm {
-    .icon {
-      @apply size-4;
-    }
-  }
-
-  &.checkbox_size_xs {
-    .icon {
-      @apply size-3;
-    }
-  }
-}
-
-@utility input {
-  @apply flex justify-center items-center p-4 border border-dark rounded-lg bg-items;
-  @apply focus:on-focus;
-  @apply with-hover:bg-items-hovered;
-
-  .icon {
-    @apply size-8;
-  }
-}
-
-@utility vr {
-  @apply inline-block self-stretch w-px min-h-4 bg-dark;
-}
-
-@utility element-title {
-  @apply text-dark text-xs;
-}
-
-@layer base {
-
-  :root {
-    --color-success: #00ff00;
-    --color-error: #ff0000;
-  }
-
-  * {
-    @apply box-border;
-  }
 
   html,
   body {
     font-family: Roboto, 'Open Sans', sans-serif;
-    font-size: 16px;
   }
 
   button {
@@ -136,7 +81,7 @@
 
   a {
     @apply text-inherit;
-    @apply with-hover:text-details-500;
+    @apply hover:text-details-500;
     @apply focus-visible:outline-hidden focus-visible:underline;
   }
 
@@ -145,19 +90,9 @@
     @apply block;
   }
 
+
+
   .theme {
-    --color-text: black;
-
-    --color-items: var(--color-details-1);
-    --color-items-hovered: var(--color-details-10);
-
-    --color-folders: var(--color-details-75);
-    --color-folders-hovered: var(--color-details-100);
-
-    --color-dark: var(--color-details-900);
-
-    --color-bg: white;
-
     &.theme_color_red {
       --color-details-1: #fff5f5;
       --color-details-10: #ffebeb;
@@ -253,5 +188,82 @@
       --color-details-800: #b35900;
       --color-details-900: #804000;
     }
+  }
+}
+
+@utility on-focus {
+  outline: var(--color-dark) solid 1px;
+  outline-offset: 0;
+}
+
+@layer utilities {
+  .l-container {
+    max-width: 75rem;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .icon {
+    @apply size-6;
+
+    &.icon_size_sm {
+      @apply size-4;
+    }
+
+    &.icon_size_lg {
+      @apply size-8;
+    }
+  }
+
+
+  .button {
+    all: unset;
+    @apply bg-items border border-dark border-solid rounded-sm p-1 text-center cursor-pointer select-none flex justify-center relative items-center hover:bg-items-hovered;
+    @apply disabled:pointer-events-none disabled:bg-dark disabled:opacity-25 disabled:text-items;
+    @apply active:text-details-500 active:border-details-500;
+    @apply focus:on-focus;
+  }
+
+  .text-input-base {
+    @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-bg border border-current rounded-sm px-3 text-xs cursor-text justify-between box-border;
+
+    input {
+      all: unset;
+      @apply text-initial flex-1 min-w-0;
+    }
+  }
+
+  .checkbox {
+    @apply inline-flex items-center gap-2 cursor-pointer has-[input:disabled]:pointer-events-none text-dark has-[input:disabled]:text-dark has-[input:checked]:has-[input:disabled]:text-dark hover:text-details-200 has-[input:checked]:text-details-200;
+
+    &.checkbox_size_sm {
+      .icon {
+        @apply size-4;
+      }
+    }
+
+    &.checkbox_size_xs {
+      .icon {
+        @apply size-3;
+      }
+    }
+  }
+
+  .input {
+    @apply flex justify-center items-center p-4 border border-dark rounded-lg bg-items;
+    @apply focus:on-focus;
+    @apply hover:bg-items-hovered;
+
+    .icon {
+      @apply size-8;
+    }
+  }
+
+  .vr {
+    @apply inline-block self-stretch w-px min-h-4 bg-dark;
+  }
+
+  .element-title {
+    @apply text-dark text-xs;
   }
 }

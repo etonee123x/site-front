@@ -1,6 +1,6 @@
 .explorerElement {
   @apply bg-items border-2 border-dark rounded-lg w-full cursor-pointer;
-  @apply with-hover:bg-items-hovered with-hover:border-details-500;
+  @apply hover:bg-items-hovered hover:border-details-500;
   @apply focus-visible:on-focus focus-visible:no-underline;
 }
 
