@@ -1,6 +1,4 @@
-@import 'normalize.css';
-
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800&display=swap') layer(base);
 
 @import 'tailwindcss';
 
@@ -12,6 +10,10 @@
 
   --color-text: black;
 
+  --color-bg: white;
+}
+
+@theme inline {
   --color-items: var(--color-details-1);
   --color-items-hovered: var(--color-details-10);
 
@@ -19,8 +21,6 @@
   --color-folders-hovered: var(--color-details-100);
 
   --color-dark: var(--color-details-900);
-
-  --color-bg: white;
 
   --color-details-1: var(--color-details-1);
   --color-details-10: var(--color-details-10);
@@ -67,7 +67,8 @@
 
   ul,
   ol {
-    @apply p-0 m-0;
+    padding: 0;
+    margin: 0;
   }
 
   li {
@@ -77,6 +78,7 @@
 
   hr {
     @apply m-0 border-none bg-dark min-h-[1px] min-w-[1px];
+    margin: 0;
   }
 
   a {
@@ -87,10 +89,8 @@
 
   p {
     all: unset;
-    @apply block;
+    display: block;
   }
-
-
 
   .theme {
     &.theme_color_red {
@@ -196,7 +196,7 @@
   outline-offset: 0;
 }
 
-@layer utilities {
+@layer components {
   .l-container {
     max-width: 75rem;
     width: 90%;
@@ -204,14 +204,17 @@
   }
 
   .icon {
-    @apply size-6;
+    width: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 6);
 
     &.icon_size_sm {
-      @apply size-4;
+      width: calc(var(--spacing) * 4);
+      height: calc(var(--spacing) * 4);
     }
 
     &.icon_size_lg {
-      @apply size-8;
+      width: calc(var(--spacing) * 8);
+      height: calc(var(--spacing) * 8);
     }
   }
 
@@ -229,7 +232,8 @@
 
     input {
       all: unset;
-      @apply text-initial flex-1 min-w-0;
+      color: initial;
+      @apply flex-1 min-w-0;
     }
   }
 
@@ -260,10 +264,15 @@
   }
 
   .vr {
-    @apply inline-block self-stretch w-px min-h-4 bg-dark;
+    @apply self-stretch;
+    display: inline-block;
+    width: 1px;
+    min-height: calc(var(--spacing) * 4);
+    background-color: var(--color-dark);
   }
 
   .element-title {
-    @apply text-dark text-xs;
+    @apply text-xs;
+    color: var(--color-dark);
   }
 }
