@@ -69,7 +69,7 @@ const onClickButtonClear = () => {
 };
 
 const onFocus = () => emit('focus');
-const onBlur = () => emit('blur-sm');
+const onBlur = () => emit('blur');
 
 defineExpose({
   blur: () => input.value?.blur(),

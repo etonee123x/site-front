@@ -1,5 +1,5 @@
 <template>
-  <div class="l-container pt-2 h-full flex flex-col">
+  <div class="layout-container mx-auto pt-2 h-full flex flex-col">
     <DialogPost />
     <template v-if="authStore.isAdmin">
       <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">

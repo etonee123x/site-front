@@ -38,7 +38,7 @@
       <template #content>
         <div
           :style="{ width: `${width}px` }"
-          class="max-h-[106px] text-initial bg-bg border border-details-300 rounded-sm p-1 text-xs overflow-hidden"
+          class="max-h-[106px] text-black bg-background border border-details-300 rounded-sm p-1 text-xs overflow-hidden"
         >
           <ul
             v-if="optionsFiltered.length"

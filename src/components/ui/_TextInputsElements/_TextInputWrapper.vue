@@ -2,7 +2,7 @@
   <div class="flex flex-col" :class="hasError ? 'group has-error text-error' : 'text-details-800'">
     <label v-if="label" :class="ELEMENT_TITLE" :for="labelFor" class="mb-1">{{ label }}</label>
     <slot />
-    <div class="flex mt-1 h-3 gap-2 items-center text-3xs text-initial group-[.has-error]:text-error">
+    <div class="flex mt-1 h-3 gap-2 items-center text-3xs text-black group-[.has-error]:text-error">
       <slot name="bottom">
         {{ maybeMessage }}
       </slot>

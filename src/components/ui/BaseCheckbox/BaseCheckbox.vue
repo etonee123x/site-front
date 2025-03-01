@@ -13,7 +13,7 @@
       ref="input"
       @input="onInput"
     />
-    <label v-if="$slots.default" class="text-initial">
+    <label v-if="$slots.default" class="text-black">
       <slot />
     </label>
   </div>

@@ -3,14 +3,12 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-initial: initial;
-
   --color-success: #00ff00;
   --color-error: #ff0000;
 
   --color-text: black;
 
-  --color-bg: white;
+  --color-background: white;
 }
 
 @theme inline {
@@ -36,7 +34,6 @@
   --color-details-800: var(--color-details-800);
   --color-details-900: var(--color-details-900);
 }
-
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -196,25 +193,24 @@
   outline-offset: 0;
 }
 
+@utility container {
+  @apply max-w-7xl w-5/6;
+}
+
 @layer components {
-  .l-container {
-    max-width: 75rem;
-    width: 90%;
-    margin: 0 auto;
+  .layout-container {
+    @apply max-w-7xl w-5/6;
   }
 
   .icon {
-    width: calc(var(--spacing) * 6);
-    height: calc(var(--spacing) * 6);
+    @apply size-6;
 
     &.icon_size_sm {
-      width: calc(var(--spacing) * 4);
-      height: calc(var(--spacing) * 4);
+      @apply size-4;
     }
 
     &.icon_size_lg {
-      width: calc(var(--spacing) * 8);
-      height: calc(var(--spacing) * 8);
+      @apply size-8;
     }
   }
 
@@ -228,12 +224,11 @@
   }
 
   .text-input-base {
-    @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-bg border border-current rounded-sm px-3 text-xs cursor-text justify-between box-border;
+    @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-background border border-current rounded-sm px-3 text-xs cursor-text justify-between box-border;
 
     input {
       all: unset;
-      color: initial;
-      @apply flex-1 min-w-0;
+      @apply text-black flex-1 min-w-0;
     }
   }
 

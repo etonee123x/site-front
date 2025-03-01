@@ -1,6 +1,6 @@
 <template>
   <header class="border-b border-b-details-500">
-    <div class="l-container flex items-center py-2 gap-4">
+    <div class="layout-container mx-auto flex items-center py-2 gap-4">
       <nav class="flex items-end gap-4">
         <RouterLink :to class="text-xl">{{ siteTitle }}</RouterLink>
         <ul class="flex gap-2">
