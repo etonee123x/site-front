@@ -1,16 +1,12 @@
 <template>
   <div>
-    <div
-      class="flex justify-center items-center cursor-pointer p-4 border border-dark rounded-lg bg-items with-hover:bg-items-hovered"
-      :class="isFocused && 'on-focus'"
-      @click="onClick"
-    >
-      <input class="fixed start-0 translate-x-[-200%]" type="file" @click.prevent @focus="onFocus" @blur="onBlur" />
-      <BaseIcon class="text-4xl" :path="mdiFilePlusOutline" />
-    </div>
-    <BaseDialog ref="refBaseDialog" :title="t('title')" @confirm="onConfirm" @close="onClose" @click.stop>
+    <button type="button" :class="INPUT.default" @click="onClick">
+      <input tabindex="-1" class="fixed start-0 translate-x-[-200%] pointer-events-none" type="file" />
+      <BaseIcon :path="mdiFilePlusOutline" />
+    </button>
+    <BaseDialog :title="t('title')" ref="baseDialog" @confirm="onConfirm" @close="onClose" @click.stop>
       <LazyBaseFilesList v-if="isNotEmptyArray(model)" v-model="model" />
-      <BaseButton class="mx-auto my-4" :prepend-icon="{ path: mdiPlus }" @click="onClickAdd">
+      <BaseButton class="mx-auto my-4" :propsIconPrepend="{ path: mdiPlus }" @click="onClickAdd">
         {{ t('add') }}
       </BaseButton>
     </BaseDialog>
@@ -27,28 +23,27 @@ En:
 </i18n>
 
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue';
+import { ref, defineAsyncComponent, useTemplateRef } from 'vue';
 import { useFileDialog } from '@vueuse/core';
 import { mdiFilePlusOutline, mdiPlus } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 
-import BaseButton from './BaseButton.vue';
-import BaseIcon from './BaseIcon.vue';
+import BaseButton from './BaseButton';
+import BaseIcon from './BaseIcon';
 import BaseDialog from './BaseDialog.vue';
 
 import { useIsUniqueFileCheck } from '@/composables/useIsUniqueFileCheck';
-import { useIsFocused } from '@/composables/useIsFocused';
+import { INPUT } from '@/helpers/ui';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('./BaseFilesList.vue'));
 
 const { t } = useI18n({ useScope: 'local' });
 
-const refBaseDialog = ref<InstanceType<typeof BaseDialog>>();
-
-const { onFocus, onBlur, isFocused } = useIsFocused();
+const baseDialog = useTemplateRef('baseDialog');
 
 const { open: openInitial, onChange: onChangeInitial, reset: resetInitial } = useFileDialog();
+
 onChangeInitial((files) => {
   if (!files) {
     return;
@@ -56,7 +51,7 @@ onChangeInitial((files) => {
 
   model.value = Array.from(files);
 
-  refBaseDialog.value?.open();
+  baseDialog.value?.open();
   resetInitial();
 });
 

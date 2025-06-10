@@ -7,12 +7,10 @@ import { mdiFileOutline } from '@mdi/js';
 import { isExtAudio, isExtImage, isExtVideo } from '@shared/src/types';
 import { defineAsyncComponent, computed } from 'vue';
 
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
 const LazyPreviewVideo = defineAsyncComponent(() => import('@/components/PreviewVideo.vue'));
 
-const props = defineProps<{
-  file: File;
-}>();
+const props = defineProps<{ file: File }>();
 
 const component = computed(() => {
   const ext = props.file.type.replace(/.*\//, '.');

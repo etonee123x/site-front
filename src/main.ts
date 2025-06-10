@@ -4,7 +4,7 @@ import { createPinia } from 'pinia';
 import { router } from '@/router';
 import { i18n } from '@/i18n';
 import { useSettingsStore } from '@/stores/settings';
-import { getConfig } from '@/api';
+import { getConfig } from '@/api/config';
 import App from '@/App.vue';
 
 getConfig()

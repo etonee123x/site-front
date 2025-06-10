@@ -1,34 +1,28 @@
 <template>
-  <div class="l-container pt-2 h-full flex flex-col">
+  <div class="layout-container mx-auto pt-2 h-full flex flex-col">
     <DialogPost />
-    <template v-if="isAdmin">
+    <template v-if="authStore.isAdmin">
       <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
-        <LazyBlogEditPost
-          ref="refLazyBlogEditPost"
-          v-model="postData"
-          v-model:files="files"
-          :v$="v$"
-          @submit="onSubmit"
-        />
-        <LazyBaseButton :is-loading="isLoading[IsLoadingAction.Post]" @click="onClickButton">
+        <LazyBlogEditPost :v$ ref="lazyBlogEditPost" v-model="postData" v-model:files="files" @submit="onSubmit" />
+        <LazyBaseButton :isLoading="blogStore.isLoadingPost" @click="onClickButton">
           {{ t('send') }}
         </LazyBaseButton>
       </LazyBaseForm>
-      <LazyBaseHr v-if="hasPosts" class="my-4" />
+      <hr v-if="hasPosts" class="my-4" />
     </template>
     <LazyBaseLoading
-      v-if="isLoading[IsLoadingAction.Get] && !hasPosts"
-      is-full
+      v-if="blogStore.isLoadingGetAll && !hasPosts"
+      isFull
       class="flex justify-center items-center flex-1"
     />
     <template v-else>
       <template v-if="hasPosts">
         <ul class="flex flex-col gap-4 last:pb-4">
-          <li v-for="post in posts" :key="post.id">
-            <BlogPost :post="post" />
+          <li v-for="post in blogStore.all" :key="post.id">
+            <BlogPost :post />
           </li>
         </ul>
-        <LazyBaseLoading v-if="isLoading[IsLoadingAction.Get]" is-full class="flex justify-center p-4" />
+        <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center p-4" />
       </template>
       <div v-else class="text-lg flex justify-center items-center flex-1">
         {{ t('nothingWasFound') }}
@@ -47,26 +41,26 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
-import { ref, defineAsyncComponent, watch } from 'vue';
+import { ref, defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { isNil } from '@shared/src/utils';
+import { isNil } from '@shared/src/utils/isNil';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { toId } from '@shared/src/types';
 
 import DialogPost from './components/DialogPost.vue';
 import BlogPost from './components/BlogPost.vue';
 
-import { IsLoadingAction, useBlogStore } from '@/stores/blog';
-import { useComponentsStore } from '@/stores/components';
+import { useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
 import { goToPage404 } from '@/composables/goToPage404';
+import { MAIN } from '@/constants/selectors';
+import { useElementFinder } from '@/composables/useElementFinder';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
-const LazyBaseHr = defineAsyncComponent(() => import('@/components/ui/BaseHr.vue'));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));
@@ -76,16 +70,15 @@ const { t } = useI18n({ useScope: 'local' });
 const route = useRoute();
 
 const blogStore = useBlogStore();
-const { posts, hasPosts, isEnd, isLoading, postSelected } = storeToRefs(blogStore);
 
 const authStore = useAuthStore();
-const { isAdmin } = storeToRefs(authStore);
 
-const componentsStore = useComponentsStore();
-const { main } = storeToRefs(componentsStore);
+const hasPosts = computed(() => isNotEmptyArray(blogStore.all));
 
-useInfiniteScroll(main, () => new Promise((resolve) => blogStore.getPosts().then(() => resolve())), {
-  canLoadMore: () => !isEnd.value,
+const elementMain = useElementFinder(() => document.getElementById(MAIN));
+
+useInfiniteScroll(elementMain, () => new Promise((resolve) => blogStore.getAll().then(() => resolve())), {
+  canLoadMore: () => !blogStore.isEnd,
   distance: 100,
 });
 
@@ -98,18 +91,18 @@ const files = ref<Array<File>>([]);
 
 const postData = ref(getInitialPostData());
 
-const refLazyBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
+const lazyBlogEditPost = useTemplateRef('lazyBlogEditPost');
 
 const { v$, handle } = useVuelidateBlogPostData(
   () => {
-    blogStore.postPost(postData.value, files.value);
+    blogStore.post(postData.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
 
     v$.value.$reset();
     files.value = [];
 
     postData.value = getInitialPostData();
 
-    refLazyBlogEditPost.value?.focusTextarea();
+    lazyBlogEditPost.value?.focusTextarea();
   },
   postData,
   files,
@@ -122,16 +115,12 @@ watch(
   () => route.params.postId,
   () => {
     if (isNil(route.params.postId)) {
-      postSelected.value = null;
+      blogStore.byId = null;
+
       return;
     }
 
-    blogStore
-      .getPostById(toId(String(route.params.postId)))
-      .then((post) => {
-        postSelected.value = post;
-      })
-      .catch(goToPage404);
+    blogStore.getById(toId(String(route.params.postId))).catch(goToPage404);
   },
   {
     immediate: true,

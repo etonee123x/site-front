@@ -1,9 +1,17 @@
 import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
-import { isNotEmptyArray } from '@shared/src/utils';
-import { toId, type Id } from '@shared/src/types';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import { toId, type Id, type WithId } from '@shared/src/types';
 
-import { type Toast, ToastType } from '@/types';
+export enum ToastType {
+  Error = 'Error',
+  Success = 'Success',
+}
+
+export interface Toast extends WithId {
+  text: string;
+  type: ToastType;
+}
 
 interface Options {
   ttl?: number;
@@ -33,6 +41,7 @@ export const useToastsStore = defineStore('toasts', () => {
 
   const closeToast = (id: Id) => {
     const index = toasts.findIndex(({ id: _id }) => _id === id);
+
     if (index === -1) {
       return;
     }

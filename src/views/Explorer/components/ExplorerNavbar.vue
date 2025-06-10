@@ -1,10 +1,10 @@
 <template>
   <div class="sticky top-0 flex items-center overflow-x-auto bg-background py-2 z-10">
-    <ul class="l-container">
+    <ul class="layout-container mx-auto">
       <li
-        v-for="(navigationItem, index) in navigationItems"
+        v-for="(navigationItem, index) in explorerStore.navigationItems"
+        class="whitespace-nowrap table-cell align-middle last:text-details-500 before:text-[initial] before:px-2 before:[--tw-content:'>'] first:before:[--tw-content:''] first:before:p-0"
         :key="index"
-        class="whitespace-nowrap table-cell align-middle last:text-details-500 before:text-[initial] before:px-2 before:[--tw-content:'>'] before:first:[--tw-content:''] before:first:p-0"
       >
         <RouterLink :to="navigationItem.link">
           {{ navigationItem.text }}
@@ -15,10 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-
 import { useExplorerStore } from '@/stores/explorer';
 
 const explorerStore = useExplorerStore();
-const { navigationItems } = storeToRefs(explorerStore);
 </script>

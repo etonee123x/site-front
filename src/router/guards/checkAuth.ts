@@ -9,7 +9,6 @@ export const checkAuth: NavigationGuard = async () => {
   }
 
   const authStore = useAuthStore();
-  const { getAuthData } = authStore;
 
-  await getAuthData();
+  await authStore.getAuthData();
 };

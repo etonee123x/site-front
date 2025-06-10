@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { checkAuth } from './guards/checkAuth';
-
-import { setToken } from '@/router/guards/setToken';
+import { setToken } from './guards/setToken';
 
 export enum RouteName {
   Explorer = 'Explorer',
@@ -23,7 +22,7 @@ export const router = createRouter({
     {
       name: RouteName.Home,
       path: '/',
-      redirect: '/explorer/',
+      redirect: '/blog',
     },
     {
       name: RouteName.Blog,
@@ -31,14 +30,14 @@ export const router = createRouter({
       component: () => import('@/views/Blog'),
     },
     {
-      name: RouteName.Page404,
-      path: '/:pathMatch(.*)*',
-      component: () => import('@/views/Page404'),
-    },
-    {
       name: RouteName.BlogPost,
       path: '/blog/:postId',
       component: () => import('@/views/Blog'),
+    },
+    {
+      name: RouteName.Page404,
+      path: '/:pathMatch(.*)*',
+      component: () => import('@/views/Page404'),
     },
   ],
   history: createWebHistory('/'),

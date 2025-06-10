@@ -1,5 +1,5 @@
 <template>
-  <ElementFileWrapper :element="element" @click="onClick">
+  <ElementFileWrapper :element @click="onClick">
     <PreviewVideo :src="element.src" />
   </ElementFileWrapper>
 </template>
@@ -16,7 +16,7 @@ const props = defineProps<{
   element: ItemVideo;
 }>();
 
-const { loadGalleryItemFromCurrentExplorerFolder } = useGalleryStore();
+const galleryStore = useGalleryStore();
 
-const onClick = () => loadGalleryItemFromCurrentExplorerFolder(props.element);
+const onClick = () => galleryStore.loadGalleryItemFromCurrentExplorerFolder(props.element);
 </script>

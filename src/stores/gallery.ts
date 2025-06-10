@@ -1,8 +1,8 @@
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { isExtVideo, isItemImage, isItemVideo, type ItemImage, type ItemVideo } from '@shared/src/types';
 import { useCycleList } from '@vueuse/core';
-import { pick } from '@shared/src/utils';
+import { pick } from '@shared/src/utils/pick';
 
 import { useExplorerStore } from './explorer';
 
@@ -12,7 +12,6 @@ type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 
 export const useGalleryStore = defineStore('gallery', () => {
   const explorerStore = useExplorerStore();
-  const { folderElements } = storeToRefs(explorerStore);
 
   const galleryItems = ref<Array<GalleryItem>>([]);
 
@@ -41,6 +40,7 @@ export const useGalleryStore = defineStore('gallery', () => {
     }
 
     const maybeExt = getFileUrlExt(galleryItem.value.src);
+
     if (!maybeExt) {
       return false;
     }
@@ -51,7 +51,7 @@ export const useGalleryStore = defineStore('gallery', () => {
   const loadGalleryItemFromCurrentExplorerFolder = (explorerElement: ItemImage | ItemVideo) =>
     loadGalleryItem(
       pick(explorerElement, ['name', 'src']),
-      folderElements.value.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>(
+      explorerStore.folderElements.reduce<Array<GalleryItem>>(
         (acc, folderElement) =>
           isItemImage(folderElement) || isItemVideo(folderElement)
             ? [...acc, pick(folderElement, ['name', 'src'])]

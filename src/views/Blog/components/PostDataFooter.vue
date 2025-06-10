@@ -1,8 +1,10 @@
 <template>
   <div class="flex justify-end mt-4 items-center gap-2">
     <slot />
-    <BaseVr />
-    <BaseIcon :path="mdiLinkVariant" @click="onClickCopyUrl" />
+    <div :class="VR" />
+    <BaseButton @click="onClickCopyUrl">
+      <BaseIcon :path="mdiLinkVariant" />
+    </BaseButton>
   </div>
 </template>
 
@@ -19,9 +21,10 @@ import { type Post } from '@shared/src/types';
 import { useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
-import BaseVr from '@/components/ui/BaseVr.vue';
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 import { useToastsStore } from '@/stores/toasts';
+import BaseButton from '@/components/ui/BaseButton';
+import { VR } from '@/helpers/ui';
 
 const props = defineProps<{
   post: Post;

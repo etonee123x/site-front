@@ -1,16 +1,21 @@
 import { defineStore } from 'pinia';
-import { computed, shallowRef, watch } from 'vue';
-import { type FolderData, isItemAudio } from '@shared/src/types';
+import { computed, watch } from 'vue';
+import { isItemAudio } from '@shared/src/types';
 
 import { usePlayerStore } from '@/stores/player';
-import { getFolderData as _getFolderData } from '@/api';
+import { getFolderData as _getFolderData } from '@/api/folderData';
+import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 
 const moduleURLResolver = (url: string) => `/explorer${url}`;
 
 export const useExplorerStore = defineStore('explorer', () => {
   const { loadTrack, loadRealPlaylist, loadPotentialPlaylist } = usePlayerStore();
 
-  const folderData = shallowRef<FolderData>();
+  const {
+    state: folderData,
+    execute: getFolderData,
+    isLoading: isLoadingGetFolderData,
+  } = useAsyncStateApi(_getFolderData, undefined);
 
   const handlePlayer = () => {
     if (!folderData.value) {
@@ -18,6 +23,7 @@ export const useExplorerStore = defineStore('explorer', () => {
     }
 
     const playlist = folderData.value.items.filter(isItemAudio);
+
     if (!playlist.length) {
       return;
     }
@@ -50,19 +56,15 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const lvlUp = computed(() => folderData.value?.lvlUp && moduleURLResolver(folderData.value.lvlUp));
 
-  const getFolderData = async (url: string) =>
-    _getFolderData(url).then((_folderData) => {
-      folderData.value = _folderData;
-    });
-
   watch(folderData, handlePlayer);
 
   return {
+    getFolderData,
+    isLoadingGetFolderData,
+
     folderElements,
     lvlUp,
     navigationItems,
     linkedFile,
-
-    getFolderData,
   };
 });

@@ -1,5 +1,5 @@
 import { type ItemAudio } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { defineStore } from 'pinia';
 import { computed, ref, shallowRef } from 'vue';
 
@@ -58,15 +58,15 @@ export const usePlayerStore = defineStore('player', () => {
       ? getRandomExceptCurrentIndex(playlistReal.value.length, currentPlayingNumber.value)
       : (currentPlayingNumber.value + 1) % playlistReal.value.length;
 
-    theTrack.value = playlistReal.value[currentPlayingNumber.value];
+    theTrack.value = playlistReal.value[currentPlayingNumber.value] ?? null;
   };
 
   const loadPrev = () => {
     currentPlayingNumber.value = isNotEmptyHistory.value
-      ? historyItems.value.pop() ?? 0
+      ? (historyItems.value.pop() ?? 0)
       : (currentPlayingNumber.value - 1 + playlistReal.value.length) % playlistReal.value.length;
 
-    theTrack.value = playlistReal.value[currentPlayingNumber.value];
+    theTrack.value = playlistReal.value[currentPlayingNumber.value] ?? null;
   };
 
   return {

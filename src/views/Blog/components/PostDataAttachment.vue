@@ -4,9 +4,8 @@
 
 <script setup lang="ts">
 import { isExtAudio, isExtImage, isExtVideo } from '@shared/src/types';
-import { pick } from '@shared/src/utils';
+import { pick } from '@shared/src/utils/pick';
 import { computed, defineAsyncComponent } from 'vue';
-import { storeToRefs } from 'pinia';
 
 import { getFileUrlExt, getLastParameter } from '@/utils/url';
 import { useGalleryStore } from '@/stores/gallery';
@@ -22,17 +21,17 @@ const props = defineProps<{
 const { loadGalleryItem } = useGalleryStore();
 
 const blogStore = useBlogStore();
-const { posts } = storeToRefs(blogStore);
 
 const loadToGallery = () => {
   const maybeLastParameter = getLastParameter(props.fileUrl);
+
   if (!maybeLastParameter) {
     return;
   }
 
   loadGalleryItem(
     { name: maybeLastParameter, src: props.fileUrl },
-    posts.value.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>(
+    blogStore.all.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>(
       (acc, post) => [
         ...acc,
         ...post.filesUrls.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>((acc, fileUrl) => {
@@ -43,6 +42,7 @@ const loadToGallery = () => {
           }
 
           const maybeLastParameter = getLastParameter(fileUrl);
+
           if (!maybeLastParameter) {
             return acc;
           }

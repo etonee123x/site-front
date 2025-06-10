@@ -2,15 +2,18 @@
   <div class="flex gap-4 flex-col">
     <div class="flex gap-4">
       <BaseTextarea
-        ref="refTextarea"
-        v-model="model.text"
         class="flex-1"
         :placeholder="t('textareaPlaceholder')"
         :errors="v$.text.$errors"
+        ref="baseTextarea"
+        v-model="model.text"
         @submit="onSubmit"
-        @paste-file="onPasteFile"
+        @pasteFile="onPasteFile"
       />
-      <BaseInputFile v-model="files" class="sticky top-2 h-min w-min" />
+      <div class="sticky top-2 flex flex-col gap-2 h-min">
+        <BaseInputFile @update:modelValue="onUpdateModelValueInputFile" />
+        <BaseAudioRecorder @update:modelValue="onUpdateModelValueAudioRecorder" />
+      </div>
     </div>
     <div v-if="isNotEmptyArray(files)">
       <div class="mb-3 flex items-center gap-2">
@@ -33,25 +36,24 @@ En:
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { ref, type UnwrapRef, defineAsyncComponent } from 'vue';
+import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
 import type { PostData } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { mdiDelete } from '@mdi/js';
 
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
+import BaseAudioRecorder from '@/components/ui/BaseAudioRecorder.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon.vue'));
+const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
 
-defineProps<{
-  v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']>;
-}>();
+defineProps<{ v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']> }>();
 
 const { t } = useI18n({ useScope: 'local' });
 
-const refTextarea = ref<InstanceType<typeof BaseTextarea>>();
+const baseTextarea = useTemplateRef('baseTextarea');
 
 const emit = defineEmits<{
   submit: [];
@@ -70,7 +72,15 @@ const onPasteFile = (file: File) => {
   files.value.push(file);
 };
 
+const onUpdateModelValueInputFile: InstanceType<typeof BaseInputFile>['onUpdate:model-value'] = (_files) => {
+  files.value = files.value.concat(_files);
+};
+
+const onUpdateModelValueAudioRecorder: InstanceType<typeof BaseAudioRecorder>['onUpdate:model-value'] = (blob) => {
+  files.value.push(new File([blob], 'test.ogg', { type: blob.type }));
+};
+
 defineExpose({
-  focusTextarea: () => refTextarea.value?.focus(),
+  focusTextarea: () => baseTextarea.value?.focus(),
 });
 </script>

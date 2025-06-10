@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   resolve: {
@@ -11,6 +12,6 @@ export default defineConfig({
       '@shared': resolve(__dirname, './submodules/shared'),
     },
   },
-  plugins: [vue(), VueI18nPlugin({})],
+  plugins: [vue(), VueI18nPlugin({}), tailwindcss()],
   publicDir: 'public',
 });

@@ -8,7 +8,7 @@
         {{ birthTimeFormatted }}
       </div>
     </div>
-    <BaseHr />
+    <hr />
     <div class="m-2">
       <slot />
     </div>
@@ -19,8 +19,6 @@
 import { computed } from 'vue';
 import { format } from 'date-fns';
 import { type ItemFile } from '@shared/src/types';
-
-import BaseHr from '@/components/ui/BaseHr.vue';
 
 const props = defineProps<{
   element: ItemFile;

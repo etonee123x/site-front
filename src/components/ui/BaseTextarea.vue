@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col gap-1">
     <textarea
+      class="rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-hidden resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
+      :placeholder
       ref="textarea"
       v-model="model"
-      class="f-body-2 rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-none resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
-      :placeholder="placeholder"
       @keydown.enter.shift.prevent="onEnter"
       @paste="onPaste"
     />
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { isNotEmptyArray } from '@shared/src/utils';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import type { ErrorObject } from '@vuelidate/core';
 import { useTextareaAutosize } from '@vueuse/core';
 

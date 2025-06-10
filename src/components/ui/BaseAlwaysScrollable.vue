@@ -1,9 +1,9 @@
 <template>
-  <div ref="refContainer" class="overflow-hidden relative inline-flex">
+  <div class="overflow-hidden relative inline-flex" ref="container">
     <div
-      ref="refContent"
       class="whitespace-nowrap [margin:var(--base-always-scrollable--content--margin)]"
       :class="isAnimated && $s.animated"
+      ref="content"
     >
       <slot />
     </div>
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { useElementSize } from '@vueuse/core';
-import { computed, ref } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 
 const props = withDefaults(
   defineProps<
@@ -25,11 +25,11 @@ const props = withDefaults(
   },
 );
 
-const refContainer = ref<HTMLDivElement>();
-const refContent = ref<HTMLDivElement>();
+const container = useTemplateRef('container');
+const content = useTemplateRef('content');
 
-const { width: widthContainer } = useElementSize(refContainer, undefined, { box: 'border-box' });
-const { width: widthContent } = useElementSize(refContent, undefined, { box: 'border-box' });
+const { width: widthContainer } = useElementSize(container, undefined, { box: 'border-box' });
+const { width: widthContent } = useElementSize(content, undefined, { box: 'border-box' });
 
 const diff = computed(() => widthContent.value - widthContainer.value);
 

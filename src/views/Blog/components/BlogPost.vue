@@ -1,31 +1,31 @@
 <template>
-  <div ref="refRoot" class="w-full border border-dark rounded cursor-pointer" @click="onClick">
+  <div class="w-full border border-dark rounded-sm cursor-pointer" ref="root" @click="onClick">
     <div class="p-4 flex flex-col">
       <LazyBlogEditPost
         v-if="isInEditMode"
-        ref="refBlogEditPost"
+        :v$
+        ref="blogEditPost"
         v-model="postNew"
         v-model:files="files"
-        :v$="v$"
         @submit="onSubmit"
       />
       <template v-else>
-        <PostData :post="post" />
-        <PostDataFooter :post="post" @click.stop>
+        <PostData :post />
+        <PostDataFooter :post @click.stop>
           <span class="text-sm text-dark flex items-center gap-0.5" :title="dateExact">
             <span>{{ createdAtHumanReadable }}</span>
-            <BaseIcon v-if="wasEdited" :path="mdiPencil" />
+            <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
           </span>
         </PostDataFooter>
       </template>
     </div>
-    <div v-if="isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
+    <div v-if="authStore.isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
       <LazyBaseButton
         v-for="control in controls"
-        :key="control.id"
         class="p-0.5"
-        :is-loading="control.isLoading"
-        :is-disabled="control.isDisabled"
+        :isLoading="control.isLoading"
+        :isDisabled="control.isDisabled"
+        :key="control.id"
         @click.stop="control.onClick"
       >
         <BaseIcon class="text-2xl" :path="control.iconPath" />
@@ -33,9 +33,9 @@
     </div>
   </div>
   <DialogConfirmation
-    ref="refDialogConfirmation"
     :title="t('confirmDelete')"
     :message="t('deleteMessage')"
+    ref="dialogConfirmation"
     @confirm="confirm"
     @cancel="cancel"
     @close="cancel"
@@ -57,28 +57,27 @@ Ru:
 import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import { areIdsEqual, type Post } from '@shared/src/types';
-import { computed, ref, nextTick, defineAsyncComponent } from 'vue';
-import { isNotEmptyArray, isTruthy } from '@shared/src/utils';
+import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
+import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
 import { onClickOutside, useConfirmDialog } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
-import { storeToRefs } from 'pinia';
 
 import PostData from './PostData.vue';
 import PostDataFooter from './PostDataFooter.vue';
 
-import BaseIcon from '@/components/ui/BaseIcon.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
-import { addId } from '@/utils/addId';
-import { wasEdited as _wasEdited } from '@/utils/post';
-import { IsLoadingAction, useBlogStore } from '@/stores/blog';
+import { wasEdited as _wasEdited } from '../helpers/wasEdited';
+import { useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';
 import { useAuthStore } from '@/stores/auth';
 import { RouteName, router } from '@/router';
+import { ICON } from '@/helpers/ui';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton.vue'));
+const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
 
 const getInitialPostNew = () => clone(props.post);
 
@@ -88,11 +87,11 @@ const props = defineProps<{
 
 const { reveal, confirm, cancel } = useConfirmDialog();
 
-const refRoot = ref<HTMLDivElement>();
-const refBlogEditPost = ref<InstanceType<typeof LazyBlogEditPost>>();
-const refDialogConfirmation = ref<InstanceType<typeof DialogConfirmation>>();
+const root = useTemplateRef('root');
+const blogEditPost = useTemplateRef('blogEditPost');
+const dialogConfirmation = useTemplateRef('dialogConfirmation');
 
-onClickOutside(refRoot, () => {
+onClickOutside(root, () => {
   if (!isInEditMode.value) {
     return;
   }
@@ -101,10 +100,8 @@ onClickOutside(refRoot, () => {
 });
 
 const blogStore = useBlogStore();
-const { isLoading, editModeFor } = storeToRefs(blogStore);
 
 const authStore = useAuthStore();
-const { isAdmin } = storeToRefs(authStore);
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -117,7 +114,7 @@ const { intlFormatDistance } = useDateFns();
 const { v$, handle } = useVuelidateBlogPostData(
   async () => {
     if (hasChanges.value) {
-      blogStore.putPost(props.post.id, postNew.value, files.value);
+      blogStore.putById(props.post.id, postNew.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
     }
 
     closeEditMode();
@@ -129,14 +126,12 @@ const { v$, handle } = useVuelidateBlogPostData(
 const dateExact = computed(() =>
   [
     String(new Date(props.post.createdAt)),
-    wasEdited.value && t('updatedAt', { date: String(new Date(props.post.updatedAt)) }),
-  ]
-    .filter(isTruthy)
-    .join('\n'),
+    ...(wasEdited.value ? [t('updatedAt', { date: String(new Date(props.post.updatedAt)) })] : []),
+  ].join('\n'),
 );
 const createdAtHumanReadable = computed(() => intlFormatDistance.value(props.post.createdAt, new Date()));
 
-const isInEditMode = computed(() => areIdsEqual(editModeFor.value, props.post.id));
+const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.post.id));
 
 const wasEdited = computed(() => _wasEdited(props.post));
 
@@ -145,57 +140,59 @@ const onSubmit = handle;
 const hasChanges = computed(() => !deepEqual(props.post, postNew.value));
 
 const closeEditMode = () => {
-  editModeFor.value = null;
+  blogStore.editModeFor = null;
 };
 
-const controls = computed(() =>
-  [
-    ...(isInEditMode.value
-      ? [
-          {
-            iconPath: mdiCancel,
-            isLoading: false,
-            onClick: closeEditMode,
+const controls = computed(() => [
+  ...(isInEditMode.value
+    ? [
+        {
+          id: 0,
+          iconPath: mdiCancel,
+          isLoading: false,
+          onClick: closeEditMode,
+        },
+        {
+          id: 1,
+          iconPath: mdiContentSave,
+          isDisabled: !hasChanges.value,
+          isLoading: blogStore.isLoadingPutById,
+          onClick: handle,
+        },
+      ]
+    : []),
+  // TODO: Надо придумать как редактировать посты с вложениями...
+  ...(!(isInEditMode.value || isNotEmptyArray(props.post.filesUrls))
+    ? [
+        {
+          id: 2,
+          iconPath: mdiPencil,
+          isLoading: blogStore.isLoadingPutById,
+          onClick: () => {
+            blogStore.editModeFor = props.post.id;
+
+            nextTick(() => blogEditPost.value?.focusTextarea());
           },
-          {
-            iconPath: mdiContentSave,
-            isDisabled: !hasChanges.value,
-            isLoading: isLoading.value[IsLoadingAction.Put],
-            onClick: handle,
-          },
-        ]
-      : []),
-    // Надо придумать как редактировать посты с вложениями...
-    ...(!(isInEditMode.value || isNotEmptyArray(props.post.filesUrls))
-      ? [
-          {
-            iconPath: mdiPencil,
-            isLoading: isLoading.value[IsLoadingAction.Put],
-            onClick: () => {
-              editModeFor.value = props.post.id;
+        },
+      ]
+    : []),
+  {
+    id: 3,
+    iconPath: mdiDelete,
+    isLoading: blogStore.isLoadingDeleteById,
+    onClick: async () => {
+      dialogConfirmation.value?.open();
 
-              nextTick(() => refBlogEditPost.value?.focusTextarea());
-            },
-          },
-        ]
-      : []),
-    {
-      iconPath: mdiDelete,
-      isLoading: isLoading.value[IsLoadingAction.Delete],
-      onClick: async () => {
-        refDialogConfirmation.value?.open();
+      const { isCanceled } = await reveal();
 
-        const { isCanceled } = await reveal();
+      if (isCanceled) {
+        return;
+      }
 
-        if (isCanceled) {
-          return;
-        }
-
-        return blogStore.deletePost(props.post.id);
-      },
+      return blogStore.deleteById(props.post.id).then(() => blogStore.getAll({ shouldReset: true }));
     },
-  ].map(addId),
-);
+  },
+]);
 
 const onClick = () => {
   if (isInEditMode.value) {
