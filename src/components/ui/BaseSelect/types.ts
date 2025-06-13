@@ -1,4 +1,4 @@
-import type { Nil } from '@shared/src/types';
+import type { Nil } from '@etonee123x/shared/types';
 import type { TippyComponent } from 'vue-tippy';
 
 export interface Props<Option, ModelValueSingle>

@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { type ItemVideo } from '@shared/src/types';
+import type { ItemVideo } from '@etonee123x/shared/types/folderData';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 

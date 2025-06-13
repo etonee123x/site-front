@@ -34,8 +34,8 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
-import { ItemAudio } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import type { ItemAudio } from '@etonee123x/shared/types/folderData';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';

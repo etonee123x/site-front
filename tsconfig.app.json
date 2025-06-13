@@ -10,9 +10,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@shared/*": [
-        "submodules/shared/*"
       ]
     }
   }

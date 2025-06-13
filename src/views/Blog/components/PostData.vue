@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import { type Post } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import type { Post } from '@etonee123x/shared/types/blog';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { computed } from 'vue';
 
 import PostDataAttachment from './PostDataAttachment.vue';

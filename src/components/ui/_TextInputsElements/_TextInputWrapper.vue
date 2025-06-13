@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { isNotNil } from '@shared/src/utils/isNotNil';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import { ELEMENT_TITLE } from '@/helpers/ui';
 
 const props = defineProps<

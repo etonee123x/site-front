@@ -56,9 +56,10 @@ Ru:
 <script setup lang="ts">
 import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
-import { areIdsEqual, type Post } from '@shared/src/types';
+import type { Post } from '@etonee123x/shared/types/blog';
+import { areIdsEqual } from '@etonee123x/shared/helpers/id';
 import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { onClickOutside, useConfirmDialog } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 

@@ -17,7 +17,7 @@ Ru:
 
 <script lang="ts" setup>
 import { mdiLinkVariant } from '@mdi/js';
-import { type Post } from '@shared/src/types';
+import type { Post } from '@etonee123x/shared/types/blog';
 import { useClipboard } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 

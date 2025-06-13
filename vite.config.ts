@@ -9,7 +9,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@shared': resolve(__dirname, './submodules/shared'),
     },
   },
   plugins: [vue(), VueI18nPlugin({}), tailwindcss()],

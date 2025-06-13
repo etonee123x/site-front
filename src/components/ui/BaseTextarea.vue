@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import type { ErrorObject } from '@vuelidate/core';
 import { useTextareaAutosize } from '@vueuse/core';
 
@@ -47,7 +47,7 @@ const onPaste = (e: ClipboardEvent) => {
   emit('pasteFile', maybeFile);
 };
 
-const model = defineModel<string>();
+const model = defineModel<string>({ required: true });
 
 const { textarea } = useTextareaAutosize({ input: model, styleProp: 'minHeight' });
 

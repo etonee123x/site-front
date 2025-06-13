@@ -1,5 +1,5 @@
 import type { NavigationGuard } from 'vue-router';
-import { omit } from '@shared/src/utils/omit';
+import { omit } from '@etonee123x/shared/utils/omit';
 
 import { TOKEN } from '@/constants';
 

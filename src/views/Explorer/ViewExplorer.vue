@@ -18,7 +18,8 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
-import { type Item, isItemFolder, isItemAudio, isItemImage, isItemVideo } from '@shared/src/types';
+import { isItemFolder, isItemAudio, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
+import type { Item } from '@etonee123x/shared/types/folderData';
 
 import ExplorerNavbar from './components/ExplorerNavbar.vue';
 

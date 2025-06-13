@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import { isExtAudio, isExtImage, isExtVideo } from '@shared/src/types';
-import { pick } from '@shared/src/utils/pick';
+import { isExtAudio, isExtImage, isExtVideo } from '@etonee123x/shared/helpers/folderData';
+import { pick } from '@etonee123x/shared/utils/pick';
 import { computed, defineAsyncComponent } from 'vue';
 
 import { getFileUrlExt, getLastParameter } from '@/utils/url';

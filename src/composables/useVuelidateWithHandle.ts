@@ -1,4 +1,4 @@
-import type { FunctionCallback } from '@shared/src/types';
+import type { FunctionCallback } from '@etonee123x/shared/types';
 import { type ValidationArgs, useVuelidate } from '@vuelidate/core';
 
 export const useVuelidateWithHandle = <

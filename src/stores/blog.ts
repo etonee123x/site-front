@@ -1,8 +1,9 @@
-import type { Id, Post, PostData } from '@shared/src/types';
+import type { Id } from '@etonee123x/shared/types/id';
+import type { Post, PostData } from '@etonee123x/shared/types/blog';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useCounter, useToggle } from '@vueuse/core';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 
 import {
   getPosts as _getPosts,

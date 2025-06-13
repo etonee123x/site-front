@@ -45,9 +45,9 @@ import { useI18n } from 'vue-i18n';
 import { useInfiniteScroll } from '@vueuse/core';
 import { ref, defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { isNil } from '@shared/src/utils/isNil';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
-import { toId } from '@shared/src/types';
+import { isNil } from '@etonee123x/shared/utils/isNil';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
+import { toId } from '@etonee123x/shared/helpers/id';
 
 import DialogPost from './components/DialogPost.vue';
 import BlogPost from './components/BlogPost.vue';

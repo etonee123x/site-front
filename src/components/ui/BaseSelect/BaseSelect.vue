@@ -101,11 +101,11 @@ import { Tippy, type TippyComponent } from 'vue-tippy';
 import { computed, ref, watch, nextTick, watchEffect, useId, useTemplateRef } from 'vue';
 import { objectGet } from '@/utils/objectGet';
 import { useElementSize, type MaybeComputedElementRef } from '@vueuse/core';
-import { isNil } from '@shared/src/utils/isNil';
-import { isEqual } from '@shared/src/utils/isEqual';
+import { isNil } from '@etonee123x/shared/utils/isNil';
+import { isEqual } from '@etonee123x/shared/utils/isEqual';
 import { useI18n } from 'vue-i18n';
 import BaseCheckbox from '@/components/ui/BaseCheckbox';
-import type { Nil } from '@shared/src/types';
+import type { Nil } from '@etonee123x/shared/types';
 import { CHECKBOX } from '@/helpers/ui';
 import type { Props } from './types';
 

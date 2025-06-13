@@ -1,4 +1,4 @@
-import type { FolderData } from '@shared/src/types';
+import type { FolderData } from '@etonee123x/shared/types/folderData';
 
 import { client } from '@/api/_client';
 

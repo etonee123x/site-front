@@ -23,9 +23,6 @@
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "@shared/*": [
-        "submodules/shared/*"
       ]
     },
     "allowSyntheticDefaultImports": true

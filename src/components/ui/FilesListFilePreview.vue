@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { mdiFileOutline } from '@mdi/js';
-import { isExtAudio, isExtImage, isExtVideo } from '@shared/src/types';
+import { isExtAudio, isExtImage, isExtVideo } from '@etonee123x/shared/helpers/folderData';
 import { defineAsyncComponent, computed } from 'vue';
 
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));

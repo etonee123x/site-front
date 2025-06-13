@@ -37,8 +37,8 @@ En:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
-import type { PostData } from '@shared/src/types';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
+import type { PostData } from '@etonee123x/shared/types/blog';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { mdiDelete } from '@mdi/js';
 
 import { useVuelidateBlogPostData } from '@/views/Blog/composables';

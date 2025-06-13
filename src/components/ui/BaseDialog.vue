@@ -40,9 +40,10 @@ import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } 
 import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { isNotEmptyArray } from '@shared/src/utils/isNotEmptyArray';
-import { isNotNil } from '@shared/src/utils/isNotNil';
-import type { FunctionCallback, WithId } from '@shared/src/types';
+import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import type { FunctionCallback } from '@etonee123x/shared/types';
+import type { WithId } from '@etonee123x/shared/types/id';
 import { MAIN } from '@/constants/selectors';
 
 const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton'));
