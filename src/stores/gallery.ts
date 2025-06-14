@@ -1,18 +1,13 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import {
-  isExtVideo,
-  isItemImage,
-  isItemVideo,
-  type ItemImage,
-  type ItemVideo,
-} from '@etonee123x/shared/helpers/folderData';
+import { isExtVideo, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
 import { useCycleList } from '@vueuse/core';
 import { pick } from '@etonee123x/shared/utils/pick';
 
 import { useExplorerStore } from './explorer';
 
 import { getFileUrlExt } from '@/utils/url';
+import type { ItemImage, ItemVideo } from '@etonee123x/shared/types/folderData';
 
 type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 
