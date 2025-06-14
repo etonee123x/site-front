@@ -1,7 +1,7 @@
 <template>
-  <div tabindex="0" :class="$s.explorerElement" @keydown.enter="onClick" @click="onClick">
+  <div tabindex="0" class="explorerElement" @keydown.enter="onClick" @click="onClick">
     <div class="flex justify-between">
-      <div :class="$s.title">
+      <div class="explorerElement__title">
         {{ element.name }}
       </div>
       <div class="text-right m-2" title="Created at">
@@ -33,6 +33,6 @@ const onClick = () => emit('click');
 const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
 </script>
 
-<style module="$s">
+<style>
 @import '../assets/styles/explorerElement.css';
 </style>
