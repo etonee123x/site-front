@@ -5,7 +5,7 @@
     @close="onClose"
     @cancel.prevent="onClose"
   >
-    <div class="p-4 flex flex-col h-full w-full [scrollbar-gutter:stable_both-edges]" ref="dialogInner">
+    <div class="p-4 flex flex-col w-full [scrollbar-gutter:stable_both-edges]" ref="dialogInner">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>

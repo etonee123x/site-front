@@ -4,6 +4,7 @@
       <BaseSelect :options="Object.values(ThemeColor)" :label="t('color')" v-model="model.themeColor" />
       <BaseSelect :options="Object.values(Language)" :label="t('language')" v-model="model.language" />
       <BaseButton @click="onClickResetSettings">{{ t('resetSettings') }}</BaseButton>
+      <button v-if="isDevelopment" @click="onClickAuthorize">{{ t('authorize') }}</button>
     </div>
   </BaseDialog>
 </template>
@@ -15,12 +16,14 @@ En:
   mode: 'Mode:'
   language: 'Language:'
   resetSettings: 'Reset settings'
+  authorize: 'Authorize'
 Ru:
   settings: 'Настройки'
   color: 'Цвет:'
   mode: 'Режим:'
   language: 'Язык:'
   resetSettings: 'Сбросить настройки'
+  authorize: 'Авторизоваться'
 </i18n>
 
 <script setup lang="ts">
@@ -33,6 +36,11 @@ import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
 import { clone } from '@/utils/clone';
 import { Language, ThemeColor } from '@/api/config';
+import { isDevelopment } from '@/helpers/mode';
+import { TOKEN } from '@/constants';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 
 const baseDialog = useTemplateRef('baseDialog');
 
@@ -58,6 +66,15 @@ const onClickResetSettings = () => {
   settingsStore.resetSettings();
 
   resetModel();
+};
+
+const onClickAuthorize = () => {
+  if (!isDevelopment) {
+    return;
+  }
+
+  localStorage.setItem(TOKEN, 'dev-jwt');
+  authStore.getAuthData();
 };
 
 defineExpose({
