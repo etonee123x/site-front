@@ -1,5 +1,9 @@
 <template>
-  <div class="w-full border border-dark rounded-sm cursor-pointer" ref="root" @click="onClick">
+  <div
+    class="w-full bg-background border border-dark rounded-sm cursor-pointer shadow-lg shadow-dark/15"
+    ref="root"
+    @click="onClick"
+  >
     <div class="p-4 flex flex-col">
       <LazyBlogEditPost
         v-if="isInEditMode"
@@ -31,15 +35,15 @@
         <BaseIcon class="text-2xl" :path="control.iconPath" />
       </LazyBaseButton>
     </div>
+    <DialogConfirmation
+      :title="t('confirmDelete')"
+      :message="t('deleteMessage')"
+      ref="dialogConfirmation"
+      @confirm="confirm"
+      @cancel="cancel"
+      @close="cancel"
+    />
   </div>
-  <DialogConfirmation
-    :title="t('confirmDelete')"
-    :message="t('deleteMessage')"
-    ref="dialogConfirmation"
-    @confirm="confirm"
-    @cancel="cancel"
-    @close="cancel"
-  />
 </template>
 
 <i18n lang="yaml">

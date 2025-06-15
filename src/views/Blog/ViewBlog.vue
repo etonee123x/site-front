@@ -17,11 +17,9 @@
     />
     <template v-else>
       <template v-if="hasPosts">
-        <ul class="flex flex-col gap-4 last:pb-4">
-          <li v-for="post in blogStore.all" :key="post.id">
-            <BlogPost :post />
-          </li>
-        </ul>
+        <div class="flex flex-col gap-4 last:pb-4">
+          <BlogPost v-for="post in blogStore.all" :post :key="post.id" />
+        </div>
         <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center p-4" />
       </template>
       <div v-else class="text-lg flex justify-center items-center flex-1">
