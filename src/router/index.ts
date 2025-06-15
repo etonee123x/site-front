@@ -25,14 +25,19 @@ export const router = createRouter({
       redirect: '/blog',
     },
     {
-      name: RouteName.Blog,
       path: '/blog',
-      component: () => import('@/views/Blog'),
-    },
-    {
-      name: RouteName.BlogPost,
-      path: '/blog/:postId',
-      component: () => import('@/views/Blog'),
+      children: [
+        {
+          name: RouteName.Blog,
+          path: '',
+          component: () => import('@/views/Blog'),
+        },
+        {
+          name: RouteName.BlogPost,
+          path: ':postId',
+          component: () => import('@/views/Blog'),
+        },
+      ],
     },
     {
       name: RouteName.Page404,
