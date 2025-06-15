@@ -33,7 +33,7 @@ En:
 </i18n>
 
 <script setup lang="ts">
-import { mdiAccountCircleOutline, mdiCog } from '@mdi/js';
+import { mdiLogout, mdiCog } from '@mdi/js';
 import { computed, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -65,7 +65,7 @@ const icons = computed(() => [
     ? [
         {
           id: 0,
-          path: mdiAccountCircleOutline,
+          path: mdiLogout,
           onClick: logout,
         },
       ]
