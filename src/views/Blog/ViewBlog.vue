@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container mx-auto pt-2 h-full flex flex-col">
+  <div class="layout-container mx-auto pt-2 flex flex-col">
     <DialogPost />
     <template v-if="authStore.isAdmin || true">
       <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
@@ -17,10 +17,10 @@
     />
     <template v-else>
       <template v-if="hasPosts">
-        <div class="flex flex-col gap-4 last:pb-4">
+        <div class="flex flex-col gap-4 mb-4">
           <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post.id" />
         </div>
-        <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center p-4" />
+        <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center m-4" />
       </template>
       <div v-else class="text-lg flex justify-center items-center flex-1">
         {{ t('nothingWasFound') }}
