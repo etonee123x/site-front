@@ -15,7 +15,7 @@
       />
       <template v-else>
         <PostData :post />
-        <PostDataFooter :post>
+        <PostDataFooter :post class="mt-4">
           <span class="text-sm text-dark flex items-center gap-0.5" :title="dateExact">
             <span>{{ createdAtHumanReadable }}</span>
             <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />

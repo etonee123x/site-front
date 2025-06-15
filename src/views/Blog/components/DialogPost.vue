@@ -2,7 +2,7 @@
   <BaseDialog isHiddenHeader style="height: min-content" ref="baseDialog" @close="onDialogClose">
     <LazyPostData v-if="blogStore.byId" :post="blogStore.byId" />
     <template #footer>
-      <PostDataFooter v-if="blogStore.byId" :post="blogStore.byId">
+      <PostDataFooter v-if="blogStore.byId" class="sticky bottom-0 -mb-4 py-4 bg-background" :post="blogStore.byId">
         <div class="text-sm text-dark flex flex-col items-end">
           <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
           <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>

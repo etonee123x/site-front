@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-end mt-4 items-center gap-2">
+  <div class="flex justify-end items-center gap-2">
     <slot />
     <div :class="VR" />
     <BaseButton @click.stop="onClickCopyUrl">
