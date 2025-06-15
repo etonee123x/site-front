@@ -1,20 +1,20 @@
 <template>
   <BaseDialog
-    style="width: 90%; max-width: 90%; height: 90%; max-height: 90%; overflow: hidden"
+    class="max-w-11/12 max-h-11/12 w-fit overflow-hidden"
     isHiddenFooter
     isHiddenHeader
     ref="baseDialog"
     @close="onClose"
   >
     <div v-if="galleryStore.galleryItem" class="flex flex-col gap-2 items-center flex-1 w-full h-full">
-      <BaseAlwaysScrollable class="mb-1 w-full [--base-always-scrollable--content--margin:0_auto]" duration="12000">
+      <BaseAlwaysScrollable class="w-full [--base-always-scrollable--content--margin:0_auto]" duration="12000">
         {{ galleryStore.galleryItem.name }}
       </BaseAlwaysScrollable>
       <div class="flex-1 flex items-center justify-center overflow-hidden w-full h-full" ref="mediaContainer">
         <component
           :is="component.is"
           v-bind="component.binds"
-          class="h-full object-contain outline-hidden border-none"
+          class="object-contain outline-hidden border-none max-w-full max-h-[calc(90vh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))]"
           :src="galleryStore.galleryItem.src"
         />
       </div>
