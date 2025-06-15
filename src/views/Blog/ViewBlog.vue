@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container mx-auto pt-2 h-full flex flex-col">
     <DialogPost />
-    <template v-if="authStore.isAdmin">
+    <template v-if="authStore.isAdmin || true">
       <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
         <LazyBlogEditPost :v$ ref="lazyBlogEditPost" v-model="postData" v-model:files="files" @submit="onSubmit" />
         <LazyBaseButton :isLoading="blogStore.isLoadingPost" @click="onClickButton">
@@ -18,7 +18,7 @@
     <template v-else>
       <template v-if="hasPosts">
         <div class="flex flex-col gap-4 last:pb-4">
-          <BlogPost v-for="post in blogStore.all" :post :key="post.id" />
+          <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post.id" />
         </div>
         <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center p-4" />
       </template>
@@ -26,6 +26,15 @@
         {{ t('nothingWasFound') }}
       </div>
     </template>
+
+    <DialogConfirmation
+      :title="t('confirmDelete')"
+      :message="t('deleteMessage')"
+      ref="dialogConfirmationDelete"
+      @confirm="confirm"
+      @cancel="cancel"
+      @close="cancel"
+    />
   </div>
 </template>
 
@@ -33,14 +42,18 @@
 En:
   send: 'Send'
   nothingWasFound: 'Nothing was found...'
+  confirmDelete: 'Delete Post'
+  deleteMessage: 'Are you sure you want to delete this post?'
 Ru:
   send: 'Отправить'
   nothingWasFound: 'Ничего не найдено...'
+  confirmDelete: 'Удалить пост'
+  deleteMessage: 'Вы уверены, что хотите удалить этот пост?'
 </i18n>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { useInfiniteScroll } from '@vueuse/core';
+import { useConfirmDialog, useInfiniteScroll } from '@vueuse/core';
 import { ref, defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { isNil } from '@etonee123x/shared/utils/isNil';
@@ -56,12 +69,17 @@ import { useAuthStore } from '@/stores/auth';
 import { goToPage404 } from '@/composables/goToPage404';
 import { MAIN } from '@/constants/selectors';
 import { useElementFinder } from '@/composables/useElementFinder';
+import DialogConfirmation from '@/components/DialogConfirmation.vue';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));
+
+const dialogConfirmationDelete = useTemplateRef('dialogConfirmationDelete');
+
+const { reveal, confirm, cancel } = useConfirmDialog();
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -108,6 +126,14 @@ const { v$, handle } = useVuelidateBlogPostData(
 
 const onSubmit = handle;
 const onClickButton = handle;
+
+const onBeforeDelete = async () => {
+  dialogConfirmationDelete.value?.open();
+
+  const { isCanceled } = await reveal();
+
+  return !isCanceled;
+};
 
 watch(
   () => route.params.postId,

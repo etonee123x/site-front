@@ -15,7 +15,7 @@
       />
       <template v-else>
         <PostData :post />
-        <PostDataFooter :post @click.stop>
+        <PostDataFooter :post>
           <span class="text-sm text-dark flex items-center gap-0.5" :title="dateExact">
             <span>{{ createdAtHumanReadable }}</span>
             <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
@@ -35,14 +35,6 @@
         <BaseIcon class="text-2xl" :path="control.iconPath" />
       </LazyBaseButton>
     </div>
-    <DialogConfirmation
-      :title="t('confirmDelete')"
-      :message="t('deleteMessage')"
-      ref="dialogConfirmation"
-      @confirm="confirm"
-      @cancel="cancel"
-      @close="cancel"
-    />
   </div>
 </template>
 
@@ -64,14 +56,13 @@ import type { Post } from '@etonee123x/shared/types/blog';
 import { areIdsEqual } from '@etonee123x/shared/helpers/id';
 import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
 import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
-import { onClickOutside, useConfirmDialog } from '@vueuse/core';
+import { onClickOutside } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
 import PostData from './PostData.vue';
 import PostDataFooter from './PostDataFooter.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon';
-import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
 import { wasEdited as _wasEdited } from '../helpers/wasEdited';
@@ -88,13 +79,11 @@ const getInitialPostNew = () => clone(props.post);
 
 const props = defineProps<{
   post: Post;
+  onBeforeDelete: () => Promise<boolean>;
 }>();
-
-const { reveal, confirm, cancel } = useConfirmDialog();
 
 const root = useTemplateRef('root');
 const blogEditPost = useTemplateRef('blogEditPost');
-const dialogConfirmation = useTemplateRef('dialogConfirmation');
 
 onClickOutside(root, () => {
   if (!isInEditMode.value) {
@@ -186,11 +175,7 @@ const controls = computed(() => [
     iconPath: mdiDelete,
     isLoading: blogStore.isLoadingDeleteById,
     onClick: async () => {
-      dialogConfirmation.value?.open();
-
-      const { isCanceled } = await reveal();
-
-      if (isCanceled) {
+      if (!(await props.onBeforeDelete())) {
         return;
       }
 

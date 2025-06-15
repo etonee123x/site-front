@@ -2,7 +2,7 @@
   <div class="flex justify-end mt-4 items-center gap-2">
     <slot />
     <div :class="VR" />
-    <BaseButton @click="onClickCopyUrl">
+    <BaseButton @click.stop="onClickCopyUrl">
       <BaseIcon :path="mdiLinkVariant" />
     </BaseButton>
   </div>
