@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container mx-auto pt-2 flex flex-col">
     <DialogPost />
-    <template v-if="authStore.isAdmin || true">
+    <template v-if="authStore.isAdmin">
       <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
         <LazyBlogEditPost :v$ ref="lazyBlogEditPost" v-model="postData" v-model:files="files" @submit="onSubmit" />
         <LazyBaseButton :isLoading="blogStore.isLoadingPost" @click="onClickButton">
