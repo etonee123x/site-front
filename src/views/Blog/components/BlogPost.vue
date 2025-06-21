@@ -11,7 +11,7 @@
         ref="blogEditPost"
         v-model="postNew"
         v-model:files="files"
-        @submit="onSubmit"
+        @keydown:enter="onKeyDownEnter"
       />
       <template v-else>
         <PostData :post />
@@ -55,7 +55,6 @@ import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import type { Post } from '@etonee123x/shared/types/blog';
 import { areIdsEqual } from '@etonee123x/shared/helpers/id';
 import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { onClickOutside } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
@@ -67,10 +66,11 @@ import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
 import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useBlogStore } from '@/stores/blog';
-import { useVuelidateBlogPostData } from '@/views/Blog/composables';
+import { useVuelidateBlogPostData } from '../composables/useVuelidateBlogPostData';
 import { useAuthStore } from '@/stores/auth';
 import { RouteName, router } from '@/router';
 import { ICON } from '@/helpers/ui';
+import { onPostTextareaKeyDownEnter } from '../helpers/onPostTextareaKeyDownEnter';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -129,7 +129,7 @@ const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.pos
 
 const wasEdited = computed(() => _wasEdited(props.post));
 
-const onSubmit = handle;
+const onKeyDownEnter = onPostTextareaKeyDownEnter(handle);
 
 const hasChanges = computed(() => !deepEqual(props.post, postNew.value));
 
@@ -156,7 +156,7 @@ const controls = computed(() => [
       ]
     : []),
   // TODO: Надо придумать как редактировать посты с вложениями...
-  ...(!(isInEditMode.value || isNotEmptyArray(props.post.filesUrls))
+  ...(!(isInEditMode.value || props.post.filesUrls.length)
     ? [
         {
           id: 2,

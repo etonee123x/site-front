@@ -1,16 +1,15 @@
 import { type MaybeRefOrGetter, type Ref, toValue } from 'vue';
 import type { FunctionCallback } from '@etonee123x/shared/types';
 import type { PostData } from '@etonee123x/shared/types/blog';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
-import { helpers } from '@vuelidate/validators';
+import { helpers, requiredIf } from '@vuelidate/validators';
 
 import { i18n } from '@/i18n';
 import { useVuelidateWithHandle } from '@/composables/useVuelidateWithHandle';
 
-const validatorText = (filesUrls: Array<string>, files: MaybeRefOrGetter<Array<File>>) =>
+const requiredIfNoFiles = (filesUrls: Array<string>, files: MaybeRefOrGetter<Array<File>>) =>
   helpers.withMessage(
     () => i18n.global.t('validations.required'),
-    (value: string) => isNotEmptyArray(filesUrls) || isNotEmptyArray(toValue(files)) || helpers.req(value),
+    requiredIf(() => toValue(files).length === 0 && toValue(filesUrls).length === 0),
   );
 
 export const useVuelidateBlogPostData = (
@@ -22,7 +21,7 @@ export const useVuelidateBlogPostData = (
     callback,
     {
       text: {
-        required: validatorText(postData.value.filesUrls, files),
+        requiredIfNoFiles: requiredIfNoFiles(postData.value.filesUrls, files),
       },
     },
     postData,

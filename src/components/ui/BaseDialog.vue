@@ -16,7 +16,7 @@
       </slot>
       <slot v-bind="{ close }" />
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
-        <div v-if="isNotEmptyArray(buttons)" class="flex justify-end gap-2 mt-auto">
+        <div v-if="buttons.length" class="flex justify-end gap-2 mt-auto">
           <LazyBaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
           </LazyBaseButton>
@@ -40,10 +40,9 @@ import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } 
 import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import type { FunctionCallback } from '@etonee123x/shared/types';
-import type { WithId } from '@etonee123x/shared/types/id';
+import type { WithId } from '@etonee123x/shared/helpers/id';
 import { MAIN } from '@/constants/selectors';
 
 const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton'));

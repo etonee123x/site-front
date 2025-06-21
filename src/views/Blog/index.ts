@@ -1,1 +1,1 @@
-export { default } from '@/views/Blog/ViewBlog.vue';
+export { default } from './ViewBlog.vue';

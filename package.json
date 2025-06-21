@@ -19,6 +19,7 @@
     "@vueuse/core": "^13.3.0",
     "date-fns": "^4.1.0",
     "deep-equal": "^2.2.3",
+    "is-mobile": "^5.0.0",
     "jwt-decode": "^4.0.0",
     "normalize.css": "^8.0.1",
     "ofetch": "^1.4.1",

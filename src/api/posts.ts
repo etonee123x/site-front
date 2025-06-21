@@ -1,5 +1,5 @@
 import type { Post } from '@etonee123x/shared/types/blog';
-import type { Id } from '@etonee123x/shared/types/id';
+import type { Id } from '@etonee123x/shared/helpers/id';
 import type { WithMeta, WithIsEnd, ForPost, ForPut, ForPatch } from '@etonee123x/shared/types/database';
 
 import { client } from '@/api/_client';

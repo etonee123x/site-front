@@ -5,10 +5,7 @@ import { enGB, ru } from 'date-fns/locale';
 import { i18n } from '@/i18n';
 import { Language, ThemeColor, type Settings } from '@/api/config';
 
-const CLASS_TITLES = Object.freeze({
-  THEME: 'theme',
-  THEME_COLOR: 'theme_color',
-});
+const THEME_COLOR_CLASS_MODIFICATOR_TITLE = '_theme-color';
 
 const LOCAL_STORAGE_SETTINGS_FIELD_TITLE = 'SETTINGS';
 
@@ -82,9 +79,9 @@ export const useSettingsStore = defineStore('settings', () => {
 
     const bodyClassList = document.querySelector('body')?.classList;
     const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter((_class) => !_class.startsWith(CLASS_TITLES.THEME_COLOR));
+    const newClasses = oldClasses.filter((_class) => !_class.startsWith(THEME_COLOR_CLASS_MODIFICATOR_TITLE));
 
-    newClasses.push(CLASS_TITLES.THEME, [CLASS_TITLES.THEME_COLOR, (_color ?? color).toLowerCase()].join('_'));
+    newClasses.push([THEME_COLOR_CLASS_MODIFICATOR_TITLE, (_color ?? color).toLowerCase()].join('_'));
 
     bodyClassList?.remove(...oldClasses);
     bodyClassList?.add(...newClasses);

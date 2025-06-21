@@ -10,7 +10,7 @@
         <BaseIcon :path="getIconPath(toast)" />
         <span class="text-[initial]">{{ toast.text }}</span>
         <BaseButton @click="() => onClickClose(toast)">
-          <BaseIcon :path="mdiClose" class="cursor-pointer text-[initial]" />
+          <BaseIcon :path="mdiClose" class="text-[initial]" />
         </BaseButton>
       </span>
     </li>

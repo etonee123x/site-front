@@ -1,5 +1,5 @@
 <template>
-  <ol class="flex gap-4 flex-col ps-8" ref="ol">
+  <ol class="flex gap-4 flex-col" ref="ol">
     <li v-for="(file, index) in model" :key="getKeyByFile(file)">
       <div class="flex items-center gap-2">
         <FilesListFilePreview :file />

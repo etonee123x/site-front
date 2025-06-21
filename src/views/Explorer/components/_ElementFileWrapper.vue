@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { format } from 'date-fns';
-import type { ItemFile } from '@etonee123x/shared/types/folderData';
+import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
 
 const props = defineProps<{
   element: ItemFile;

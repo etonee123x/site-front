@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ItemFolder } from '@etonee123x/shared/types/folderData';
+import type { ItemFolder } from '@etonee123x/shared/helpers/folderData';
 
 defineProps<{
   element: ItemFolder;

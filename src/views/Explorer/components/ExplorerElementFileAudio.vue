@@ -34,8 +34,7 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
-import type { ItemAudio } from '@etonee123x/shared/types/folderData';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
+import type { ItemAudio } from '@etonee123x/shared/helpers/folderData';
 import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, mdiMetronome } from '@mdi/js';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
@@ -61,7 +60,7 @@ const metadataList = computed(() => [
     path: mdiClockOutline,
     value: formatDuration(props.element.metadata.duration * 1000),
   },
-  ...(isNotEmptyArray(props.element.metadata.artists)
+  ...(props.element.metadata.artists.length
     ? [
         {
           id: 1,

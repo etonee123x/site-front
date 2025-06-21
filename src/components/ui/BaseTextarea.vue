@@ -5,17 +5,16 @@
       :placeholder
       ref="textarea"
       v-model="model"
-      @keydown.enter.shift.prevent="onEnter"
       @paste="onPaste"
+      @keydown.enter="onKeyDownEnter"
     />
-    <ul v-if="isNotEmptyArray(errors)" class="text-sm flex flex-col gap-1 text-error">
+    <ul v-if="errors.length" class="text-sm flex flex-col gap-1 text-error">
       <li v-for="error in errors" :key="error.$uid">{{ error.$message }}</li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import type { ErrorObject } from '@vuelidate/core';
 import { useTextareaAutosize } from '@vueuse/core';
 
@@ -25,27 +24,19 @@ withDefaults(
     errors?: Array<ErrorObject>;
   }>(),
   {
-    placeholder: undefined,
     errors: () => [],
   },
 );
 
 const emit = defineEmits<{
-  submit: [];
-  pasteFile: [File];
+  paste: [ClipboardEvent];
+  drop: [DragEvent];
+  'keydown:enter': [KeyboardEvent];
 }>();
 
-const onEnter = () => emit('submit');
+const onPaste = (e: ClipboardEvent) => emit('paste', e);
 
-const onPaste = (e: ClipboardEvent) => {
-  const maybeFile = e.clipboardData?.files[0];
-
-  if (!maybeFile) {
-    return;
-  }
-
-  emit('pasteFile', maybeFile);
-};
+const onKeyDownEnter = (e: KeyboardEvent) => emit('keydown:enter', e);
 
 const model = defineModel<string>({ required: true });
 

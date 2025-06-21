@@ -2,9 +2,15 @@
   <div class="layout-container mx-auto pt-2 flex flex-col">
     <DialogPost />
     <template v-if="authStore.isAdmin">
-      <LazyBaseForm class="flex flex-col gap-4" @submit.prevent="onSubmit">
-        <LazyBlogEditPost :v$ ref="lazyBlogEditPost" v-model="postData" v-model:files="files" @submit="onSubmit" />
-        <LazyBaseButton :isLoading="blogStore.isLoadingPost" @click="onClickButton">
+      <LazyBaseForm class="flex flex-col gap-4" ref="baseForm" @submit.prevent="onSubmit">
+        <LazyBlogEditPost
+          :v$
+          ref="lazyBlogEditPost"
+          v-model="postData"
+          v-model:files="files"
+          @keydown:enter="onKeyDownEnter"
+        />
+        <LazyBaseButton type="submit" :isLoading="blogStore.isLoadingPost">
           {{ t('send') }}
         </LazyBaseButton>
       </LazyBaseForm>
@@ -54,22 +60,23 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog, useInfiniteScroll } from '@vueuse/core';
-import { ref, defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
+import { defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { isNil } from '@etonee123x/shared/utils/isNil';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { toId } from '@etonee123x/shared/helpers/id';
 
 import DialogPost from './components/DialogPost.vue';
 import BlogPost from './components/BlogPost.vue';
 
 import { useBlogStore } from '@/stores/blog';
-import { useVuelidateBlogPostData } from '@/views/Blog/composables';
+import { useVuelidateBlogPostData } from './composables/useVuelidateBlogPostData';
 import { useAuthStore } from '@/stores/auth';
 import { goToPage404 } from '@/composables/goToPage404';
 import { MAIN } from '@/constants/selectors';
 import { useElementFinder } from '@/composables/useElementFinder';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
+import { useResetableRef } from '@/composables/useResetableRef';
+import { onPostTextareaKeyDownEnter } from './helpers/onPostTextareaKeyDownEnter';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -78,6 +85,8 @@ const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseL
 const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));
 
 const dialogConfirmationDelete = useTemplateRef('dialogConfirmationDelete');
+const baseForm = useTemplateRef('baseForm');
+const lazyBlogEditPost = useTemplateRef('lazyBlogEditPost');
 
 const { reveal, confirm, cancel } = useConfirmDialog();
 
@@ -89,7 +98,7 @@ const blogStore = useBlogStore();
 
 const authStore = useAuthStore();
 
-const hasPosts = computed(() => isNotEmptyArray(blogStore.all));
+const hasPosts = computed(() => Boolean(blogStore.all.length));
 
 const elementMain = useElementFinder(() => document.getElementById(MAIN));
 
@@ -98,25 +107,20 @@ useInfiniteScroll(elementMain, () => new Promise((resolve) => blogStore.getAll()
   distance: 100,
 });
 
-const getInitialPostData = () => ({
+const [files, resetFiles] = useResetableRef<Array<File>>([]);
+
+const [postData, resetPostModel] = useResetableRef(() => ({
   text: '',
   filesUrls: [],
-});
-
-const files = ref<Array<File>>([]);
-
-const postData = ref(getInitialPostData());
-
-const lazyBlogEditPost = useTemplateRef('lazyBlogEditPost');
+}));
 
 const { v$, handle } = useVuelidateBlogPostData(
   () => {
     blogStore.post(postData.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
 
     v$.value.$reset();
-    files.value = [];
-
-    postData.value = getInitialPostData();
+    resetFiles();
+    resetPostModel();
 
     lazyBlogEditPost.value?.focusTextarea();
   },
@@ -125,7 +129,7 @@ const { v$, handle } = useVuelidateBlogPostData(
 );
 
 const onSubmit = handle;
-const onClickButton = handle;
+const onKeyDownEnter = onPostTextareaKeyDownEnter(() => baseForm.value?.requestSubmit());
 
 const onBeforeDelete = async () => {
   dialogConfirmationDelete.value?.open();
@@ -139,7 +143,7 @@ watch(
   () => route.params.postId,
   () => {
     if (isNil(route.params.postId)) {
-      blogStore.byId = null;
+      blogStore.byId = undefined;
 
       return;
     }

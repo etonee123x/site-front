@@ -7,7 +7,7 @@ import { pick } from '@etonee123x/shared/utils/pick';
 import { useExplorerStore } from './explorer';
 
 import { getFileUrlExt } from '@/utils/url';
-import type { ItemImage, ItemVideo } from '@etonee123x/shared/types/folderData';
+import type { ItemImage, ItemVideo } from '@etonee123x/shared/helpers/folderData';
 
 type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 

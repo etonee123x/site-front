@@ -15,7 +15,7 @@ export const useExplorerStore = defineStore('explorer', () => {
     state: folderData,
     execute: getFolderData,
     isLoading: isLoadingGetFolderData,
-  } = useAsyncStateApi(_getFolderData, undefined);
+  } = useAsyncStateApi(_getFolderData);
 
   const handlePlayer = () => {
     if (!folderData.value) {

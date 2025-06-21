@@ -1,5 +1,4 @@
-import type { ItemAudio } from '@etonee123x/shared/types/folderData';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
+import type { ItemAudio } from '@etonee123x/shared/helpers/folderData';
 import { defineStore } from 'pinia';
 import { computed, ref, shallowRef } from 'vue';
 
@@ -19,7 +18,7 @@ export const usePlayerStore = defineStore('player', () => {
 
   const historyItems = ref<Array<number>>([]);
 
-  const isNotEmptyHistory = computed(() => isNotEmptyArray(historyItems.value));
+  const isNotEmptyHistory = computed(() => Boolean(historyItems.value.length));
 
   const isShuffleModeEnabled = ref(false);
 

@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-end items-center gap-2">
     <slot />
-    <div :class="VR" />
+    <div :class="VR" class="my-1" />
     <BaseButton @click.stop="onClickCopyUrl">
       <BaseIcon :path="mdiLinkVariant" />
     </BaseButton>

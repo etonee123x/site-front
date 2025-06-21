@@ -1,9 +1,10 @@
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div :class="$s.html" class="whitespace-break-spaces break-words" ref="root" v-html="html" />
+  <div :class="HTML" class="whitespace-break-spaces break-words" ref="root" v-html="html" />
 </template>
 
 <script setup lang="ts">
+import { HTML } from '@/helpers/ui';
 import { isString } from '@etonee123x/shared/utils/isString';
 import { onMounted, useTemplateRef } from 'vue';
 import { useRouter } from 'vue-router';
@@ -26,6 +27,7 @@ onMounted(() =>
         return;
       }
 
+      event.stopPropagation();
       event.preventDefault();
 
       router.push(String(event.target.href).replace(window.origin, ''));
@@ -33,9 +35,3 @@ onMounted(() =>
   ),
 );
 </script>
-
-<style module="$s">
-.html a {
-  @apply underline;
-}
-</style>

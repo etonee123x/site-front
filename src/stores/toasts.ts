@@ -1,8 +1,7 @@
 import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { toId } from '@etonee123x/shared/helpers/id';
-import type { Id, WithId } from '@etonee123x/shared/types/id';
+import type { Id, WithId } from '@etonee123x/shared/helpers/id';
 
 export enum ToastType {
   Error = 'Error',
@@ -34,7 +33,7 @@ export const useToastsStore = defineStore('toasts', () => {
     setTimeout(() => closeToast(id), ttl);
   };
 
-  const hasToasts = computed(() => isNotEmptyArray(toasts));
+  const hasToasts = computed(() => Boolean(toasts.length));
 
   const toastSuccess = (text: string, options?: Options) => toast(text, { type: ToastType.Success, ...options });
 

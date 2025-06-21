@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <BaseHtml v-if="html" :html />
-    <ul v-if="isNotEmptyArray(post.filesUrls)">
+    <ul v-if="post.filesUrls.length">
       <li v-for="(fileUrl, index) in post.filesUrls" :key="index">
         <PostDataAttachment :fileUrl />
       </li>
@@ -11,7 +11,6 @@
 
 <script setup lang="ts">
 import type { Post } from '@etonee123x/shared/types/blog';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 import { computed } from 'vue';
 
 import PostDataAttachment from './PostDataAttachment.vue';

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ItemImage } from '@etonee123x/shared/types/folderData';
+import type { ItemImage } from '@etonee123x/shared/helpers/folderData';
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 

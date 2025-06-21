@@ -25,3 +25,5 @@ export const CHECKBOX = Object.freeze({
 export const VR = 'vr';
 
 export const ELEMENT_TITLE = 'element-title';
+
+export const HTML = 'html';

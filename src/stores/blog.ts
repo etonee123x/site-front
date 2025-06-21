@@ -1,9 +1,8 @@
-import type { Id } from '@etonee123x/shared/types/id';
+import type { Id } from '@etonee123x/shared/helpers/id';
 import type { Post, PostData } from '@etonee123x/shared/types/blog';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useCounter, useToggle } from '@vueuse/core';
-import { isNotEmptyArray } from '@etonee123x/shared/utils/isNotEmptyArray';
 
 import {
   getPosts as _getPosts,
@@ -14,18 +13,19 @@ import {
 } from '@/api/posts';
 import { postUpload } from '@/api/upload';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
+import { useResetableRef } from '@/composables/useResetableRef';
 
 export const useBlogStore = defineStore('blog', () => {
-  const { inc, reset: _reset, count: page } = useCounter();
+  const { inc, reset: resetCounter, count: page } = useCounter();
   const [isEnd, toggleIsEnd] = useToggle();
 
-  const all = ref<Array<Post>>([]);
+  const [all, resetAll] = useResetableRef<Array<Post>>([]);
   const { execute: getAll, isLoading: isLoadingGetAll } = useAsyncStateApi(
     async (options: { shouldReset?: boolean } = {}) => {
       if (options.shouldReset) {
-        all.value = [];
+        resetAll();
         toggleIsEnd(false);
-        _reset();
+        resetCounter();
       }
 
       return _getPosts(page.value).then(({ data: _posts, meta: { isEnd: _isEnd } }): Array<Post> => {
@@ -41,27 +41,25 @@ export const useBlogStore = defineStore('blog', () => {
 
   const { execute: post, isLoading: isLoadingPost } = useAsyncStateApi(
     async (postData: PostData, files: Array<File> = []) => {
-      const filesUrls = await postUpload(files);
+      const filesUrls = files.length ? await postUpload(files) : [];
 
       return _postPost({ ...postData, filesUrls });
     },
-    undefined,
   );
 
   const { execute: putById, isLoading: isLoadingPutById } = useAsyncStateApi(
     async (id: Id, post: Post, files: Array<File> = []) => {
-      const filesUrls = await postUpload(files);
+      const filesUrls = files.length ? await postUpload(files) : [];
 
       return _putPost(id, { ...post, filesUrls });
     },
-    undefined,
   );
 
-  const { state: byId, execute: getById, isLoading: isLoadingGetById } = useAsyncStateApi(_getPostById, null);
+  const { state: byId, execute: getById, isLoading: isLoadingGetById } = useAsyncStateApi(_getPostById);
 
-  const { execute: deleteById, isLoading: isLoadingDeleteById } = useAsyncStateApi(_deletePost, null);
+  const { execute: deleteById, isLoading: isLoadingDeleteById } = useAsyncStateApi(_deletePost);
 
-  const hasPosts = computed(() => isNotEmptyArray(all.value));
+  const hasPosts = computed(() => Boolean(all.value.length));
 
   const editModeFor = ref<Id | null>(null);
 

@@ -27,18 +27,18 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { ref, computed, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useSettingsStore } from '@/stores/settings';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
-import { clone } from '@/utils/clone';
 import { Language, ThemeColor } from '@/api/config';
 import { isDevelopment } from '@/helpers/mode';
 import { TOKEN } from '@/constants';
 import { useAuthStore } from '@/stores/auth';
+import { useResetableRef } from '@/composables/useResetableRef';
 
 const authStore = useAuthStore();
 
@@ -48,16 +48,12 @@ const settingsStore = useSettingsStore();
 
 const { t } = useI18n({ useScope: 'local' });
 
-const model = ref(clone(settingsStore.settings));
+const [model, resetModel] = useResetableRef(() => settingsStore.settings);
 
 const onConfirm = () => {
   settingsStore.settings = model.value;
 
   settingsStore.saveSettings();
-};
-
-const resetModel = () => {
-  model.value = clone(settingsStore.settings);
 };
 
 const onClose = resetModel;
@@ -75,6 +71,7 @@ const onClickAuthorize = () => {
 
   localStorage.setItem(TOKEN, 'dev-jwt');
   authStore.getAuthData();
+  baseDialog.value?.close();
 };
 
 defineExpose({
