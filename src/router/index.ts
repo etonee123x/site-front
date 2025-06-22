@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createMemoryHistory, createRouter as _createRouter, createWebHistory } from 'vue-router';
 
 import { checkAuth } from './guards/checkAuth';
 import { setToken } from './guards/setToken';
@@ -12,41 +12,45 @@ export enum RouteName {
   Page404 = 'Page404',
 }
 
-export const router = createRouter({
-  routes: [
-    {
-      name: RouteName.Explorer,
-      path: '/explorer/:links*',
-      component: () => import('@/views/Explorer'),
-    },
-    {
-      name: RouteName.Home,
-      path: '/',
-      redirect: '/blog',
-    },
-    {
-      path: '/blog',
-      children: [
-        {
-          name: RouteName.Blog,
-          path: '',
-          component: () => import('@/views/Blog'),
-        },
-        {
-          name: RouteName.BlogPost,
-          path: ':postId',
-          component: () => import('@/views/Blog'),
-        },
-      ],
-    },
-    {
-      name: RouteName.Page404,
-      path: '/:pathMatch(.*)*',
-      component: () => import('@/views/Page404'),
-    },
-  ],
-  history: createWebHistory('/'),
-});
+export const createRouter = () => {
+  const router = _createRouter({
+    routes: [
+      {
+        name: RouteName.Explorer,
+        path: '/explorer/:links*',
+        component: () => import('@/views/Explorer'),
+      },
+      {
+        name: RouteName.Home,
+        path: '/',
+        redirect: '/blog',
+      },
+      {
+        path: '/blog',
+        children: [
+          {
+            name: RouteName.Blog,
+            path: '',
+            component: () => import('@/views/Blog'),
+          },
+          {
+            name: RouteName.BlogPost,
+            path: ':postId',
+            component: () => import('@/views/Blog'),
+          },
+        ],
+      },
+      {
+        name: RouteName.Page404,
+        path: '/:pathMatch(.*)*',
+        component: () => import('@/views/Page404'),
+      },
+    ],
+    history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory('/'),
+  });
 
-router.beforeEach(setToken);
-router.beforeEach(checkAuth);
+  router.beforeEach(setToken);
+  router.beforeEach(checkAuth);
+
+  return router;
+};

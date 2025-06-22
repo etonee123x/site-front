@@ -36,23 +36,19 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, ref, defineAsyncComponent, onBeforeUnmount, useTemplateRef } from 'vue';
-import { onClickOutside, useMutationObserver, useScrollLock, useToggle } from '@vueuse/core';
+import { computed, ref, defineAsyncComponent, useTemplateRef } from 'vue';
+import { onClickOutside, useMutationObserver } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import type { FunctionCallback } from '@etonee123x/shared/types';
 import type { WithId } from '@etonee123x/shared/helpers/id';
-import { MAIN } from '@/constants/selectors';
 
 const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton'));
 const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon'));
 
 const dialog = useTemplateRef('dialog');
 const dialogInner = useTemplateRef('dialogInner');
-
-const isLocked = useScrollLock(document.getElementById(MAIN));
-const toggleIsLocked = useToggle(isLocked);
 
 interface Button extends WithId {
   text: string;
@@ -117,7 +113,6 @@ const open = () => {
   }
 
   dialog.value?.showModal();
-  toggleIsLocked(true);
   emit('open');
 };
 
@@ -127,7 +122,6 @@ const close = () => {
   }
 
   dialog.value?.close();
-  toggleIsLocked(false);
   emit('close');
 };
 
@@ -135,8 +129,6 @@ const onClose = close;
 const onClickCloseIcon = close;
 
 onClickOutside(dialogInner, close);
-
-onBeforeUnmount(() => toggleIsLocked(false));
 
 defineExpose({
   open,

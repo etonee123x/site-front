@@ -102,7 +102,9 @@ const hasPosts = computed(() => Boolean(blogStore.all.length));
 
 const elementMain = useElementFinder(() => document.getElementById(MAIN));
 
-useInfiniteScroll(elementMain, () => new Promise((resolve) => blogStore.getAll().then(() => resolve())), {
+await blogStore.getAll();
+
+useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
   canLoadMore: () => !blogStore.isEnd,
   distance: 100,
 });

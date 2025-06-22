@@ -63,7 +63,7 @@ const getComponent = (item: Item) => {
 const fetchData = (to: RouteLocationNormalizedLoaded) =>
   explorerStore.getFolderData(to.fullPath.replace('/explorer', '')).catch(goToPage404);
 
-fetchData(route);
+await fetchData(route);
 
 onBeforeRouteUpdate((to) => void fetchData(to));
 </script>

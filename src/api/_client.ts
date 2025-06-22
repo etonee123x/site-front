@@ -9,7 +9,11 @@ export const client = createFetch({
   defaults: {
     baseURL: import.meta.env.VITE_API_URL,
     onRequest({ options }) {
-      const maybeToken = localStorage.getItem(TOKEN);
+      if (import.meta.env.SSR) {
+        return;
+      }
+
+      const maybeToken = globalThis.localStorage.getItem(TOKEN);
 
       options.headers = {
         ...options.headers,

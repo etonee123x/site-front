@@ -30,7 +30,7 @@ onMounted(() =>
       event.stopPropagation();
       event.preventDefault();
 
-      router.push(String(event.target.href).replace(window.origin, ''));
+      router.push(String(event.target.href).replace(globalThis.origin, ''));
     }),
   ),
 );

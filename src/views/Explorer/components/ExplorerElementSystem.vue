@@ -5,7 +5,3 @@
     </div>
   </div>
 </template>
-
-<style>
-@import '../assets/styles/explorerElement.css';
-</style>

@@ -34,7 +34,7 @@ import { useSettingsStore } from '@/stores/settings';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
-import { Language, ThemeColor } from '@/api/config';
+import { Language, ThemeColor } from '@/constants/settings';
 import { isDevelopment } from '@/helpers/mode';
 import { TOKEN } from '@/constants';
 import { useAuthStore } from '@/stores/auth';
@@ -50,11 +50,7 @@ const { t } = useI18n({ useScope: 'local' });
 
 const [model, resetModel] = useResetableRef(() => settingsStore.settings);
 
-const onConfirm = () => {
-  settingsStore.settings = model.value;
-
-  settingsStore.saveSettings();
-};
+const onConfirm = () => settingsStore.saveSettings(model.value);
 
 const onClose = resetModel;
 
@@ -69,7 +65,7 @@ const onClickAuthorize = () => {
     return;
   }
 
-  localStorage.setItem(TOKEN, 'dev-jwt');
+  globalThis.localStorage.setItem(TOKEN, 'dev-jwt');
   authStore.getAuthData();
   baseDialog.value?.close();
 };

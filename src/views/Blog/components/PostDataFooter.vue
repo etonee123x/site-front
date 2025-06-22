@@ -37,7 +37,7 @@ const { copy } = useClipboard({ legacy: true });
 const toastsStore = useToastsStore();
 
 const onClickCopyUrl = () =>
-  copy(window.location.href.replace(/(?<=blog).*/, `/${props.post.id}`)).then(() =>
+  copy(globalThis.location.href.replace(/(?<=blog).*/, `/${props.post.id}`)).then(() =>
     toastsStore.toastSuccess(t('copied')),
   );
 </script>

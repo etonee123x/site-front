@@ -1,29 +1,13 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { enGB, ru } from 'date-fns/locale';
 
 import { i18n } from '@/i18n';
-import { Language, ThemeColor, type Settings } from '@/api/config';
-
-const THEME_COLOR_CLASS_MODIFICATOR_TITLE = '_theme-color';
-
-const LOCAL_STORAGE_SETTINGS_FIELD_TITLE = 'SETTINGS';
-
-const getLocalStorageSettings = () => {
-  let result: Partial<Settings> = {};
-
-  const localStorageSettings = localStorage.getItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE);
-
-  if (localStorageSettings) {
-    try {
-      result = JSON.parse(localStorageSettings);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  return result;
-};
+import { Language, ThemeColor, type Settings } from '@/constants/settings';
+import { useCookies } from '@vueuse/integrations/useCookies';
+import { throwError } from '@etonee123x/shared/utils/throwError';
+import { themeColorToThemeColorClass } from '@/helpers/themeColor';
+import { THEME_COLOR } from '@/helpers/ui';
 
 const LANGUAGE_TO_DATE_FNS_LOCALE = Object.freeze({
   [Language.En]: enGB,
@@ -31,6 +15,7 @@ const LANGUAGE_TO_DATE_FNS_LOCALE = Object.freeze({
 });
 
 export const useSettingsStore = defineStore('settings', () => {
+  const cookies = useCookies();
   const { t } = i18n.global;
 
   const themeColorToThemeColorTranslation = computed(() =>
@@ -45,63 +30,64 @@ export const useSettingsStore = defineStore('settings', () => {
     }),
   );
 
-  const _settings = ref(Object.assign({}, window.CONFIG, getLocalStorageSettings()));
-
-  const settings = computed({
-    get: () => _settings.value,
-    set: (v) => {
-      _settings.value = v;
-
-      initSettings();
-    },
+  const settings = ref<Settings>({
+    themeColor: cookies.get('themeColor'),
+    language: cookies.get('language'),
   });
 
-  const themeColor = computed(() => _settings.value.themeColor);
-  const language = computed(() => _settings.value.language);
+  const themeColor = computed(() => settings.value.themeColor);
 
-  const initSettings = () => {
-    setColor(themeColor.value);
-    setLanguage(language.value);
-  };
-
-  const setColor = (color: ThemeColor) => {
-    type ThemeColorWithoutRandom = Exclude<ThemeColor, ThemeColor.Random>;
-
-    let _color: ThemeColorWithoutRandom | null = null;
-
-    if (color === ThemeColor.Random) {
-      const colorsWithoutRandom = Object.values(ThemeColor).filter(
-        (c): c is ThemeColorWithoutRandom => c !== ThemeColor.Random,
-      );
-
-      _color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)] ?? null;
-    }
-
-    const bodyClassList = document.querySelector('body')?.classList;
-    const oldClasses = Array.from(bodyClassList ?? []);
-    const newClasses = oldClasses.filter((_class) => !_class.startsWith(THEME_COLOR_CLASS_MODIFICATOR_TITLE));
-
-    newClasses.push([THEME_COLOR_CLASS_MODIFICATOR_TITLE, (_color ?? color).toLowerCase()].join('_'));
-
-    bodyClassList?.remove(...oldClasses);
-    bodyClassList?.add(...newClasses);
-
-    _settings.value.themeColor = color;
+  const initSettings = (settings: Settings) => {
+    setColor(settings.themeColor);
+    setLanguage(settings.language);
   };
 
   const setLanguage = (language: Language) => {
-    i18n.global.locale.value = language;
+    settings.value.language = language;
+    i18n.global.locale.value = settings.value.language;
+  };
+
+  const setColor = (themeColor: ThemeColor) => {
+    settings.value.themeColor = themeColor;
+
+    if (import.meta.env.SSR) {
+      return;
+    }
+
+    let color = themeColor;
+
+    if (themeColor === ThemeColor.Random) {
+      const colorsWithoutRandom = Object.values(ThemeColor).filter((themeColor) => themeColor !== ThemeColor.Random);
+
+      color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)] ?? throwError();
+    }
+
+    const bodyClassList = document.querySelector('body')?.classList;
+
+    bodyClassList?.remove(...Object.values(THEME_COLOR));
+    bodyClassList?.add(themeColorToThemeColorClass(color));
   };
 
   const dateFnsLocale = computed(() => LANGUAGE_TO_DATE_FNS_LOCALE[i18n.global.locale.value]);
 
-  const saveSettings = () => localStorage.setItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE, JSON.stringify(settings.value));
+  const saveSettings = (_settings: Settings) => {
+    // сохранить настройки
+
+    initSettings(_settings);
+  };
 
   const resetSettings = () => {
-    localStorage.removeItem(LOCAL_STORAGE_SETTINGS_FIELD_TITLE);
-
-    settings.value = Object.assign({}, window.CONFIG);
+    // вернуть настройки из кук
   };
+
+  watch(
+    settings,
+    () => {
+      cookies.set('language', settings.value.language);
+      cookies.set('themeColor', settings.value.themeColor);
+    },
+    { deep: true },
+  );
 
   return {
     settings,

@@ -16,7 +16,10 @@ import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import { useResetableRef } from '@/composables/useResetableRef';
 
 export const useBlogStore = defineStore('blog', () => {
-  const { inc, reset: resetCounter, count: page } = useCounter();
+  // TODO: сделать SSR-friendly композабл
+  // const { inc, reset: resetCounter, count: page } = useCounter();
+
+  const pageNumber = ref(0);
   const [isEnd, toggleIsEnd] = useToggle();
 
   const [all, resetAll] = useResetableRef<Array<Post>>([]);
@@ -25,13 +28,13 @@ export const useBlogStore = defineStore('blog', () => {
       if (options.shouldReset) {
         resetAll();
         toggleIsEnd(false);
-        resetCounter();
+        pageNumber.value = 0;
       }
 
-      return _getPosts(page.value).then(({ data: _posts, meta: { isEnd: _isEnd } }): Array<Post> => {
+      return _getPosts(pageNumber.value).then(({ data: _posts, meta: { isEnd: _isEnd } }): Array<Post> => {
         all.value = all.value.concat(_posts);
         toggleIsEnd(_isEnd);
-        inc();
+        pageNumber.value++;
 
         return all.value;
       });
@@ -84,5 +87,7 @@ export const useBlogStore = defineStore('blog', () => {
     hasPosts,
     isEnd,
     editModeFor,
+
+    pageNumber,
   };
 });

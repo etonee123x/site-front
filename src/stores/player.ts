@@ -3,8 +3,11 @@ import { defineStore } from 'pinia';
 import { computed, ref, shallowRef } from 'vue';
 
 import { getRandomExceptCurrentIndex } from '@/utils/getRandomExceptCurrentIndex';
+import { useRoute } from 'vue-router';
 
 export const usePlayerStore = defineStore('player', () => {
+  const route = useRoute();
+
   const theTrack = shallowRef<ItemAudio | null>(null);
 
   const currentPlayingNumber = ref(0);
@@ -12,7 +15,7 @@ export const usePlayerStore = defineStore('player', () => {
   const playlistReal = ref<Array<ItemAudio>>([]);
   const playlistPotential = ref<Array<ItemAudio>>([]);
 
-  const playlistRealHref = ref(window.location.href);
+  const playlistRealHref = ref(route.fullPath);
 
   const isTrackLoaded = computed(() => Boolean(theTrack.value));
 
@@ -27,9 +30,9 @@ export const usePlayerStore = defineStore('player', () => {
   const name = computed(() => theTrack.value?.name);
 
   const loadTrack = (track: ItemAudio) => {
-    if (window.location.href !== playlistRealHref.value || !theTrack.value) {
+    if (route.fullPath !== playlistRealHref.value || !theTrack.value) {
       playlistReal.value = playlistPotential.value;
-      playlistRealHref.value = window.location.href;
+      playlistRealHref.value = route.fullPath;
       historyItems.value = [];
     }
 
@@ -43,7 +46,7 @@ export const usePlayerStore = defineStore('player', () => {
 
   const loadRealPlaylist = (playlist: ItemAudio[]) => {
     playlistReal.value = playlist;
-    playlistRealHref.value = window.location.href;
+    playlistRealHref.value = route.fullPath;
   };
 
   const loadPotentialPlaylist = (playlist: ItemAudio[]) => {

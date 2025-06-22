@@ -1,19 +1,28 @@
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
+import { createSSRApp } from 'vue';
+import { createPinia, setActivePinia } from 'pinia';
 
-import { router } from '@/router';
+import { createRouter } from '@/router';
 import { i18n } from '@/i18n';
-import { useSettingsStore } from '@/stores/settings';
-import { getConfig } from '@/api/config';
 import App from '@/App.vue';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
-getConfig()
-  .then((config) => {
-    window.CONFIG = config;
-  })
-  .catch(console.error)
-  .finally(() => {
-    createApp(App).use(createPinia()).use(router).use(i18n).mount('#app');
+export const createApp = (context: { url?: string } = {}) => {
+  const app = createSSRApp(App);
 
-    useSettingsStore().initSettings();
-  });
+  const pinia = createPinia();
+
+  setActivePinia(pinia);
+  app.use(pinia);
+
+  const router = createRouter();
+
+  app.use(router);
+
+  if (isNotNil(context.url)) {
+    router.push(context.url);
+  }
+
+  app.use(i18n);
+
+  return { app, router, pinia, i18n };
+};

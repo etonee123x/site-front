@@ -1,5 +1,3 @@
-import { client } from '@/api/_client';
-
 export enum ThemeColor {
   Random = 'Random',
   Red = 'Red',
@@ -19,5 +17,3 @@ export interface Settings {
   themeColor: ThemeColor;
   language: Language;
 }
-
-export const getConfig = () => client<Settings>('/config.json', { baseURL: '' });

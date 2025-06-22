@@ -4,7 +4,11 @@ import { useAuthStore } from '@/stores/auth';
 import { TOKEN } from '@/constants';
 
 export const checkAuth: NavigationGuard = async () => {
-  if (!localStorage.getItem(TOKEN)) {
+  if (import.meta.env.SSR) {
+    return;
+  }
+
+  if (!globalThis.localStorage.getItem(TOKEN)) {
     return;
   }
 

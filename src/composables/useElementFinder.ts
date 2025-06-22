@@ -4,6 +4,10 @@ import { useMutationObserver, useDebounceFn } from '@vueuse/core';
 export const useElementFinder = (getElement: () => HTMLElement | null) => {
   const element = shallowRef<HTMLElement | null>(null);
 
+  if (import.meta.env.SSR) {
+    return element;
+  }
+
   const update = useDebounceFn(() => {
     element.value = getElement();
   }, 100);

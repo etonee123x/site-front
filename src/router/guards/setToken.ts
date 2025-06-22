@@ -10,7 +10,7 @@ export const setToken: NavigationGuard = async (...[to, , next]) => {
     return;
   }
 
-  localStorage.setItem(TOKEN, String(maybeToken));
+  globalThis.localStorage.setItem(TOKEN, String(maybeToken));
 
   next({
     ...to,
