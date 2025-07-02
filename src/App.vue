@@ -26,16 +26,24 @@ import { MAIN } from '@/constants/selectors';
 import { useSettingsStore } from '@/stores/settings';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
+import { isServer, KEY_JWT } from '@/constants';
+import { useRoute, useRouter } from 'vue-router';
+import { isString } from '@etonee123x/shared/utils/isString';
+import { useAuthStore } from '@/stores/auth';
+import { omit } from '@etonee123x/shared/utils/omit';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
+
+const router = useRouter();
+const route = useRoute();
 
 const playerStore = usePlayerStore();
 const toastsStore = useToastsStore();
 
 const settingsStore = useSettingsStore();
 
-if (import.meta.env.SSR) {
+if (isServer) {
   const ssrContext = useSSRContext() ?? throwError();
 
   settingsStore.initSettings(ssrContext.settings);
@@ -46,5 +54,15 @@ if (import.meta.env.SSR) {
       class: themeColorToThemeColorClass(settingsStore.settings.themeColor),
     },
   });
+}
+
+const maybeJwt = route.query[KEY_JWT];
+
+const authStore = useAuthStore();
+
+authStore.postAuth(maybeJwt?.toString());
+
+if (isString(maybeJwt)) {
+  router.push({ ...route, query: omit(route.query, [KEY_JWT]) });
 }
 </script>

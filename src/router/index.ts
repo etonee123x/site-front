@@ -1,7 +1,6 @@
 import { createMemoryHistory, createRouter as _createRouter, createWebHistory } from 'vue-router';
 
-import { checkAuth } from './guards/checkAuth';
-import { setToken } from './guards/setToken';
+import { isServer } from '@/constants';
 
 export enum RouteName {
   Explorer = 'Explorer',
@@ -12,8 +11,8 @@ export enum RouteName {
   Page404 = 'Page404',
 }
 
-export const createRouter = () => {
-  const router = _createRouter({
+export const createRouter = () =>
+  _createRouter({
     routes: [
       {
         name: RouteName.Explorer,
@@ -46,11 +45,5 @@ export const createRouter = () => {
         component: () => import('@/views/Page404'),
       },
     ],
-    history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory('/'),
+    history: isServer ? createMemoryHistory() : createWebHistory('/'),
   });
-
-  router.beforeEach(setToken);
-  router.beforeEach(checkAuth);
-
-  return router;
-};

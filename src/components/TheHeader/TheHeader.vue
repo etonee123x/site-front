@@ -39,7 +39,6 @@ import { useI18n } from 'vue-i18n';
 
 import DialogSettings from './components/DialogSettings.vue';
 
-import { logout } from '@/helpers/logout';
 import BaseIcon from '@/components/ui/BaseIcon';
 import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
@@ -66,7 +65,7 @@ const icons = computed(() => [
         {
           id: 0,
           path: mdiLogout,
-          onClick: logout,
+          onClick: authStore.deleteAuth,
         },
       ]
     : []),

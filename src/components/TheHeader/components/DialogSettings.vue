@@ -27,7 +27,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useSettingsStore } from '@/stores/settings';
@@ -36,7 +36,6 @@ import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
 import { Language, ThemeColor } from '@/constants/settings';
 import { isDevelopment } from '@/helpers/mode';
-import { TOKEN } from '@/constants';
 import { useAuthStore } from '@/stores/auth';
 import { useResetableRef } from '@/composables/useResetableRef';
 
@@ -60,19 +59,17 @@ const onClickResetSettings = () => {
   resetModel();
 };
 
-const onClickAuthorize = () => {
+const onClickAuthorize = async () => {
   if (!isDevelopment) {
     return;
   }
 
-  globalThis.localStorage.setItem(TOKEN, 'dev-jwt');
-  authStore.getAuthData();
+  await authStore.postAuth('dev-jwt');
   baseDialog.value?.close();
 };
 
 defineExpose({
   open: () => baseDialog.value?.open(),
   close: () => baseDialog.value?.close(),
-  isOpened: computed(() => baseDialog.value?.isOpened),
 });
 </script>

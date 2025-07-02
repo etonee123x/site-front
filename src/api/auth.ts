@@ -8,4 +8,6 @@ export interface AuthData {
   role: Role;
 }
 
-export const getAuthData = () => client<AuthData>(`/auth`);
+export const postAuth = (jwt?: string) => client<AuthData>(`/auth`, { method: 'POST', query: { jwt } });
+
+export const deleteAuth = () => client<void>(`/auth`, { method: 'DELETE' });

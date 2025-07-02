@@ -1,10 +1,11 @@
 import { shallowRef } from 'vue';
 import { useMutationObserver, useDebounceFn } from '@vueuse/core';
+import { isServer } from '@/constants';
 
 export const useElementFinder = (getElement: () => HTMLElement | null) => {
   const element = shallowRef<HTMLElement | null>(null);
 
-  if (import.meta.env.SSR) {
+  if (isServer) {
     return element;
   }
 

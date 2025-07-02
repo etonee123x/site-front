@@ -9,6 +9,8 @@
   --color-text: black;
 
   --color-background: white;
+
+  --z-index-modal: 1000;
 }
 
 @theme inline {
@@ -74,7 +76,7 @@
 
 
   hr {
-    @apply m-0 border-none bg-dark min-h-[1px] min-w-[1px];
+    @apply m-0 border-none bg-dark min-h-px min-w-px;
     margin: 0;
   }
 
@@ -282,6 +284,19 @@
     &.explorerElement_folder {
       @apply bg-folders;
       @apply hover:bg-folders-hovered hover:text-[initial];
+    }
+  }
+
+  .dialog {
+    @apply fixed inset-0 m-auto p-0 z-modal;
+
+    .dialog__content {
+      scrollbar-gutter: stable_both-edges;
+      @apply p-4 flex flex-col w-full bg-background border border-details-500 outline-hidden rounded-lg;
+    }
+
+    .dialog__backdrop {
+      @apply fixed inset-0 bg-dark/35 -z-[1];
     }
   }
 }

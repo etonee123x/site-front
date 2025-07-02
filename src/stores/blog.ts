@@ -2,7 +2,7 @@ import type { Id } from '@etonee123x/shared/helpers/id';
 import type { Post, PostData } from '@etonee123x/shared/types/blog';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { useCounter, useToggle } from '@vueuse/core';
+import { useToggle } from '@vueuse/core';
 
 import {
   getPosts as _getPosts,

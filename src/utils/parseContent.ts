@@ -1,3 +1,4 @@
+import { isServer } from '@/constants';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { useSSRContext } from 'vue';
 
@@ -7,7 +8,7 @@ export const parseContent = (content: string | undefined): string => {
   const replaceLinks: FunctionReplacer = (content) => {
     const URL_REGEXP = /(?<=\W|^)https?:\/\/(www\.)?[a-zA-Z0-9-:._/%]+(\?[-a-zA-Z0-9=]+(?=\W|$))?/;
 
-    const origin = import.meta.env.SSR ? (useSSRContext() ?? throwError()).origin : globalThis.location.origin;
+    const origin = isServer ? (useSSRContext() ?? throwError()).origin : globalThis.location.origin;
 
     return content.replace(
       URL_REGEXP,

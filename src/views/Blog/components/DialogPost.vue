@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog isHiddenHeader style="height: min-content" ref="baseDialog" @close="onDialogClose">
+  <BaseDialog isHiddenHeader style="height: min-content" ref="baseDialog" v-model="isDialogOpen" @close="onDialogClose">
     <LazyPostData v-if="blogStore.byId" :post="blogStore.byId" />
     <template #footer>
       <PostDataFooter v-if="blogStore.byId" class="sticky bottom-0 -mb-4 py-4 bg-background" :post="blogStore.byId">
@@ -33,6 +33,7 @@ import { useBlogStore } from '@/stores/blog';
 import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
+import { useToggle } from '@vueuse/core';
 
 const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
 
@@ -47,6 +48,8 @@ const blogStore = useBlogStore();
 const { format } = useDateFns();
 
 const baseDialog = useTemplateRef('baseDialog');
+
+const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 
 const dates = computed(() =>
   blogStore.byId
@@ -68,6 +71,6 @@ const onDialogClose = () => {
 
 watch(
   () => blogStore.byId,
-  () => (blogStore.byId ? baseDialog.value?.open() : baseDialog.value?.close()),
+  () => toggleIsDialogOpen(Boolean(blogStore.byId)),
 );
 </script>

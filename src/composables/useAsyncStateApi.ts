@@ -2,8 +2,8 @@ import { useLoadingStore } from '@/stores/loading';
 import type { FetchError } from 'ofetch';
 import { computed, ref, useSSRContext } from 'vue';
 import { useResetableRef } from '@/composables/useResetableRef';
-import { logout } from '@/helpers/logout';
 import { throwError } from '@etonee123x/shared/utils/throwError';
+import { isServer } from '@/constants';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Params extends Array<any> = []>(
@@ -24,7 +24,9 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
   const _execute = async (...parameters: Params): Promise<Data> => {
     const key = [requestFunction.name, ...parameters].join(':');
 
-    if (import.meta.env.SSR) {
+    console.log(key);
+
+    if (isServer) {
       const ssrContext = useSSRContext() ?? throwError();
 
       if (!ssrContext.payload[key]) {
@@ -64,13 +66,6 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
   };
 
   const _onError = (error: FetchError<Data>) => {
-    // переменную shouldLogout не опускать, она нужна для инкапсуляции
-    const shouldLogout = error.status === 401;
-
-    if (shouldLogout) {
-      logout();
-    }
-
     throw error;
   };
 
