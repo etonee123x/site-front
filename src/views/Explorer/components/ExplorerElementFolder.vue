@@ -13,12 +13,3 @@ defineProps<{
   element: ItemFolder;
 }>();
 </script>
-
-<style>
-@import '../assets/styles/explorerElement.css';
-
-.explorerElement.explorerElement_folder {
-  @apply bg-folders;
-  @apply hover:bg-folders-hovered hover:text-[initial];
-}
-</style>

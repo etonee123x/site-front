@@ -60,9 +60,8 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog, useInfiniteScroll } from '@vueuse/core';
-import { defineAsyncComponent, watch, computed, useTemplateRef } from 'vue';
+import { defineAsyncComponent, computed, useTemplateRef, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { isNil } from '@etonee123x/shared/utils/isNil';
 import { toId } from '@etonee123x/shared/helpers/id';
 
 import DialogPost from './components/DialogPost.vue';
@@ -77,6 +76,8 @@ import { useElementFinder } from '@/composables/useElementFinder';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useResetableRef } from '@/composables/useResetableRef';
 import { onPostTextareaKeyDownEnter } from './helpers/onPostTextareaKeyDownEnter';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import { isServer } from '@/constants/target';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -102,7 +103,7 @@ const hasPosts = computed(() => Boolean(blogStore.all.length));
 
 const elementMain = useElementFinder(() => document.getElementById(MAIN));
 
-useInfiniteScroll(elementMain, () => new Promise((resolve) => blogStore.getAll().then(() => resolve())), {
+useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
   canLoadMore: () => !blogStore.isEnd,
   distance: 100,
 });
@@ -139,19 +140,28 @@ const onBeforeDelete = async () => {
   return !isCanceled;
 };
 
-watch(
-  () => route.params.postId,
-  () => {
-    if (isNil(route.params.postId)) {
+await Promise.all([
+  blogStore.getAll(),
+  ...(isNotNil(route.params.postId)
+    ? [
+        //
+        blogStore.getById(toId(String(route.params.postId))).catch(goToPage404),
+      ]
+    : []),
+]);
+
+if (!isServer) {
+  watch(
+    () => route.params.postId,
+    async () => {
+      if (isNotNil(route.params.postId)) {
+        await blogStore.getById(toId(String(route.params.postId)));
+
+        return;
+      }
+
       blogStore.byId = undefined;
-
-      return;
-    }
-
-    blogStore.getById(toId(String(route.params.postId))).catch(goToPage404);
-  },
-  {
-    immediate: true,
-  },
-);
+    },
+  );
+}
 </script>

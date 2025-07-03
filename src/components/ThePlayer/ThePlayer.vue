@@ -140,7 +140,7 @@ const onClickClose = playerStore.unloadTrack;
 const onSwiped = playerStore.unloadTrack;
 
 const urlFull = computed(() => {
-  let _url = [window.location.origin, playerStore.url].join('');
+  let _url = [globalThis.location.origin, playerStore.url].join('');
 
   try {
     _url = encodeURI(_url);

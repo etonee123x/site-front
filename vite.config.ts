@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
 import tailwindcss from '@tailwindcss/vite';
+import VueDevTools from 'vite-plugin-vue-devtools';
 
 export default defineConfig({
   resolve: {
@@ -11,6 +12,6 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
     },
   },
-  plugins: [vue(), VueI18nPlugin({}), tailwindcss()],
+  plugins: [VueDevTools(), vue(), VueI18nPlugin({}), tailwindcss()],
   publicDir: 'public',
 });

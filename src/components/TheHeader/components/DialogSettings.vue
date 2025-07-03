@@ -27,18 +27,17 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { useSettingsStore } from '@/stores/settings';
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
-import { Language, ThemeColor } from '@/api/config';
-import { isDevelopment } from '@/helpers/mode';
-import { TOKEN } from '@/constants';
+import { Language, ThemeColor } from '@/constants/settings';
 import { useAuthStore } from '@/stores/auth';
 import { useResetableRef } from '@/composables/useResetableRef';
+import { isDevelopment } from '@/constants/mode';
 
 const authStore = useAuthStore();
 
@@ -50,11 +49,7 @@ const { t } = useI18n({ useScope: 'local' });
 
 const [model, resetModel] = useResetableRef(() => settingsStore.settings);
 
-const onConfirm = () => {
-  settingsStore.settings = model.value;
-
-  settingsStore.saveSettings();
-};
+const onConfirm = () => settingsStore.saveSettings(model.value);
 
 const onClose = resetModel;
 
@@ -64,19 +59,17 @@ const onClickResetSettings = () => {
   resetModel();
 };
 
-const onClickAuthorize = () => {
+const onClickAuthorize = async () => {
   if (!isDevelopment) {
     return;
   }
 
-  localStorage.setItem(TOKEN, 'dev-jwt');
-  authStore.getAuthData();
+  await authStore.postAuth('dev-jwt');
   baseDialog.value?.close();
 };
 
 defineExpose({
   open: () => baseDialog.value?.open(),
   close: () => baseDialog.value?.close(),
-  isOpened: computed(() => baseDialog.value?.isOpened),
 });
 </script>

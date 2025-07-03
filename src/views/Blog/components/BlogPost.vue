@@ -68,9 +68,10 @@ import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidateBlogPostData } from '../composables/useVuelidateBlogPostData';
 import { useAuthStore } from '@/stores/auth';
-import { RouteName, router } from '@/router';
+import { RouteName } from '@/router';
 import { ICON } from '@/helpers/ui';
 import { onPostTextareaKeyDownEnter } from '../helpers/onPostTextareaKeyDownEnter';
+import { useRouter } from 'vue-router';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -84,6 +85,8 @@ const props = defineProps<{
 
 const root = useTemplateRef('root');
 const blogEditPost = useTemplateRef('blogEditPost');
+
+const router = useRouter();
 
 onClickOutside(root, () => {
   if (!isInEditMode.value) {

@@ -75,7 +75,7 @@ const onTouchEnd = () => {
   }
 
   style.transition = `all ${props.disapearDelay}ms`;
-  style.transform = `translateX(${window.innerWidth * (wasSwipedLeft ? -1 : 1)}px)`;
+  style.transform = `translateX(${globalThis.innerWidth * (wasSwipedLeft ? -1 : 1)}px)`;
 
   setTimeout(() => emit('swiped'), Number(props.disapearDelay));
 };
