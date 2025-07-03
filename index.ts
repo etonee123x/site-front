@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { readFile } from 'node:fs/promises';
+import { readFile, access } from 'node:fs/promises';
 import express, { type Request } from 'express';
 import type { ViteDevServer } from 'vite';
 import cookieParser from 'cookie-parser';
@@ -12,6 +12,8 @@ import { type Settings } from './src/constants/settings';
 import { postAuth } from './src/api/auth';
 import { isString } from '@etonee123x/shared/utils/isString';
 import { isProduction } from './src/constants/mode';
+import http from 'http';
+import https from 'https';
 
 // Constants
 const port = process.env.PORT || 5173;
@@ -110,5 +112,28 @@ app.use(
   },
 );
 
-// Start http server
-app.listen(port, () => console.info(`Server started at http://localhost:${port}`));
+const pathToCert = process.env.PATH_TO_CERT;
+const pathToKey = process.env.PATH_TO_KEY;
+
+if (pathToCert && pathToKey) {
+  Promise.all([
+    access(pathToCert).then(() => readFile(pathToCert, 'utf-8')),
+    access(pathToKey).then(() => readFile(pathToKey, 'utf-8')),
+  ])
+    .then(([cert, key]) => {
+      https
+        .createServer({ key, cert }, app)
+        .once('listening', () => console.info(`HTTPS server is listening`))
+        .listen(port)
+        .on('error', (error) => console.error('Failed to start HTTPS server due to:', error));
+    })
+    .catch((error) => console.error('Failed to start HTTPS server due to:', error));
+} else {
+  console.warn('HTTPS server was not started because the certificate paths are missing');
+
+  http
+    .createServer(app)
+    .once('listening', () => console.info(`HTTP server is listening`))
+    .listen(port)
+    .on('error', (error) => console.error('Failed to start HTTP server due to:', error));
+}
