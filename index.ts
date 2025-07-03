@@ -1,12 +1,16 @@
+import 'dotenv/config';
+
 import { readFile } from 'node:fs/promises';
-import express, { Request } from 'express';
-import { ViteDevServer } from 'vite';
+import express, { type Request } from 'express';
+import type { ViteDevServer } from 'vite';
 import cookieParser from 'cookie-parser';
-import { type render as IRender } from './src/entryServer';
+import { type render as IRender } from '@/entryServer';
 import { transformHtmlTemplate } from '@unhead/vue/server';
 import { resolve } from 'path';
 import { pick } from '@etonee123x/shared/utils/pick';
-import { Settings } from './src/constants/settings';
+import { type Settings } from '@/constants/settings';
+import { postAuth } from '@/api/auth';
+import { isString } from '@etonee123x/shared/utils/isString';
 
 // Constants
 const isProduction = process.env.NODE_ENV === 'production';
@@ -26,11 +30,7 @@ let vite: ViteDevServer;
 if (!isProduction) {
   const { createServer } = await import('vite');
 
-  vite = await createServer({
-    server: { middlewareMode: true },
-    appType: 'custom',
-    base,
-  });
+  vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', base });
   app.use(vite.middlewares);
 } else {
   const compression = (await import('compression')).default;
@@ -50,6 +50,12 @@ app.use(
     response,
   ) => {
     try {
+      if (isString(request.query.token)) {
+        const cookies = await postAuth(request.query.token);
+
+        response.setHeader('Set-Cookie', cookies);
+      }
+
       const url = request.originalUrl.replace(base, '');
 
       let template: string;
@@ -59,7 +65,7 @@ app.use(
         // Always read fresh template in development
         template = await readFile('index.html', 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('/src/entryServer.ts')).render;
+        render = (await vite.ssrLoadModule('./src/entryServer.ts')).render;
       } else {
         template = templateHtml;
         render = (await import('./dist/server/entryServer.js')).render;
@@ -75,15 +81,11 @@ app.use(
       request.settings = settings;
 
       response.cookie('language', settings.language, {
-        path: '/',
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 365,
+        maxAge: 365 * 24 * 60 * 60 * 1000,
       });
 
       response.cookie('themeColor', settings.themeColor, {
-        path: '/',
-        httpOnly: false,
-        maxAge: 60 * 60 * 24 * 365,
+        maxAge: 365 * 24 * 60 * 60 * 1000,
       });
 
       const rendered = await render(url, request);

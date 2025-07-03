@@ -1,13 +1,8 @@
 import { client } from '@/api/_client';
 
-export enum Role {
-  Admin = 'Admin',
-}
-
-export interface AuthData {
-  role: Role;
-}
-
-export const postAuth = (jwt?: string) => client<AuthData>(`/auth`, { method: 'POST', query: { jwt } });
+export const postAuth = (jwt?: string) =>
+  client
+    .raw<void>(`/auth`, { method: 'POST', query: { jwt } }) //
+    .then((r) => r.headers.getSetCookie());
 
 export const deleteAuth = () => client<void>(`/auth`, { method: 'DELETE' });

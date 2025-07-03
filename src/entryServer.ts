@@ -32,6 +32,7 @@ export const render = async (
 
   const context = {
     origin,
+    request,
     settings: request.settings ?? throwError(),
     payload: {},
     teleports: {},

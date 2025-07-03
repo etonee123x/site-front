@@ -1,8 +1,11 @@
+import { isServer } from '@/constants';
 import { createFetch } from 'ofetch';
+
+const baseURL = isServer ? process.env.VITE_API_URL : import.meta.env.VITE_API_URL;
 
 export const client = createFetch({
   defaults: {
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL,
     credentials: 'include',
   },
 });

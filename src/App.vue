@@ -26,17 +26,10 @@ import { MAIN } from '@/constants/selectors';
 import { useSettingsStore } from '@/stores/settings';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
-import { isServer, KEY_JWT } from '@/constants';
-import { useRoute, useRouter } from 'vue-router';
-import { isString } from '@etonee123x/shared/utils/isString';
-import { useAuthStore } from '@/stores/auth';
-import { omit } from '@etonee123x/shared/utils/omit';
+import { isServer } from '@/constants';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
-
-const router = useRouter();
-const route = useRoute();
 
 const playerStore = usePlayerStore();
 const toastsStore = useToastsStore();
@@ -54,15 +47,5 @@ if (isServer) {
       class: themeColorToThemeColorClass(settingsStore.settings.themeColor),
     },
   });
-}
-
-const maybeJwt = route.query[KEY_JWT];
-
-const authStore = useAuthStore();
-
-authStore.postAuth(maybeJwt?.toString());
-
-if (isString(maybeJwt)) {
-  router.push({ ...route, query: omit(route.query, [KEY_JWT]) });
 }
 </script>
