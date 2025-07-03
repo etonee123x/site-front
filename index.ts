@@ -98,10 +98,14 @@ app.use(
       );
 
       response.status(200).set({ 'Content-Type': 'text/html' }).send(html);
-    } catch (e) {
-      vite?.ssrFixStacktrace(e);
-      console.error(e.stack);
-      response.status(500).end(e.stack);
+    } catch (error) {
+      if (!(error instanceof Error)) {
+        return console.error('Unknown error', error);
+      }
+
+      vite?.ssrFixStacktrace(error);
+      console.error(error.stack);
+      response.status(500).end(error.stack);
     }
   },
 );

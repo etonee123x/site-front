@@ -29,11 +29,16 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "index.ts",
+    "vite.config.ts"
   ],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  // "references": [
+  //   // {
+  //   //   "path": "./tsconfig.node.json"
+  //   // },
+  //   // {
+  //   //   "path": "./tsconfig.app.json"
+  //   // }
+  // ]
 }

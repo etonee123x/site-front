@@ -13,16 +13,7 @@ export const render = async (
 ) => {
   const { app, router, pinia } = createApp({ url });
 
-  const head = createHead({
-    init: [
-      {
-        link: [
-          { rel: 'icon', href: '/favicon.ico' },
-          { rel: 'stylesheet', type: 'text/css', href: '/src/assets/styles/index.css' },
-        ],
-      },
-    ],
-  });
+  const head = createHead();
 
   app.use(head);
 
