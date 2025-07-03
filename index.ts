@@ -4,14 +4,14 @@ import { readFile } from 'node:fs/promises';
 import express, { type Request } from 'express';
 import type { ViteDevServer } from 'vite';
 import cookieParser from 'cookie-parser';
-import { type render as IRender } from '@/entryServer';
+import { type render as IRender } from './src/entryServer';
 import { transformHtmlTemplate } from '@unhead/vue/server';
 import { resolve } from 'path';
 import { pick } from '@etonee123x/shared/utils/pick';
-import { type Settings } from '@/constants/settings';
-import { postAuth } from '@/api/auth';
+import { type Settings } from './src/constants/settings';
+import { postAuth } from './src/api/auth';
 import { isString } from '@etonee123x/shared/utils/isString';
-import { isProduction } from '@/constants/mode';
+import { isProduction } from './src/constants/mode';
 
 // Constants
 const port = process.env.PORT || 5173;
