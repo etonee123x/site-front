@@ -1,4 +1,4 @@
-import { isServer } from '@/constants';
+import { isServer } from '@/constants/target';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { useSSRContext } from 'vue';
 

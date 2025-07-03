@@ -8,7 +8,7 @@ import { useCookies } from '@vueuse/integrations/useCookies';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
 import { THEME_COLOR } from '@/helpers/ui';
-import { isServer } from '@/constants';
+import { isServer } from '@/constants/target';
 
 const LANGUAGE_TO_DATE_FNS_LOCALE = Object.freeze({
   [Language.En]: enGB,

@@ -1,6 +1,6 @@
 import { shallowRef } from 'vue';
 import { useMutationObserver, useDebounceFn } from '@vueuse/core';
-import { isServer } from '@/constants';
+import { isServer } from '@/constants/target';
 
 export const useElementFinder = (getElement: () => HTMLElement | null) => {
   const element = shallowRef<HTMLElement | null>(null);

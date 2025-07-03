@@ -1,6 +1,6 @@
 import { createMemoryHistory, createRouter as _createRouter, createWebHistory } from 'vue-router';
 
-import { isServer } from '@/constants';
+import { isServer } from '@/constants/target';
 
 export enum RouteName {
   Explorer = 'Explorer',

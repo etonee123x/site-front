@@ -5,27 +5,29 @@ import { postAuth as _postAuth, deleteAuth as _deleteAuth } from '@/api/auth';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import { useCookies } from '@vueuse/integrations/useCookies.mjs';
 import { isString } from '@etonee123x/shared/utils/isString';
-import { isModeDevelopment, isServer } from '@/constants';
 import { jsonParse } from '@etonee123x/shared/utils/jsonParse';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { isRealObject } from '@etonee123x/shared/utils/isRealObject';
+import { KEY_JWT } from '@/constants/keys';
+import { isDevelopment } from '@/constants/mode';
+import { isServer } from '@/constants/target';
 
 export const useAuthStore = defineStore('auth', () => {
-  const cookies = useCookies(['jwt']);
+  const cookies = useCookies([KEY_JWT]);
 
   const { execute: postAuth, isLoading: isLoadingPostAuth } = useAsyncStateApi(_postAuth);
   const { execute: deleteAuth, isLoading: isLoadingDeleteAuth } = useAsyncStateApi(_deleteAuth);
 
   const isAdmin = computed(() => {
     const cookieJwt = isServer //
-      ? (useSSRContext() ?? throwError()).request.cookies.jwt
-      : cookies.get('jwt');
+      ? (useSSRContext() ?? throwError()).request.cookies[KEY_JWT]
+      : cookies.get(KEY_JWT);
 
     if (!isString(cookieJwt)) {
       return false;
     }
 
-    if (cookieJwt === 'dev-jwt' && isModeDevelopment) {
+    if (cookieJwt === 'dev-jwt' && isDevelopment) {
       return true;
     }
 

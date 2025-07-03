@@ -11,9 +11,9 @@ import { pick } from '@etonee123x/shared/utils/pick';
 import { type Settings } from '@/constants/settings';
 import { postAuth } from '@/api/auth';
 import { isString } from '@etonee123x/shared/utils/isString';
+import { isProduction } from '@/constants/mode';
 
 // Constants
-const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 5173;
 const base = process.env.BASE || '/';
 
@@ -27,17 +27,17 @@ app.use(cookieParser());
 
 let vite: ViteDevServer;
 
-if (!isProduction) {
-  const { createServer } = await import('vite');
-
-  vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', base });
-  app.use(vite.middlewares);
-} else {
+if (isProduction) {
   const compression = (await import('compression')).default;
   const sirv = (await import('sirv')).default;
 
   app.use(compression());
   app.use(base, sirv('./dist/client', { extensions: [] }));
+} else {
+  const { createServer } = await import('vite');
+
+  vite = await createServer({ server: { middlewareMode: true }, appType: 'custom', base });
+  app.use(vite.middlewares);
 }
 
 // Serve HTML
@@ -61,14 +61,14 @@ app.use(
       let template: string;
       let render: typeof IRender;
 
-      if (!isProduction) {
+      if (isProduction) {
+        template = templateHtml;
+        render = (await import('./dist/server/entryServer.js')).render;
+      } else {
         // Always read fresh template in development
         template = await readFile('index.html', 'utf-8');
         template = await vite.transformIndexHtml(url, template);
         render = (await vite.ssrLoadModule('./src/entryServer.ts')).render;
-      } else {
-        template = templateHtml;
-        render = (await import('./dist/server/entryServer.js')).render;
       }
 
       const initialSettings = JSON.parse(await readFile(resolve('./public/settings.json'), 'utf-8'));

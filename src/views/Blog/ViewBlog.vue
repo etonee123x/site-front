@@ -77,7 +77,7 @@ import DialogConfirmation from '@/components/DialogConfirmation.vue';
 import { useResetableRef } from '@/composables/useResetableRef';
 import { onPostTextareaKeyDownEnter } from './helpers/onPostTextareaKeyDownEnter';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
-import { isServer } from '@/constants';
+import { isServer } from '@/constants/target';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));

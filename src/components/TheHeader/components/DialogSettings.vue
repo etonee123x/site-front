@@ -35,9 +35,9 @@ import BaseDialog from '@/components/ui/BaseDialog.vue';
 import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
 import { Language, ThemeColor } from '@/constants/settings';
-import { isDevelopment } from '@/helpers/mode';
 import { useAuthStore } from '@/stores/auth';
 import { useResetableRef } from '@/composables/useResetableRef';
+import { isDevelopment } from '@/constants/mode';
 
 const authStore = useAuthStore();
 

@@ -26,7 +26,7 @@ import { MAIN } from '@/constants/selectors';
 import { useSettingsStore } from '@/stores/settings';
 import { throwError } from '@etonee123x/shared/utils/throwError';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
-import { isServer } from '@/constants';
+import { isServer } from '@/constants/target';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
