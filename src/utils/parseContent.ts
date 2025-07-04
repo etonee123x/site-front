@@ -1,6 +1,7 @@
 import { isServer } from '@/constants/target';
-import { throwError } from '@etonee123x/shared/utils/throwError';
 import { useSSRContext } from 'vue';
+import { requestToOrigin } from '@/utils/requestToOrigin';
+import { nonNullable } from './nonNullable';
 
 export const parseContent = (content: string | undefined): string => {
   type FunctionReplacer = (content: string) => string;
@@ -8,7 +9,7 @@ export const parseContent = (content: string | undefined): string => {
   const replaceLinks: FunctionReplacer = (content) => {
     const URL_REGEXP = /(?<=\W|^)https?:\/\/(www\.)?[a-zA-Z0-9-:._/%]+(\?[-a-zA-Z0-9=]+(?=\W|$))?/;
 
-    const origin = isServer ? (useSSRContext() ?? throwError()).origin : globalThis.location.origin;
+    const origin = isServer ? requestToOrigin(nonNullable(useSSRContext()).request) : globalThis.location.origin;
 
     return content.replace(
       URL_REGEXP,

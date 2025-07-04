@@ -6,11 +6,11 @@ import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import { useCookies } from '@vueuse/integrations/useCookies.mjs';
 import { isString } from '@etonee123x/shared/utils/isString';
 import { jsonParse } from '@etonee123x/shared/utils/jsonParse';
-import { throwError } from '@etonee123x/shared/utils/throwError';
 import { isRealObject } from '@etonee123x/shared/utils/isRealObject';
 import { KEY_JWT } from '@/constants/keys';
 import { isDevelopment } from '@/constants/mode';
 import { isServer } from '@/constants/target';
+import { nonNullable } from '@/utils/nonNullable';
 
 export const useAuthStore = defineStore('auth', () => {
   const cookies = useCookies([KEY_JWT]);
@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAdmin = computed(() => {
     const cookieJwt = isServer //
-      ? (useSSRContext() ?? throwError()).request.cookies[KEY_JWT]
+      ? nonNullable(useSSRContext()).request.locals.cookies[KEY_JWT]
       : cookies.get(KEY_JWT);
 
     if (!isString(cookieJwt)) {
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
       return true;
     }
 
-    const maybePayloadBase64 = cookieJwt.split('.')[1] ?? throwError();
+    const maybePayloadBase64 = nonNullable(cookieJwt.split('.')[1]);
 
     const parseBase64Payload =
       'atob' in globalThis ? globalThis.atob : (input: string) => Buffer.from(input, 'base64').toString('utf-8');

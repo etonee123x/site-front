@@ -5,10 +5,10 @@ import { enGB, ru } from 'date-fns/locale';
 import { i18n } from '@/i18n';
 import { Language, ThemeColor, type Settings } from '@/constants/settings';
 import { useCookies } from '@vueuse/integrations/useCookies';
-import { throwError } from '@etonee123x/shared/utils/throwError';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
 import { THEME_COLOR } from '@/helpers/ui';
 import { isServer } from '@/constants/target';
+import { nonNullable } from '@/utils/nonNullable';
 
 const LANGUAGE_TO_DATE_FNS_LOCALE = Object.freeze({
   [Language.En]: enGB,
@@ -60,7 +60,7 @@ export const useSettingsStore = defineStore('settings', () => {
     if (themeColor === ThemeColor.Random) {
       const colorsWithoutRandom = Object.values(ThemeColor).filter((themeColor) => themeColor !== ThemeColor.Random);
 
-      color = colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)] ?? throwError();
+      color = nonNullable(colorsWithoutRandom[Math.floor(Math.random() * colorsWithoutRandom.length)]);
     }
 
     const bodyClassList = document.querySelector('body')?.classList;

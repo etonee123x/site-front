@@ -2,13 +2,12 @@ import { renderToString } from 'vue/server-renderer';
 import { createApp } from './main';
 import type { Request } from 'express';
 import { createHead } from '@unhead/vue/server';
-import type { Settings } from './constants/settings';
-import { throwError } from '@etonee123x/shared/utils/throwError';
+import type { Locals } from '@/types';
 
 export const render = async (
   url: string,
   request: Request & {
-    settings?: Settings;
+    locals?: Locals;
   },
 ) => {
   const { app, router, pinia } = createApp({ url });
@@ -19,12 +18,8 @@ export const render = async (
 
   await router.isReady();
 
-  const origin = `${request.protocol}://${request.get('host')}`;
-
   const context = {
-    origin,
     request,
-    settings: request.settings ?? throwError(),
     payload: {},
     teleports: {},
   };

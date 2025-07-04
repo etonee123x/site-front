@@ -1,7 +1,7 @@
 import { ThemeColor } from '@/constants/settings';
 import { THEME_COLOR } from '@/helpers/ui';
+import { nonNullable } from '@/utils/nonNullable';
 import { checkExhaustive } from '@etonee123x/shared/utils/checkExhaustive';
-import { throwError } from '@etonee123x/shared/utils/throwError';
 
 export const themeColorToThemeColorClass = (themeColor: ThemeColor) => {
   const colors = [
@@ -27,7 +27,7 @@ export const themeColorToThemeColorClass = (themeColor: ThemeColor) => {
     case ThemeColor.Red:
       return THEME_COLOR.RED;
     case ThemeColor.Random:
-      return colors[Math.floor(Math.random() * colors.length)] ?? throwError();
+      return nonNullable(colors[Math.floor(Math.random() * colors.length)]);
     default:
       throw checkExhaustive(themeColor);
   }

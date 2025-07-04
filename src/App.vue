@@ -24,9 +24,9 @@ import TheFooter from '@/components/TheFooter';
 import TheDialogGallery from '@/components/TheDialogGallery.vue';
 import { MAIN } from '@/constants/selectors';
 import { useSettingsStore } from '@/stores/settings';
-import { throwError } from '@etonee123x/shared/utils/throwError';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
 import { isServer } from '@/constants/target';
+import { nonNullable } from '@/utils/nonNullable';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
@@ -37,9 +37,9 @@ const toastsStore = useToastsStore();
 const settingsStore = useSettingsStore();
 
 if (isServer) {
-  const ssrContext = useSSRContext() ?? throwError();
+  const ssrContext = nonNullable(useSSRContext());
 
-  settingsStore.initSettings(ssrContext.settings);
+  settingsStore.initSettings(ssrContext.request.locals.settings);
 
   useHead({
     title: String(import.meta.env.VITE_SITE_TITLE),

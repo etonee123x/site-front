@@ -4,16 +4,18 @@ import { readFile, access } from 'node:fs/promises';
 import express, { type Request } from 'express';
 import type { ViteDevServer } from 'vite';
 import cookieParser from 'cookie-parser';
-import { type render as IRender } from './src/entryServer';
+import { type render as Render } from './src/entryServer';
 import { transformHtmlTemplate } from '@unhead/vue/server';
 import { resolve } from 'path';
 import { pick } from '@etonee123x/shared/utils/pick';
-import { type Settings } from './src/constants/settings';
 import { postAuth } from './src/api/auth';
-import { isString } from '@etonee123x/shared/utils/isString';
 import { isProduction } from './src/constants/mode';
+import { KEY_JWT } from './src/constants/keys';
 import http from 'http';
 import https from 'https';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import Cookies from 'universal-cookie';
+import { type Locals } from './src/types';
 
 // Constants
 const port = process.env.PORT || 5173;
@@ -47,21 +49,38 @@ app.use(
   '*all',
   async (
     request: Request & {
-      settings?: Settings;
+      locals?: Locals;
     },
     response,
   ) => {
     try {
-      if (isString(request.query.token)) {
-        const cookies = await postAuth(request.query.token);
+      const locals: Locals = pick(request, ['cookies']);
 
-        response.setHeader('Set-Cookie', cookies);
+      request.locals = locals;
+      const maybeJwt = request.query.token?.toString() ?? request.cookies[KEY_JWT];
+
+      if (isNotNil(maybeJwt)) {
+        await postAuth(maybeJwt)
+          .then((_cookies) => {
+            response.setHeader('Set-Cookie', _cookies);
+
+            const cookies = new Cookies(_cookies.map((cookie) => cookie.split(';', 1)).join('; '));
+
+            locals.cookies = {
+              ...locals.cookies,
+              ...cookies.getAll(),
+            };
+          })
+          .catch(() => {
+            response.clearCookie(KEY_JWT);
+            delete locals.cookies?.[KEY_JWT];
+          });
       }
 
       const url = request.originalUrl.replace(base, '');
 
       let template: string;
-      let render: typeof IRender;
+      let render: typeof Render;
 
       if (isProduction) {
         template = templateHtml;
@@ -80,7 +99,7 @@ app.use(
         ...pick(request.cookies, ['themeColor', 'language']),
       };
 
-      request.settings = settings;
+      locals.settings = settings;
 
       response.cookie('language', settings.language, {
         maxAge: 365 * 24 * 60 * 60 * 1000,
@@ -89,6 +108,8 @@ app.use(
       response.cookie('themeColor', settings.themeColor, {
         maxAge: 365 * 24 * 60 * 60 * 1000,
       });
+
+      request.locals = locals;
 
       const rendered = await render(url, request);
 

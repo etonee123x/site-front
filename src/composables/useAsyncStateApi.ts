@@ -2,8 +2,8 @@ import { useLoadingStore } from '@/stores/loading';
 import type { FetchError } from 'ofetch';
 import { computed, ref, useSSRContext } from 'vue';
 import { useResetableRef } from '@/composables/useResetableRef';
-import { throwError } from '@etonee123x/shared/utils/throwError';
 import { isServer } from '@/constants/target';
+import { nonNullable } from '@/utils/nonNullable';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Params extends Array<any> = []>(
@@ -24,10 +24,8 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
   const _execute = async (...parameters: Params): Promise<Data> => {
     const key = [requestFunction.name, ...parameters].join(':');
 
-    console.log(key);
-
     if (isServer) {
-      const ssrContext = useSSRContext() ?? throwError();
+      const ssrContext = nonNullable(useSSRContext());
 
       if (!ssrContext.payload[key]) {
         const promise = requestFunction(...parameters)
