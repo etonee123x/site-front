@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, onServerPrefetch } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
 import { isItemFolder, isItemAudio, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
 import type { Item } from '@etonee123x/shared/helpers/folderData';
@@ -25,6 +25,7 @@ import ExplorerNavbar from './components/ExplorerNavbar.vue';
 
 import { useExplorerStore } from '@/stores/explorer';
 import { goToPage404 } from '@/composables/goToPage404';
+import { clientOnly } from '@/helpers/clientOnly';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
@@ -60,10 +61,13 @@ const getComponent = (item: Item) => {
   }
 };
 
-const fetchData = (to: RouteLocationNormalizedLoaded) =>
+const _fetchData = (to: RouteLocationNormalizedLoaded) =>
   explorerStore.getFolderData(to.fullPath.replace('/explorer', '')).catch(goToPage404);
 
-await fetchData(route);
+const fetchData = () => _fetchData(route);
 
-onBeforeRouteUpdate((to) => void fetchData(to));
+onServerPrefetch(fetchData);
+clientOnly(fetchData);
+
+onBeforeRouteUpdate((to) => void _fetchData(to));
 </script>

@@ -60,7 +60,7 @@ Ru:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog, useInfiniteScroll } from '@vueuse/core';
-import { defineAsyncComponent, computed, useTemplateRef, watch } from 'vue';
+import { defineAsyncComponent, computed, useTemplateRef, watch, onServerPrefetch } from 'vue';
 import { useRoute } from 'vue-router';
 import { toId } from '@etonee123x/shared/helpers/id';
 
@@ -78,6 +78,7 @@ import { useResetableRef } from '@/composables/useResetableRef';
 import { onPostTextareaKeyDownEnter } from './helpers/onPostTextareaKeyDownEnter';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import { isServer } from '@/constants/target';
+import { clientOnly } from '@/helpers/clientOnly';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
@@ -140,15 +141,19 @@ const onBeforeDelete = async () => {
   return !isCanceled;
 };
 
-await Promise.all([
-  blogStore.getAll(),
-  ...(isNotNil(route.params.postId)
-    ? [
-        //
-        blogStore.getById(toId(String(route.params.postId))).catch(goToPage404),
-      ]
-    : []),
-]);
+const fetchData = () =>
+  Promise.all([
+    ...(isServer ? [blogStore.getAll()] : []),
+    ...(isNotNil(route.params.postId)
+      ? [
+          //
+          blogStore.getById(toId(String(route.params.postId))).catch(goToPage404),
+        ]
+      : []),
+  ]);
+
+onServerPrefetch(fetchData);
+clientOnly(fetchData);
 
 if (!isServer) {
   watch(
