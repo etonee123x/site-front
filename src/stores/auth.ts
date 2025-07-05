@@ -27,8 +27,8 @@ export const useAuthStore = defineStore('auth', () => {
       return false;
     }
 
-    if (cookieJwt === 'dev-jwt' && isDevelopment) {
-      return true;
+    if (cookieJwt === 'dev-jwt') {
+      return isDevelopment;
     }
 
     const maybePayloadBase64 = nonNullable(cookieJwt.split('.')[1]);
