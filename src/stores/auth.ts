@@ -31,12 +31,10 @@ export const useAuthStore = defineStore('auth', () => {
       return isDevelopment;
     }
 
-    const maybePayloadBase64 = nonNullable(cookieJwt.split('.')[1]);
-
     const parseBase64Payload =
       'atob' in globalThis ? globalThis.atob : (input: string) => Buffer.from(input, 'base64').toString('utf-8');
 
-    const jwtParsed = jsonParse(parseBase64Payload(maybePayloadBase64));
+    const jwtParsed = jsonParse(parseBase64Payload(nonNullable(cookieJwt.split('.')[1])));
 
     return isRealObject(jwtParsed) && 'isAdmin' in jwtParsed && jwtParsed.isAdmin === true;
   });
