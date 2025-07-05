@@ -13,9 +13,9 @@ import { isProduction } from './src/constants/mode';
 import { KEY_JWT } from './src/constants/keys';
 import http from 'http';
 import https from 'https';
-import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import { type Locals } from './src/types';
 import { requestToOrigin } from './src/utils/requestToOrigin';
+import { isNil } from '@etonee123x/shared/utils/isNil';
 
 interface RequestWithLocals extends Request {
   locals?: Locals;
@@ -56,19 +56,19 @@ app.use(
 
     const maybeQueryJwt = request.query[KEY_JWT]?.toString();
 
-    if (isNotNil(maybeQueryJwt)) {
-      await postAuth(maybeQueryJwt)
-        .then((_cookies) => response.setHeader('Set-Cookie', _cookies))
-        .catch(() => response.clearCookie(KEY_JWT));
-
-      const requestUrl = new URL(request.url, requestToOrigin(request));
-
-      requestUrl.searchParams.delete(KEY_JWT);
-
-      response.redirect(requestUrl.toString());
+    if (isNil(maybeQueryJwt)) {
+      return next();
     }
 
-    next();
+    await postAuth(maybeQueryJwt)
+      .then((_cookies) => response.setHeader('Set-Cookie', _cookies))
+      .catch(() => response.clearCookie(KEY_JWT));
+
+    const requestUrl = new URL(request.url, requestToOrigin(request));
+
+    requestUrl.searchParams.delete(KEY_JWT);
+
+    return response.redirect(requestUrl.toString());
   },
   async (request: RequestWithLocals, response, next) => {
     // settings
