@@ -66,7 +66,7 @@ import { useDateFns } from '@/composables/useDateFns';
 import { clone } from '@/utils/clone';
 import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useBlogStore } from '@/stores/blog';
-import { useVuelidateBlogPostData } from '../composables/useVuelidateBlogPostData';
+import { useVuelidatePostData } from '../composables/useVuelidatePostData';
 import { useAuthStore } from '@/stores/auth';
 import { RouteName } from '@/router';
 import { ICON } from '@/helpers/ui';
@@ -108,17 +108,20 @@ const postNew = ref(getInitialPostNew());
 
 const { intlFormatDistance } = useDateFns();
 
-const { v$, handle } = useVuelidateBlogPostData(
-  async () => {
-    if (hasChanges.value) {
-      blogStore.putById(props.post.id, postNew.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
-    }
+const { v$ } = useVuelidatePostData(postNew, files);
 
-    closeEditMode();
-  },
-  postNew,
-  files,
-);
+const onSubmit = async () => {
+  if (!(await v$.value.$validate())) {
+    return;
+  }
+
+  if (hasChanges.value) {
+    blogStore.putById(props.post.id, postNew.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
+  }
+
+  closeEditMode();
+  v$.value.$reset();
+};
 
 const dateExact = computed(() =>
   [
@@ -132,7 +135,7 @@ const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.pos
 
 const wasEdited = computed(() => _wasEdited(props.post));
 
-const onKeyDownEnter = onPostTextareaKeyDownEnter(handle);
+const onKeyDownEnter = onPostTextareaKeyDownEnter(onSubmit);
 
 const hasChanges = computed(() => !deepEqual(props.post, postNew.value));
 
@@ -154,7 +157,7 @@ const controls = computed(() => [
           iconPath: mdiContentSave,
           isDisabled: !hasChanges.value,
           isLoading: blogStore.isLoadingPutById,
-          onClick: handle,
+          onClick: onSubmit,
         },
       ]
     : []),

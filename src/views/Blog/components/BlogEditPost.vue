@@ -42,7 +42,7 @@ import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
 import type { PostData } from '@etonee123x/shared/types/blog';
 import { mdiDelete } from '@mdi/js';
 
-import { type useVuelidateBlogPostData } from '../composables/useVuelidateBlogPostData';
+import { type useVuelidatePostData } from '../composables/useVuelidatePostData';
 import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
 // import BaseAudioRecorder from '@/components/ui/BaseAudioRecorder.vue';
@@ -51,7 +51,7 @@ const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/Bas
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
 const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
 
-defineProps<{ v$: UnwrapRef<ReturnType<typeof useVuelidateBlogPostData>['v$']> }>();
+defineProps<{ v$: UnwrapRef<ReturnType<typeof useVuelidatePostData>['v$']> }>();
 
 const { t } = useI18n({ useScope: 'local' });
 

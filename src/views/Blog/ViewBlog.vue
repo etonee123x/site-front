@@ -68,7 +68,7 @@ import DialogPost from './components/DialogPost.vue';
 import BlogPost from './components/BlogPost.vue';
 
 import { useBlogStore } from '@/stores/blog';
-import { useVuelidateBlogPostData } from './composables/useVuelidateBlogPostData';
+import { useVuelidatePostData } from './composables/useVuelidatePostData';
 import { useAuthStore } from '@/stores/auth';
 import { goToPage404 } from '@/composables/goToPage404';
 import { MAIN } from '@/constants/selectors';
@@ -116,21 +116,22 @@ const [postData, resetPostModel] = useResetableRef(() => ({
   filesUrls: [],
 }));
 
-const { v$, handle } = useVuelidateBlogPostData(
-  () => {
-    blogStore.post(postData.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
+const { v$ } = useVuelidatePostData(postData, files);
 
-    v$.value.$reset();
-    resetFiles();
-    resetPostModel();
+const onSubmit = async () => {
+  if (!(await v$.value.$validate())) {
+    return;
+  }
 
-    lazyBlogEditPost.value?.focusTextarea();
-  },
-  postData,
-  files,
-);
+  blogStore.post(postData.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
 
-const onSubmit = handle;
+  v$.value.$reset();
+  resetFiles();
+  resetPostModel();
+
+  lazyBlogEditPost.value?.focusTextarea();
+};
+
 const onKeyDownEnter = onPostTextareaKeyDownEnter(() => baseForm.value?.requestSubmit());
 
 const onBeforeDelete = async () => {
