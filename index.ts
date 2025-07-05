@@ -14,8 +14,12 @@ import { KEY_JWT } from './src/constants/keys';
 import http from 'http';
 import https from 'https';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
-import Cookies from 'universal-cookie';
 import { type Locals } from './src/types';
+import { requestToOrigin } from './src/utils/requestToOrigin';
+
+interface RequestWithLocals extends Request {
+  locals?: Locals;
+}
 
 // Constants
 const port = process.env.PORT || 5173;
@@ -47,36 +51,53 @@ if (isProduction) {
 // Serve HTML
 app.use(
   '*all',
-  async (
-    request: Request & {
-      locals?: Locals;
-    },
-    response,
-  ) => {
+  async (request, response, next) => {
+    // auth
+
+    const maybeQueryJwt = request.query[KEY_JWT]?.toString();
+
+    if (isNotNil(maybeQueryJwt)) {
+      await postAuth(maybeQueryJwt)
+        .then((_cookies) => response.setHeader('Set-Cookie', _cookies))
+        .catch(() => response.clearCookie(KEY_JWT));
+
+      const requestUrl = new URL(request.url, requestToOrigin(request));
+
+      requestUrl.searchParams.delete(KEY_JWT);
+
+      response.redirect(requestUrl.toString());
+    }
+
+    next();
+  },
+  async (request: RequestWithLocals, response, next) => {
+    // settings
+
+    const initialSettings = JSON.parse(await readFile(resolve('./public/settings.json'), 'utf-8'));
+
+    const settings = {
+      ...initialSettings,
+      ...pick(request.cookies, ['themeColor', 'language']),
+    };
+
+    const locals: Locals = {
+      settings,
+    };
+
+    response.cookie('language', settings.language, {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+    });
+
+    response.cookie('themeColor', settings.themeColor, {
+      maxAge: 365 * 24 * 60 * 60 * 1000,
+    });
+
+    request.locals = locals;
+
+    next();
+  },
+  async (request: RequestWithLocals, response) => {
     try {
-      const locals: Locals = pick(request, ['cookies']);
-
-      request.locals = locals;
-      const maybeJwt = request.query.token?.toString() ?? request.cookies[KEY_JWT];
-
-      if (isNotNil(maybeJwt)) {
-        await postAuth(maybeJwt)
-          .then((_cookies) => {
-            response.setHeader('Set-Cookie', _cookies);
-
-            const cookies = new Cookies(_cookies.map((cookie) => cookie.split(';', 1)).join('; '));
-
-            locals.cookies = {
-              ...locals.cookies,
-              ...cookies.getAll(),
-            };
-          })
-          .catch(() => {
-            response.clearCookie(KEY_JWT);
-            delete locals.cookies?.[KEY_JWT];
-          });
-      }
-
       const url = request.originalUrl.replace(base, '');
 
       let template: string;
@@ -91,25 +112,6 @@ app.use(
         template = await vite.transformIndexHtml(url, template);
         render = (await vite.ssrLoadModule('./src/entryServer.ts')).render;
       }
-
-      const initialSettings = JSON.parse(await readFile(resolve('./public/settings.json'), 'utf-8'));
-
-      const settings = {
-        ...initialSettings,
-        ...pick(request.cookies, ['themeColor', 'language']),
-      };
-
-      locals.settings = settings;
-
-      response.cookie('language', settings.language, {
-        maxAge: 365 * 24 * 60 * 60 * 1000,
-      });
-
-      response.cookie('themeColor', settings.themeColor, {
-        maxAge: 365 * 24 * 60 * 60 * 1000,
-      });
-
-      request.locals = locals;
 
       const rendered = await render(url, request);
 

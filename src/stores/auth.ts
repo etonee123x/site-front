@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAdmin = computed(() => {
     const cookieJwt = isServer //
-      ? nonNullable(useSSRContext()).request.locals.cookies[KEY_JWT]
+      ? nonNullable(useSSRContext()).request.cookies[KEY_JWT]
       : cookies.get(KEY_JWT);
 
     if (!isString(cookieJwt)) {
