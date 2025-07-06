@@ -2,6 +2,13 @@
   <component :is="component.is" class="max-w-full" v-bind="component.binds" />
 </template>
 
+<i18n lang="yaml">
+Ru:
+  attachmentN: 'Вложение { N }'
+En:
+  attachmentN: 'Attachment { N }'
+</i18n>
+
 <script setup lang="ts">
 import { isExtAudio, isExtImage, isExtVideo } from '@etonee123x/shared/helpers/folderData';
 import { pick } from '@etonee123x/shared/utils/pick';
@@ -10,13 +17,17 @@ import { computed, defineAsyncComponent } from 'vue';
 import { getFileUrlExt, getLastParameter } from '@/utils/url';
 import { useGalleryStore } from '@/stores/gallery';
 import { useBlogStore } from '@/stores/blog';
+import { useI18n } from 'vue-i18n';
 
 const LazyAttachmentWithUnknownExtension = defineAsyncComponent(() => import('./AttachmentWithUnknownExtension.vue'));
 const LazyPreviewVideo = defineAsyncComponent(() => import('@/components/PreviewVideo.vue'));
 
 const props = defineProps<{
   fileUrl: string;
+  index: number;
 }>();
+
+const { t } = useI18n({ useScope: 'local' });
 
 const { loadGalleryItem } = useGalleryStore();
 
@@ -64,6 +75,7 @@ const component = computed(() => {
         is: 'img',
         binds: {
           src: props.fileUrl,
+          alt: t('attachmentN', { N: props.index + 1 }),
           onClick: (e: Event) => {
             e.stopPropagation();
             loadToGallery();

@@ -3,7 +3,7 @@
     <BaseHtml v-if="html" :html />
     <ul v-if="post.filesUrls.length">
       <li v-for="(fileUrl, index) in post.filesUrls" :key="index">
-        <PostDataAttachment :fileUrl />
+        <PostDataAttachment :fileUrl :index />
       </li>
     </ul>
   </div>
