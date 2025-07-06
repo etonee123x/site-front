@@ -4,11 +4,11 @@
   "type": "module",
   "version": "1.1.0",
   "scripts": {
-    "dev": "tsx watch index.ts",
+    "dev": "tsx watch src",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entryServer.ts --outDir dist/server",
-    "start": "cross-env NODE_ENV=production tsx index.ts",
+    "start": "cross-env NODE_ENV=production tsx src",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "typecheck": "vue-tsc --noEmit"

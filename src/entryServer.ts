@@ -1,5 +1,5 @@
 import { renderToString } from 'vue/server-renderer';
-import { createApp } from './main';
+import { createApp } from '@/main';
 import type { Request } from 'express';
 import { createHead } from '@unhead/vue/server';
 import type { Locals } from '@/types';
