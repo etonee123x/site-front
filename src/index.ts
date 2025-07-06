@@ -109,7 +109,7 @@ app.use(
         // Always read fresh template in development
         template = await readFile('index.html', 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('./entryServer.ts')).render;
+        render = (await vite.ssrLoadModule('./src/entryServer.ts')).render;
       }
 
       const rendered = await render(url, request);
