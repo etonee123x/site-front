@@ -6,13 +6,57 @@ import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Params extends Array<any> = []>(
-  requestFunction: (...params: Params) => Promise<Data>,
+type RequestFunction<Data, Params extends Array<any> = []> = (...params: Params) => Promise<Data>;
+
+type Options<Data> = Partial<{
+  onSuccess: (data: Data) => void;
+}>;
+
+type UseAsyncStateApiParametersWithKey<
+  //
+  Data,
+  InitialState extends Data | undefined,
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  Params extends Array<any> = [],
+> = [
+  //
+  key: string,
+  requestFunction: RequestFunction<Data, Params>,
   initialState?: InitialState,
-  options: Partial<{
-    onSuccess: (data: Data) => void;
-  }> = {},
+  options?: Options<Data>,
+];
+
+type UseAsyncStateApiParametersWithoutKey<
+  Data,
+  InitialState extends Data | undefined,
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  Params extends Array<any> = [],
+> = [
+  //
+  requestFunction: RequestFunction<Data, Params>,
+  initialState?: InitialState,
+  options?: Options<Data>,
+];
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+type UseAsyncStateApiParameters<Data, InitialState extends Data | undefined, Params extends Array<any> = []> =
+  | UseAsyncStateApiParametersWithKey<Data, InitialState, Params>
+  | UseAsyncStateApiParametersWithoutKey<Data, InitialState, Params>;
+
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Params extends Array<any> = []>(
+  ...parameters: UseAsyncStateApiParameters<Data, InitialState, Params>
 ) => {
+  const [
+    //
+    key,
+    requestFunction,
+    initialState,
+    options = {},
+  ] = parameters as UseAsyncStateApiParametersWithKey<Data, InitialState, Params>;
+
+  console.log({ key });
+
   const loadingStore = useLoadingStore();
 
   const state = ref(initialState as InitialState extends undefined ? Data | undefined : Data);
@@ -22,8 +66,6 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
   const isLoading = computed(() => Boolean(promise.value));
 
   const _execute = async (...parameters: Params): Promise<Data> => {
-    const key = [requestFunction.name, ...parameters].join(':');
-
     if (isServer) {
       const ssrContext = nonNullable(useSSRContext());
 
