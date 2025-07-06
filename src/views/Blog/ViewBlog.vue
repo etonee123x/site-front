@@ -105,7 +105,7 @@ const hasPosts = computed(() => Boolean(blogStore.all.length));
 const elementMain = useElementFinder(() => document.getElementById(MAIN));
 
 useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
-  canLoadMore: () => !blogStore.isEnd,
+  canLoadMore: () => !(blogStore.isLoadingGetAll || blogStore.isEnd),
   distance: 100,
 });
 
@@ -144,7 +144,7 @@ const onBeforeDelete = async () => {
 
 const fetchData = () =>
   Promise.all([
-    ...(isServer ? [blogStore.getAll()] : []),
+    blogStore.getAll(),
     ...(isNotNil(route.params.postId)
       ? [
           //
