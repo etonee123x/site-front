@@ -1,5 +1,11 @@
 <template>
-  <header class="border-b border-b-details-500">
+  <header
+    class="border-b border-b-details-500 relative"
+    :class="
+      loadingStore.isLoading &&
+      'after:opacity-30 after:absolute after:bottom-0 after:translate-y-1/2 after:h-1 after:rounded-full after:z-[calc(var(--z-index-explorer-navbar)+1)] after:w-1/6 after:bg-dark after:animate-runner'
+    "
+  >
     <div class="layout-container mx-auto flex items-center py-2 gap-4">
       <nav class="flex items-end gap-4">
         <RouterLink :to class="text-xl">{{ siteTitle }}</RouterLink>
@@ -43,8 +49,11 @@ import BaseIcon from '@/components/ui/BaseIcon';
 import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
 import BaseButton from '@/components/ui/BaseButton';
+import { useLoadingStore } from '@/stores/loading';
 
 const { t } = useI18n({ useScope: 'local' });
+
+const loadingStore = useLoadingStore();
 
 const dialogSettings = useTemplateRef('dialogSettings');
 

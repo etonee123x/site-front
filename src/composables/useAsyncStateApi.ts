@@ -55,8 +55,6 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
     options = {},
   ] = parameters as UseAsyncStateApiParametersWithKey<Data, InitialState, Params>;
 
-  console.log({ key });
-
   const loadingStore = useLoadingStore();
 
   const state = ref(initialState as InitialState extends undefined ? Data | undefined : Data);
@@ -70,7 +68,7 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
       const ssrContext = nonNullable(useSSRContext());
 
       if (!ssrContext.payload[key]) {
-        const promise = requestFunction(...parameters)
+        promise.value = requestFunction(...parameters)
           .then((data) => {
             ssrContext.payload[key] = data;
             state.value = data;
@@ -81,7 +79,7 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
           })
           .finally(resetPromise);
 
-        return promise;
+        return promise.value;
       }
 
       state.value = ssrContext.payload[key] as InitialState;
@@ -98,11 +96,15 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
       return state.value;
     }
 
-    return requestFunction(...parameters).then((data) => {
-      state.value = data;
+    promise.value = requestFunction(...parameters)
+      .then((data) => {
+        state.value = data;
 
-      return state.value;
-    });
+        return state.value;
+      })
+      .finally(resetPromise);
+
+    return promise.value;
   };
 
   const _onError = (error: FetchError<Data>) => {
