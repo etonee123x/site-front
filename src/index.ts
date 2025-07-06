@@ -4,17 +4,16 @@ import { readFile, access } from 'node:fs/promises';
 import express, { type Request } from 'express';
 import type { ViteDevServer } from 'vite';
 import cookieParser from 'cookie-parser';
-import { type render as Render } from './src/entryServer';
 import { transformHtmlTemplate } from '@unhead/vue/server';
 import { resolve } from 'path';
 import { pick } from '@etonee123x/shared/utils/pick';
-import { postAuth } from './src/api/auth';
-import { isProduction } from './src/constants/mode';
-import { KEY_JWT } from './src/constants/keys';
+import { postAuth } from '@/api/auth';
+import { isProduction } from '@/constants/mode';
+import { KEY_JWT } from '@/constants/keys';
 import http from 'http';
 import https from 'https';
-import { type Locals } from './src/types';
-import { requestToOrigin } from './src/utils/requestToOrigin';
+import { type Locals } from '@/types';
+import { requestToOrigin } from '@/utils/requestToOrigin';
 import { isNil } from '@etonee123x/shared/utils/isNil';
 
 interface RequestWithLocals extends Request {
@@ -61,7 +60,7 @@ app.use(
     }
 
     await postAuth(maybeQueryJwt)
-      .then((_cookies) => response.setHeader('Set-Cookie', _cookies))
+      .then((cookies) => response.setHeader('Set-Cookie', cookies))
       .catch(() => response.clearCookie(KEY_JWT));
 
     const requestUrl = new URL(request.url, requestToOrigin(request));
@@ -101,16 +100,16 @@ app.use(
       const url = request.originalUrl.replace(base, '');
 
       let template: string;
-      let render: typeof Render;
+      let render;
 
       if (isProduction) {
         template = templateHtml;
-        render = (await import('./dist/server/entryServer.js')).render;
+        render = (await import('../dist/server/entryServer.js')).render;
       } else {
         // Always read fresh template in development
         template = await readFile('index.html', 'utf-8');
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('./src/entryServer.ts')).render;
+        render = (await vite.ssrLoadModule('./entryServer.ts')).render;
       }
 
       const rendered = await render(url, request);
