@@ -19,7 +19,7 @@
       </nav>
       <ul class="text-2xl ms-auto flex gap-1">
         <li v-for="icon in icons" :key="icon.id">
-          <BaseButton @click="icon.onClick">
+          <BaseButton :aria-label="t('openSettings')" @click="icon.onClick">
             <BaseIcon :path="icon.path" />
           </BaseButton>
         </li>
@@ -33,9 +33,11 @@
 Ru:
   content: 'Контент'
   blog: 'Блог'
+  openSettings: 'Открыть настройки'
 En:
   content: 'Content'
   blog: 'Blog'
+  openSettings: 'Open Settings'
 </i18n>
 
 <script setup lang="ts">

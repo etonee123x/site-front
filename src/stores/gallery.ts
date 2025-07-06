@@ -31,7 +31,7 @@ export const useGalleryStore = defineStore('gallery', () => {
     next,
     prev,
     state: galleryItem,
-  } = useCycleList(galleryItems, {
+  } = useCycleList<GalleryItem | undefined>(galleryItems, {
     getIndexOf: (value, list) => list.findIndex((item) => item?.src === value?.src),
   });
 

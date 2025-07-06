@@ -2,7 +2,7 @@
   <div class="flex justify-end items-center gap-2">
     <slot />
     <div :class="VR" class="my-1" />
-    <BaseButton @click.stop="onClickCopyUrl">
+    <BaseButton aria-label="t('copyPostLink')" @click.stop="onClickCopyUrl">
       <BaseIcon :path="mdiLinkVariant" />
     </BaseButton>
   </div>
@@ -11,8 +11,10 @@
 <i18n lang="yaml">
 En:
   copied: 'Copied!'
+  copyPostLink: 'Copy post link'
 Ru:
   copied: 'Скопировано!'
+  copyPostLink: 'Скопировать ссылку на пост'
 </i18n>
 
 <script lang="ts" setup>
