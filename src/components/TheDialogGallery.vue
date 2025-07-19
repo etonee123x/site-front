@@ -1,11 +1,5 @@
 <template>
-  <BaseDialog
-    class="max-w-11/12 max-h-11/12 w-fit overflow-hidden"
-    isHiddenFooter
-    isHiddenHeader
-    ref="baseDialog"
-    @close="onClose"
-  >
+  <BaseDialog isHiddenFooter isHiddenHeader ref="baseDialog" @close="onClose">
     <div v-if="galleryStore.galleryItem" class="flex flex-col gap-2 items-center flex-1 w-full h-full">
       <BaseAlwaysScrollable class="w-full [--base-always-scrollable--content--margin:0_auto]" duration="12000">
         {{ galleryStore.galleryItem.name }}
@@ -14,7 +8,7 @@
         <component
           :is="component.is"
           v-bind="component.binds"
-          class="object-contain outline-hidden border-none max-w-full max-h-[calc(90vh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))]"
+          class="object-contain outline-hidden border-none max-w-full max-h-[calc(90dvh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))]"
           :src="galleryStore.galleryItem.src"
         />
       </div>

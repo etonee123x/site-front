@@ -143,30 +143,6 @@ const props = defineProps<Props<Option, ModelValueSingle>>();
 
 const textInputWrapper = useTemplateRef<InstanceType<typeof TextInputWrapper>>('textInputWrapper');
 
-const propsTippy = computed(() => ({
-  ...props.propsTippy,
-  appendTo:
-    props.propsTippy?.appendTo ??
-    (() => {
-      let element: HTMLElement | Nil = textInputWrapper.value?.$el;
-
-      while (element) {
-        if (element.tagName === 'DIALOG') {
-          /* 
-            <dialog>
-              ... <-- контент диалогового окна находится здесь
-            </dialog>
-          */
-          return element.children[0] ?? document.body;
-        }
-
-        element = element.parentElement;
-      }
-
-      return document.body;
-    }),
-}));
-
 const emit = defineEmits<{
   'option:select': [Option];
   'option:add': [Option];

@@ -1,7 +1,15 @@
 <template>
-  <dialog v-bind="$attrs" class="dialog" :open="model" ref="dialog" @close="onClose" @cancel.prevent="onClose">
+  <dialog
+    :id="String(id)"
+    v-bind="$attrs"
+    class="dialog"
+    :open="model"
+    ref="dialog"
+    @close="onClose"
+    @cancel.prevent="onClose"
+  >
     <div class="dialog__backdrop" @click="onClickBackdrop" />
-    <div class="dialog__content" ref="dialogContent">
+    <div class="dialog__content">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
@@ -34,18 +42,21 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed, useId, useTemplateRef, watchEffect } from 'vue';
 import { onKeyDown, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import type { FunctionCallback } from '@etonee123x/shared/types';
-import type { WithId } from '@etonee123x/shared/helpers/id';
+import { areIdsEqual, toId, type WithId } from '@etonee123x/shared/helpers/id';
 import BaseButton from './BaseButton';
 import BaseIcon from './BaseIcon';
+import { useDialogStore } from '@/stores/dialog';
+import { isNil } from '@etonee123x/shared/utils/isNil';
 
 const dialog = useTemplateRef('dialog');
-const dialogContent = useTemplateRef('dialogContent');
+
+const id = toId(useId());
 
 interface Button extends WithId {
   text: string;
@@ -67,6 +78,8 @@ const emit = defineEmits<{
   confirm: [];
   cancel: [];
 }>();
+
+const dialogStore = useDialogStore();
 
 const model = defineModel<boolean>();
 
@@ -122,7 +135,21 @@ const onClose = close;
 const onClickCloseIcon = close;
 const onClickBackdrop = close;
 
-onKeyDown('Escape', close);
+onKeyDown('Escape', () => {
+  const maybeLastDialogId = dialogStore.getLastId();
+
+  if (isNil(maybeLastDialogId) || !areIdsEqual(maybeLastDialogId, id)) {
+    return;
+  }
+
+  close();
+});
+
+watchEffect(() =>
+  model.value //
+    ? dialogStore.onOpen(id)
+    : dialogStore.removeId(id),
+);
 
 defineExpose({
   open,

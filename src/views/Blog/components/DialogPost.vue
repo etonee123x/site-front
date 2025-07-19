@@ -1,6 +1,10 @@
 <template>
   <BaseDialog isHiddenHeader ref="baseDialog" v-model="isDialogOpen" @close="onDialogClose">
-    <PostData v-if="blogStore.byId" :post="blogStore.byId" />
+    <PostData
+      v-if="blogStore.byId"
+      class="max-w-full w-full h-full max-h-[calc(90dvh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))] overflow-y-auto"
+      :post="blogStore.byId"
+    />
     <template #footer>
       <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
         <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
