@@ -36,8 +36,8 @@ import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
 import { Language, ThemeColor } from '@/constants/settings';
 import { useAuthStore } from '@/stores/auth';
-import { useResetableRef } from '@/composables/useResetableRef';
 import { isDevelopment } from '@/constants/mode';
+import { useSourcedRef } from '@/composables/useSourcedRef';
 
 const authStore = useAuthStore();
 
@@ -47,7 +47,7 @@ const settingsStore = useSettingsStore();
 
 const { t } = useI18n({ useScope: 'local' });
 
-const [model, resetModel] = useResetableRef(() => settingsStore.settings);
+const [model, resetModel] = useSourcedRef(() => settingsStore.settings);
 
 const onConfirm = () => settingsStore.saveSettings(model.value);
 

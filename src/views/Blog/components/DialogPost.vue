@@ -1,13 +1,11 @@
 <template>
-  <BaseDialog isHiddenHeader style="height: min-content" ref="baseDialog" v-model="isDialogOpen" @close="onDialogClose">
-    <LazyPostData v-if="blogStore.byId" :post="blogStore.byId" />
+  <BaseDialog isHiddenHeader ref="baseDialog" v-model="isDialogOpen" @close="onDialogClose">
+    <PostData v-if="blogStore.byId" :post="blogStore.byId" />
     <template #footer>
-      <PostDataFooter v-if="blogStore.byId" class="sticky bottom-0 -mb-4 py-4 bg-background" :post="blogStore.byId">
-        <div class="text-sm text-dark flex flex-col items-end">
-          <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
-          <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
-        </div>
-      </PostDataFooter>
+      <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
+        <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
+        <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
+      </div>
     </template>
   </BaseDialog>
 </template>
@@ -22,11 +20,9 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, useTemplateRef, watch } from 'vue';
+import { computed, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-
-import PostDataFooter from './PostDataFooter.vue';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
@@ -34,8 +30,7 @@ import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
-
-const LazyPostData = defineAsyncComponent(() => import('./PostData.vue'));
+import PostData from './PostData.vue';
 
 const FORMAT_TEMPALTE = 'PPp';
 

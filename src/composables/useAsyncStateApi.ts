@@ -1,9 +1,9 @@
 import { useLoadingStore } from '@/stores/loading';
 import type { FetchError } from 'ofetch';
 import { computed, ref, useSSRContext } from 'vue';
-import { useResetableRef } from '@/composables/useResetableRef';
 import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
+import { useSourcedRef } from './useSourcedRef';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 type RequestFunction<Data, Params extends Array<any> = []> = (...params: Params) => Promise<Data>;
@@ -59,7 +59,7 @@ export const useAsyncStateApi = <Data, InitialState extends Data | undefined, Pa
 
   const state = ref(initialState as InitialState extends undefined ? Data | undefined : Data);
 
-  const [promise, resetPromise] = useResetableRef<Promise<Data> | null>(null);
+  const [promise, resetPromise] = useSourcedRef<Promise<Data> | null>(null);
 
   const isLoading = computed(() => Boolean(promise.value));
 

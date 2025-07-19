@@ -8,36 +8,41 @@
         <TheDialogGallery />
       </main>
       <LazyThePlayer v-if="playerStore.isTrackLoaded" />
-      <TheFooter v-else />
+      <LazyTheFooter v-else />
     </div>
   </Suspense>
 </template>
 
 <script setup lang="ts">
 import { useHead } from '@unhead/vue';
-import { defineAsyncComponent, useSSRContext } from 'vue';
+import { defineAsyncComponent, onServerPrefetch, useSSRContext } from 'vue';
 
 import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
 import TheHeader from '@/components/TheHeader';
-import TheFooter from '@/components/TheFooter';
 import TheDialogGallery from '@/components/TheDialogGallery.vue';
 import { MAIN } from '@/constants/selectors';
 import { useSettingsStore } from '@/stores/settings';
 import { themeColorToThemeColorClass } from '@/helpers/themeColor';
 import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
+import { useExplorerStore } from '@/stores/explorer';
+import { useRoute } from 'vue-router';
+import { RouteName } from './router';
+import { clientOnly } from './helpers/clientOnly';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
+const LazyTheFooter = defineAsyncComponent(() => import('@/components/TheFooter'));
+
+const route = useRoute();
 
 const playerStore = usePlayerStore();
 const toastsStore = useToastsStore();
 
-const settingsStore = useSettingsStore();
-
 if (isServer) {
   const ssrContext = nonNullable(useSSRContext());
+  const settingsStore = useSettingsStore();
 
   settingsStore.initSettings(ssrContext.request.locals.settings);
 
@@ -47,5 +52,14 @@ if (isServer) {
       class: themeColorToThemeColorClass(settingsStore.settings.themeColor),
     },
   });
+}
+
+if (route.name === RouteName.Explorer) {
+  const explorerStore = useExplorerStore();
+
+  const getFolderData = () => explorerStore.getFolderData(route);
+
+  onServerPrefetch(getFolderData);
+  clientOnly(getFolderData);
 }
 </script>

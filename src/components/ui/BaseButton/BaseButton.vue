@@ -12,13 +12,13 @@
     <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
       <div v-if="$slots.prepend || propsIconPrepend" class="flex">
         <slot name="prepend">
-          <LazyBaseIcon v-if="propsIconPrepend" v-bind="propsIconPrepend" />
+          <BaseIcon v-if="propsIconPrepend" v-bind="propsIconPrepend" />
         </slot>
       </div>
       <slot />
       <div v-if="$slots.append || propsIconAppend" class="flex">
         <slot name="append">
-          <LazyBaseIcon v-if="propsIconAppend" v-bind="propsIconAppend" />
+          <BaseIcon v-if="propsIconAppend" v-bind="propsIconAppend" />
         </slot>
       </div>
     </div>
@@ -30,8 +30,8 @@
 import { computed, defineAsyncComponent } from 'vue';
 import type { Props as PropsIcon } from '@/components/ui/BaseIcon';
 import { BUTTON } from '@/helpers/ui';
+import BaseIcon from '@/components/ui/BaseIcon';
 
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const props = defineProps<

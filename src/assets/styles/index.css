@@ -208,6 +208,8 @@
   @apply max-w-7xl w-5/6;
 }
 
+@custom-variant hover-none (@media (hover: none));
+
 @layer components {
   .layout-container {
     @apply max-w-7xl w-5/6;

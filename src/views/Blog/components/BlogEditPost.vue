@@ -18,9 +18,9 @@
     <div v-if="files.length">
       <div class="mb-3 flex items-center gap-2">
         <div class="text-xl">{{ t('files') }}</div>
-        <LazyBaseButton @click="onClickDeleteFiles">
-          <LazyBaseIcon :path="mdiDelete" />
-        </LazyBaseButton>
+        <BaseButton @click="onClickDeleteFiles">
+          <BaseIcon :path="mdiDelete" />
+        </BaseButton>
       </div>
       <LazyBaseFilesList v-model="files" />
     </div>
@@ -45,11 +45,11 @@ import { mdiDelete } from '@mdi/js';
 import { type useVuelidatePostData } from '../composables/useVuelidatePostData';
 import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
+import BaseButton from '@/components/ui/BaseButton/BaseButton.vue';
+import BaseIcon from '@/components/ui/BaseIcon';
 // import BaseAudioRecorder from '@/components/ui/BaseAudioRecorder.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
-const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
 
 defineProps<{ v$: UnwrapRef<ReturnType<typeof useVuelidatePostData>['v$']> }>();
 

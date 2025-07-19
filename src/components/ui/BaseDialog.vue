@@ -5,9 +5,9 @@
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
         <div class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
-          <LazyBaseButton class="ms-auto" @click="onClickCloseIcon">
-            <LazyBaseIcon :path="mdiClose" />
-          </LazyBaseButton>
+          <BaseButton class="ms-auto" @click="onClickCloseIcon">
+            <BaseIcon :path="mdiClose" />
+          </BaseButton>
         </div>
       </slot>
 
@@ -15,9 +15,9 @@
 
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
         <div v-if="buttons.length" class="flex justify-end gap-2 mt-auto">
-          <LazyBaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
+          <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
-          </LazyBaseButton>
+          </BaseButton>
         </div>
       </slot>
     </div>
@@ -34,16 +34,15 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, useTemplateRef } from 'vue';
-import { useToggle } from '@vueuse/core';
+import { computed, useTemplateRef } from 'vue';
+import { onKeyDown, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import type { FunctionCallback } from '@etonee123x/shared/types';
 import type { WithId } from '@etonee123x/shared/helpers/id';
-
-const LazyBaseButton = defineAsyncComponent(() => import('./BaseButton'));
-const LazyBaseIcon = defineAsyncComponent(() => import('./BaseIcon'));
+import BaseButton from './BaseButton';
+import BaseIcon from './BaseIcon';
 
 const dialog = useTemplateRef('dialog');
 const dialogContent = useTemplateRef('dialogContent');
@@ -122,6 +121,8 @@ const close = () => {
 const onClose = close;
 const onClickCloseIcon = close;
 const onClickBackdrop = close;
+
+onKeyDown('Escape', close);
 
 defineExpose({
   open,
