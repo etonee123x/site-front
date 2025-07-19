@@ -54,7 +54,7 @@
               @click="() => onClickOption(option)"
             >
               <BaseCheckbox
-                v-if="multiple && isOptionSelected(option)"
+                v-if="isOptionSelected(option)"
                 :class="CHECKBOX.SIZE.SM"
                 modelValue
                 readonly

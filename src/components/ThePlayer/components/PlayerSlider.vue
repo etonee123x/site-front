@@ -1,7 +1,7 @@
 <template>
   <div
     tabindex="0"
-    class="w-full py-0.5 cursor-pointer focus:on-focus focus:outline-2"
+    class="w-full py-0.5 cursor-pointer"
     ref="slider"
     @pointerdown.stop
     @dragstart.stop

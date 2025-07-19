@@ -8,7 +8,7 @@
         <component
           :is="component.is"
           v-bind="component.binds"
-          class="object-contain outline-hidden border-none max-w-full max-h-[calc(90dvh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))]"
+          class="object-contain border-none max-w-full max-h-[calc(90dvh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))]"
           :src="galleryStore.galleryItem.src"
         />
       </div>
