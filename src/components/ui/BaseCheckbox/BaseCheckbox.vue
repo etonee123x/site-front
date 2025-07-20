@@ -1,19 +1,8 @@
 <template>
   <div class="group" :class="CHECKBOX.default" @click="onClick">
-    <BaseIcon
-      class="group-has-[input:focus]:outline group-has-[input:focus]:outline-2 group-has-[input:focus]:outline-black rounded-xs"
-      :path="iconPath"
-    />
-    <input
-      type="checkbox"
-      :checked="model"
-      class="cursor-inherit absolute start-[-9999px]"
-      :disabled
-      :readonly
-      ref="input"
-      @input="onInput"
-    />
-    <label v-if="$slots.default" class="text-black">
+    <BaseIcon class="group-has-[input:focus]:on-focus rounded-xs" :path="iconPath" />
+    <input :id type="checkbox" :checked="model" class="sr-only" :disabled :readonly ref="input" @input="onInput" />
+    <label v-if="$slots.default" :for="id" class="text-black">
       <slot />
     </label>
   </div>
@@ -22,10 +11,12 @@
 <script setup lang="ts">
 import { useToggle } from '@vueuse/core';
 import BaseIcon from '@/components/ui/BaseIcon';
-import { computed, useTemplateRef } from 'vue';
+import { computed, useId, useTemplateRef } from 'vue';
 import { mdiCheckboxBlank, mdiCheckboxMarked } from '@mdi/js';
 import { CHECKBOX } from '@/helpers/ui';
 import type { Props } from './types';
+
+const id = useId();
 
 const input = useTemplateRef('input');
 

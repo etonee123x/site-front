@@ -1,40 +1,52 @@
 import { defineStore } from 'pinia';
-import { computed, watch } from 'vue';
-import { isItemAudio } from '@etonee123x/shared/helpers/folderData';
+import { computed, shallowReactive } from 'vue';
+import { isItemAudio, type FolderData } from '@etonee123x/shared/helpers/folderData';
 
 import { usePlayerStore } from '@/stores/player';
 import { getFolderData as _getFolderData } from '@/api/folderData';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
+import type { RouteLocationNormalizedLoaded } from 'vue-router';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
 const moduleURLResolver = (url: string) => `/explorer${url}`;
 
 export const useExplorerStore = defineStore('explorer', () => {
   const { loadTrack, loadRealPlaylist, loadPotentialPlaylist } = usePlayerStore();
 
+  const routePathToFolderData = shallowReactive<Record<string, FolderData>>({});
+
   const {
     state: folderData,
     execute: getFolderData,
     isLoading: isLoadingGetFolderData,
-  } = useAsyncStateApi(_getFolderData);
+  } = useAsyncStateApi(async (to: RouteLocationNormalizedLoaded) => {
+    const routePath = to.path.replace(/^\/explorer/, '');
 
-  const handlePlayer = () => {
-    if (!folderData.value) {
-      return;
+    const maybeFolderData = routePathToFolderData[routePath];
+
+    if (isNotNil(maybeFolderData)) {
+      return maybeFolderData;
     }
 
-    const playlist = folderData.value.items.filter(isItemAudio);
+    return _getFolderData(routePath).then((_folderData) => {
+      routePathToFolderData[routePath] = _folderData;
 
-    if (!playlist.length) {
-      return;
-    }
+      const playlist = _folderData.items.filter(isItemAudio);
 
-    if (folderData.value.linkedFile && isItemAudio(folderData.value.linkedFile)) {
-      loadRealPlaylist(playlist);
-      loadTrack(folderData.value.linkedFile);
-    } else {
-      loadPotentialPlaylist(playlist);
-    }
-  };
+      if (!playlist.length) {
+        return _folderData;
+      }
+
+      if (_folderData.linkedFile && isItemAudio(_folderData.linkedFile)) {
+        loadRealPlaylist(playlist);
+        loadTrack(_folderData.linkedFile);
+      } else {
+        loadPotentialPlaylist(playlist);
+      }
+
+      return _folderData;
+    });
+  });
 
   const navigationItems = computed(
     () =>
@@ -56,9 +68,9 @@ export const useExplorerStore = defineStore('explorer', () => {
 
   const lvlUp = computed(() => folderData.value?.lvlUp && moduleURLResolver(folderData.value.lvlUp));
 
-  watch(folderData, handlePlayer);
-
   return {
+    routePathToFolderData,
+
     getFolderData,
     isLoadingGetFolderData,
 

@@ -66,6 +66,10 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
+  * {
+    @apply focus:on-focus;
+  }
+
   html,
   body {
     font-family: Roboto, 'Open Sans', sans-serif;
@@ -94,7 +98,6 @@
   a {
     @apply text-inherit;
     @apply hover:text-details-500;
-    @apply focus-visible:outline-hidden focus-visible:underline;
   }
 
   p {
@@ -200,13 +203,14 @@
 }
 
 @utility on-focus {
-  outline: var(--color-dark) solid 1px;
-  outline-offset: 0;
+  @apply outline-dark outline-2 outline-offset-1;
 }
 
 @utility container {
   @apply max-w-7xl w-5/6;
 }
+
+@custom-variant hover-none (@media (hover: none));
 
 @layer components {
   .layout-container {
@@ -235,7 +239,7 @@
   }
 
   .text-input-base {
-    @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-background border border-current rounded-sm px-3 text-xs cursor-text justify-between box-border;
+    @apply min-w-[272px] has-[input:read-only]:cursor-pointer has-[input:disabled]:pointer-events-none min-h-8 flex items-center gap-2 bg-background border border-current rounded-sm px-3 text-xs cursor-text justify-between box-border focus-within:on-focus;
 
     input {
       all: unset;
@@ -299,15 +303,15 @@
   }
 
   .dialog {
-    @apply fixed inset-0 m-auto p-0 z-modal;
+    @apply fixed inset-0 m-auto p-0 z-modal rounded-lg border border-details-500 max-w-11/12 max-h-11/12 w-fit overflow-hidden;
 
     .dialog__content {
       scrollbar-gutter: stable_both-edges;
-      @apply p-4 flex flex-col w-full bg-background border border-details-500 outline-hidden rounded-lg;
+      @apply p-4 flex flex-col w-full bg-background;
     }
 
     .dialog__backdrop {
-      @apply fixed inset-0 bg-dark/35 -z-[1];
+      @apply fixed inset-0 bg-dark/25 -z-[1];
     }
   }
 }

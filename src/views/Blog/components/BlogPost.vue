@@ -1,41 +1,39 @@
 <template>
-  <div
-    class="w-full bg-background border border-dark rounded-sm cursor-pointer shadow-lg shadow-dark/15"
-    ref="root"
-    @click="onClick"
+  <component
+    :is="component.Is"
+    v-bind="component.binds"
+    class="w-full bg-background border border-dark rounded-sm cursor-pointer shadow-lg shadow-dark/15 hover:text-[initial]"
   >
     <div class="p-4 flex flex-col">
       <LazyBlogEditPost
         v-if="isInEditMode"
         :v$
         ref="blogEditPost"
-        v-model="postNew"
+        v-model="model"
         v-model:files="files"
         @keydown:enter="onKeyDownEnter"
       />
       <template v-else>
         <PostData :post />
-        <PostDataFooter :post class="mt-4">
-          <span class="text-sm text-dark flex items-center gap-0.5" :title="dateExact">
-            <span>{{ createdAtHumanReadable }}</span>
-            <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
-          </span>
-        </PostDataFooter>
+        <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
+          <span>{{ createdAtHumanReadable }}</span>
+          <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
+        </span>
       </template>
     </div>
     <div v-if="authStore.isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
-      <LazyBaseButton
+      <BaseButton
         v-for="control in controls"
         class="p-0.5"
         :isLoading="control.isLoading"
         :isDisabled="control.isDisabled"
-        :key="control.id"
-        @click.stop="control.onClick"
+        :key="control.key"
+        @click.stop.prevent="control.onClick"
       >
         <BaseIcon class="text-2xl" :path="control.iconPath" />
-      </LazyBaseButton>
+      </BaseButton>
     </div>
-  </div>
+  </component>
 </template>
 
 <i18n lang="yaml">
@@ -55,15 +53,12 @@ import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
 import type { Post } from '@etonee123x/shared/types/blog';
 import { areIdsEqual } from '@etonee123x/shared/helpers/id';
 import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
-import { onClickOutside } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 
 import PostData from './PostData.vue';
-import PostDataFooter from './PostDataFooter.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon';
 import { useDateFns } from '@/composables/useDateFns';
-import { clone } from '@/utils/clone';
 import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidatePostData } from '../composables/useVuelidatePostData';
@@ -71,30 +66,18 @@ import { useAuthStore } from '@/stores/auth';
 import { RouteName } from '@/router';
 import { ICON } from '@/helpers/ui';
 import { onPostTextareaKeyDownEnter } from '../helpers/onPostTextareaKeyDownEnter';
-import { useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
+import { useSourcedRef } from '@/composables/useSourcedRef';
+import BaseButton from '@/components/ui/BaseButton';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
-
-const getInitialPostNew = () => clone(props.post);
 
 const props = defineProps<{
   post: Post;
   onBeforeDelete: () => Promise<boolean>;
 }>();
 
-const root = useTemplateRef('root');
 const blogEditPost = useTemplateRef('blogEditPost');
-
-const router = useRouter();
-
-onClickOutside(root, () => {
-  if (!isInEditMode.value) {
-    return;
-  }
-
-  closeEditMode();
-});
 
 const blogStore = useBlogStore();
 
@@ -104,11 +87,11 @@ const { t } = useI18n({ useScope: 'local' });
 
 const files = ref<Array<File>>([]);
 
-const postNew = ref(getInitialPostNew());
+const [model] = useSourcedRef(() => props.post, { isAutoSynced: true });
 
 const { intlFormatDistance } = useDateFns();
 
-const { v$ } = useVuelidatePostData(postNew, files);
+const { v$ } = useVuelidatePostData(model, files);
 
 const onSubmit = async () => {
   if (!(await v$.value.$validate())) {
@@ -116,12 +99,30 @@ const onSubmit = async () => {
   }
 
   if (hasChanges.value) {
-    blogStore.putById(props.post.id, postNew.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
+    blogStore.putById(props.post.id, model.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
   }
 
   closeEditMode();
   v$.value.$reset();
 };
+
+const component = computed(() =>
+  isInEditMode.value
+    ? {
+        Is: 'div',
+      }
+    : {
+        Is: RouterLink,
+        binds: {
+          to: {
+            name: RouteName.BlogPost,
+            params: {
+              postId: props.post.id,
+            },
+          },
+        },
+      },
+);
 
 const dateExact = computed(() =>
   [
@@ -137,7 +138,7 @@ const wasEdited = computed(() => _wasEdited(props.post));
 
 const onKeyDownEnter = onPostTextareaKeyDownEnter(onSubmit);
 
-const hasChanges = computed(() => !deepEqual(props.post, postNew.value));
+const hasChanges = computed(() => !deepEqual(props.post, model.value));
 
 const closeEditMode = () => {
   blogStore.editModeFor = null;
@@ -147,13 +148,13 @@ const controls = computed(() => [
   ...(isInEditMode.value
     ? [
         {
-          id: 0,
+          key: 'cancel',
           iconPath: mdiCancel,
           isLoading: false,
           onClick: closeEditMode,
         },
         {
-          id: 1,
+          key: 'save',
           iconPath: mdiContentSave,
           isDisabled: !hasChanges.value,
           isLoading: blogStore.isLoadingPutById,
@@ -165,7 +166,7 @@ const controls = computed(() => [
   ...(!(isInEditMode.value || props.post.filesUrls.length)
     ? [
         {
-          id: 2,
+          key: 'edit',
           iconPath: mdiPencil,
           isLoading: blogStore.isLoadingPutById,
           onClick: () => {
@@ -177,7 +178,7 @@ const controls = computed(() => [
       ]
     : []),
   {
-    id: 3,
+    key: 'delete',
     iconPath: mdiDelete,
     isLoading: blogStore.isLoadingDeleteById,
     onClick: async () => {
@@ -189,17 +190,4 @@ const controls = computed(() => [
     },
   },
 ]);
-
-const onClick = () => {
-  if (isInEditMode.value) {
-    return;
-  }
-
-  router.push({
-    name: RouteName.BlogPost,
-    params: {
-      postId: props.post.id,
-    },
-  });
-};
 </script>

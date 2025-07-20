@@ -13,7 +13,7 @@ import {
 } from '@/api/posts';
 import { postUpload } from '@/api/upload';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
-import { useResetableRef } from '@/composables/useResetableRef';
+import { useSourcedRef } from '@/composables/useSourcedRef';
 
 export const useBlogStore = defineStore('blog', () => {
   // TODO: сделать SSR-friendly композабл
@@ -22,7 +22,7 @@ export const useBlogStore = defineStore('blog', () => {
   const pageNumber = ref(0);
   const [isEnd, toggleIsEnd] = useToggle();
 
-  const [all, resetAll] = useResetableRef<Array<Post>>([]);
+  const [all, resetAll] = useSourcedRef<Array<Post>>([]);
   const { execute: getAll, isLoading: isLoadingGetAll } = useAsyncStateApi(
     async (options: { shouldReset?: boolean } = {}) => {
       if (options.shouldReset) {

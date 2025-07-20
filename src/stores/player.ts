@@ -15,7 +15,7 @@ export const usePlayerStore = defineStore('player', () => {
   const playlistReal = ref<Array<ItemAudio>>([]);
   const playlistPotential = ref<Array<ItemAudio>>([]);
 
-  const playlistRealHref = ref(route.fullPath);
+  const playlistRealHref = ref(route.path);
 
   const isTrackLoaded = computed(() => Boolean(theTrack.value));
 
@@ -28,11 +28,12 @@ export const usePlayerStore = defineStore('player', () => {
   const url = computed(() => theTrack.value?.url);
   const src = computed(() => theTrack.value?.src);
   const name = computed(() => theTrack.value?.name);
+  const duration = computed(() => theTrack.value?.metadata.duration);
 
   const loadTrack = (track: ItemAudio) => {
-    if (route.fullPath !== playlistRealHref.value || !theTrack.value) {
+    if (route.path !== playlistRealHref.value || !theTrack.value) {
       playlistReal.value = playlistPotential.value;
-      playlistRealHref.value = route.fullPath;
+      playlistRealHref.value = route.path;
       historyItems.value = [];
     }
 
@@ -46,7 +47,7 @@ export const usePlayerStore = defineStore('player', () => {
 
   const loadRealPlaylist = (playlist: ItemAudio[]) => {
     playlistReal.value = playlist;
-    playlistRealHref.value = route.fullPath;
+    playlistRealHref.value = route.path;
   };
 
   const loadPotentialPlaylist = (playlist: ItemAudio[]) => {
@@ -79,6 +80,7 @@ export const usePlayerStore = defineStore('player', () => {
     url,
     src,
     name,
+    duration,
 
     loadTrack,
     unloadTrack,

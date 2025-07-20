@@ -4,7 +4,7 @@
       <BaseSelect :options="Object.values(ThemeColor)" :label="t('color')" v-model="model.themeColor" />
       <BaseSelect :options="Object.values(Language)" :label="t('language')" v-model="model.language" />
       <BaseButton @click="onClickResetSettings">{{ t('resetSettings') }}</BaseButton>
-      <button v-if="isDevelopment" @click="onClickAuthorize">{{ t('authorize') }}</button>
+      <BaseButton v-if="isDevelopment" @click="onClickAuthorize">{{ t('authorize') }}</BaseButton>
     </div>
   </BaseDialog>
 </template>
@@ -36,8 +36,8 @@ import BaseButton from '@/components/ui/BaseButton';
 import BaseSelect from '@/components/ui/BaseSelect';
 import { Language, ThemeColor } from '@/constants/settings';
 import { useAuthStore } from '@/stores/auth';
-import { useResetableRef } from '@/composables/useResetableRef';
 import { isDevelopment } from '@/constants/mode';
+import { useSourcedRef } from '@/composables/useSourcedRef';
 
 const authStore = useAuthStore();
 
@@ -47,7 +47,7 @@ const settingsStore = useSettingsStore();
 
 const { t } = useI18n({ useScope: 'local' });
 
-const [model, resetModel] = useResetableRef(() => settingsStore.settings);
+const [model, resetModel] = useSourcedRef(() => settingsStore.settings);
 
 const onConfirm = () => settingsStore.saveSettings(model.value);
 

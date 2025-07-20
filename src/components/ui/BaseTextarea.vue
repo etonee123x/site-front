@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-1">
     <textarea
-      class="rounded-lg border border-dark overflow-hidden w-full m-0 p-4 outline-hidden resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
+      class="rounded-lg border border-dark overflow-hidden w-full m-0 p-4 resize-none flex bg-none flex-1 placeholder:text-dark focus:on-focus"
       :placeholder
       ref="textarea"
       v-model="model"

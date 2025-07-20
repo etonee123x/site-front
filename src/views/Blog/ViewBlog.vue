@@ -10,9 +10,9 @@
           v-model:files="files"
           @keydown:enter="onKeyDownEnter"
         />
-        <LazyBaseButton type="submit" :isLoading="blogStore.isLoadingPost">
+        <BaseButton type="submit" :isLoading="blogStore.isLoadingPost">
           {{ t('send') }}
-        </LazyBaseButton>
+        </BaseButton>
       </LazyBaseForm>
       <hr v-if="hasPosts" class="my-4" />
     </template>
@@ -74,14 +74,14 @@ import { goToPage404 } from '@/composables/goToPage404';
 import { MAIN } from '@/constants/selectors';
 import { useElementFinder } from '@/composables/useElementFinder';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
-import { useResetableRef } from '@/composables/useResetableRef';
 import { onPostTextareaKeyDownEnter } from './helpers/onPostTextareaKeyDownEnter';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import { isServer } from '@/constants/target';
 import { clientOnly } from '@/helpers/clientOnly';
+import BaseButton from '@/components/ui/BaseButton';
+import { useSourcedRef } from '@/composables/useSourcedRef';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
-const LazyBaseButton = defineAsyncComponent(() => import('@/components/ui/BaseButton'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./components/BlogEditPost.vue'));
@@ -109,9 +109,9 @@ useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
   distance: 100,
 });
 
-const [files, resetFiles] = useResetableRef<Array<File>>([]);
+const [files, resetFiles] = useSourcedRef<Array<File>>([]);
 
-const [postData, resetPostModel] = useResetableRef(() => ({
+const [postData, resetPostModel] = useSourcedRef(() => ({
   text: '',
   filesUrls: [],
 }));

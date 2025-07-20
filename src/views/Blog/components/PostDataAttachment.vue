@@ -1,5 +1,5 @@
 <template>
-  <component :is="component.is" class="max-w-full" v-bind="component.binds" />
+  <component :is="component.is" class="max-w-full" v-bind="component.binds" @click.stop.prevent />
 </template>
 
 <i18n lang="yaml">
@@ -76,10 +76,7 @@ const component = computed(() => {
         binds: {
           src: props.fileUrl,
           alt: t('attachmentN', { N: props.index + 1 }),
-          onClick: (e: Event) => {
-            e.stopPropagation();
-            loadToGallery();
-          },
+          onClick: loadToGallery,
         },
       };
     case maybeExt && isExtAudio(maybeExt):
@@ -95,10 +92,7 @@ const component = computed(() => {
         is: LazyPreviewVideo,
         binds: {
           src: props.fileUrl,
-          onClick: (e: Event) => {
-            e.stopPropagation();
-            loadToGallery();
-          },
+          onClick: loadToGallery,
         },
       };
     default:

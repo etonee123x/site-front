@@ -6,15 +6,16 @@
     <div class="layout-container mx-auto flex flex-col gap-1 justify-center">
       <BaseButton
         v-if="shouldRenderButtonClose"
-        class="text-xl absolute end-2 top-2 no-hover:hidden"
+        class="text-xl absolute end-2 top-2 hover-none:hidden"
+        :aria-label="t('closePlayer')"
         @click="onClickClose"
       >
         <BaseIcon :path="mdiClose" />
       </BaseButton>
       <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
         <div
-          class="pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
-          title="Copy link"
+          class="cursor-pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
+          :title="t('copyLink')"
           @click="onClickTitle"
         >
           <span>{{ playerStore.name }}</span>
@@ -39,7 +40,11 @@
       </div>
       <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
         <div class="flex justify-end">
-          <BaseToggler class="whitespace-nowrap min-w-6" v-model="playerStore.isShuffleModeEnabled">
+          <BaseToggler
+            class="whitespace-nowrap min-w-6"
+            :aria-label="playerStore.isShuffleModeEnabled ? t('disableShuffleTracks') : t('enableShuffleTracks')"
+            v-model="playerStore.isShuffleModeEnabled"
+          >
             <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
           </BaseToggler>
         </div>
@@ -48,7 +53,8 @@
             v-for="controlButton in controlButtons"
             :isDisabled="controlButton.isDisabled"
             class="whitespace-nowrap min-w-6 h-6 w-8"
-            :key="controlButton.id"
+            :aria-label="controlButton.ariaLabel"
+            :key="controlButton.key"
             @click="controlButton.onClick"
           >
             <BaseIcon class="text-2xl" :path="controlButton.icon" />
@@ -65,12 +71,28 @@
 <i18n lang="yaml">
 En:
   copied: 'Copied!'
+  copyLink: 'Copy link'
+  previousTrack: 'Previous track'
+  pauseTrack: 'Pause track'
+  playTrack: 'Play track'
+  nextTrack: 'Next track'
+  closePlayer: 'Close player'
+  enableShuffleTracks: 'Enable shuffle tracks'
+  disableShuffleTracks: 'Disable shuffle tracks'
 Ru:
   copied: 'Скопировано!'
+  copyLink: 'Скопировать ссылку'
+  previousTrack: 'Предыдущий трек'
+  pauseTrack: 'Пауза трека'
+  playTrack: 'Воспроизвести трек'
+  nextTrack: 'Следующий трек'
+  closePlayer: 'Закрыть плеер'
+  enableShuffleTracks: 'Включить перемешивание треков'
+  disableShuffleTracks: 'Выключить перемешивание треков'
 </i18n>
 
 <script lang="ts" setup>
-import { useClipboard, useMediaControls } from '@vueuse/core';
+import { useClipboard, useMediaControls, useToggle } from '@vueuse/core';
 import {
   mdiClose,
   mdiShuffleVariant,
@@ -103,35 +125,44 @@ const toastsStore = useToastsStore();
 
 const audio = useTemplateRef('audio');
 
-const { playing: isPlaying, waiting: isWaiting, currentTime, duration, volume } = useMediaControls(audio);
+const { playing: isPlaying, waiting: isWaiting, currentTime, volume } = useMediaControls(audio);
+const duration = computed(() => playerStore.duration ?? 0);
+
+const toggleIsPlaying = useToggle(isPlaying);
 
 const shouldRenderButtonClose = computed(() => !(isPlaying.value || isWaiting.value));
 
 const controlButtons = computed(() => [
   {
-    id: 0,
+    key: 'previous',
     icon: mdiSkipBackward,
     onClick: playerStore.loadPrev,
     isDisabled: playerStore.isShuffleModeEnabled && !playerStore.isNotEmptyHistory,
+    ariaLabel: t('previousTrack'),
   },
+  isPlaying.value
+    ? {
+        key: 'pause',
+        icon: mdiPause,
+        onClick: () => toggleIsPlaying(false),
+        ariaLabel: t('pauseTrack'),
+      }
+    : {
+        key: 'play',
+        icon: mdiPlay,
+        onClick: () => toggleIsPlaying(true),
+        ariaLabel: t('playTrack'),
+      },
   {
-    id: 1,
-    icon: isPlaying.value ? mdiPause : mdiPlay,
-    onClick: onClickPlayPause,
-  },
-  {
-    id: 2,
+    key: 'next',
     icon: mdiSkipForward,
     onClick: playerStore.loadNext,
+    ariaLabel: t('nextTrack'),
   },
 ]);
 
 const formatedDuration = computed(() => formatDuration(duration.value * 1000));
 const formattedCurrentTime = computed(() => formatDuration(currentTime.value * 1000));
-
-const onClickPlayPause = () => {
-  isPlaying.value = !isPlaying.value;
-};
 
 const onEnded = playerStore.loadNext;
 

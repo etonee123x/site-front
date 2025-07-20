@@ -2,9 +2,9 @@
   <div>
     <ExplorerNavbar />
     <div class="layout-container mx-auto flex flex-col gap-2 py-2">
-      <LazyExplorerElementSystem v-if="explorerStore.lvlUp" @keydown.enter="onClickLvlUp" @click="onClickLvlUp">
-        ...
-      </LazyExplorerElementSystem>
+      <RouterLink v-if="explorerStore.lvlUp" :to="explorerStore.lvlUp">
+        <LazyExplorerElementSystem>...</LazyExplorerElementSystem>
+      </RouterLink>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"
@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onServerPrefetch } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter, type RouteLocationNormalizedLoaded } from 'vue-router';
+import { defineAsyncComponent } from 'vue';
+import { onBeforeRouteUpdate, useRoute, type RouteLocationNormalizedLoaded } from 'vue-router';
 import { isItemFolder, isItemAudio, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
 import type { Item } from '@etonee123x/shared/helpers/folderData';
 
@@ -36,15 +36,6 @@ const LazyExplorerElementFileVideo = defineAsyncComponent(() => import('./compon
 const explorerStore = useExplorerStore();
 
 const route = useRoute();
-const router = useRouter();
-
-const onClickLvlUp = () => {
-  if (!explorerStore.lvlUp) {
-    return;
-  }
-
-  router.push(explorerStore.lvlUp);
-};
 
 const getComponent = (item: Item) => {
   switch (true) {
@@ -61,13 +52,9 @@ const getComponent = (item: Item) => {
   }
 };
 
-const _fetchData = (to: RouteLocationNormalizedLoaded) =>
-  explorerStore.getFolderData(to.fullPath.replace('/explorer', '')).catch(goToPage404);
+const fetchData = (to: RouteLocationNormalizedLoaded) => explorerStore.getFolderData(to).catch(goToPage404);
 
-const fetchData = () => _fetchData(route);
+clientOnly(() => fetchData(route));
 
-onServerPrefetch(fetchData);
-clientOnly(fetchData);
-
-onBeforeRouteUpdate((to) => void _fetchData(to));
+onBeforeRouteUpdate((to) => void fetchData(to));
 </script>
