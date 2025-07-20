@@ -4,7 +4,7 @@
       <BaseSelect :options="Object.values(ThemeColor)" :label="t('color')" v-model="model.themeColor" />
       <BaseSelect :options="Object.values(Language)" :label="t('language')" v-model="model.language" />
       <BaseButton @click="onClickResetSettings">{{ t('resetSettings') }}</BaseButton>
-      <button v-if="isDevelopment" @click="onClickAuthorize">{{ t('authorize') }}</button>
+      <BaseButton v-if="isDevelopment" @click="onClickAuthorize">{{ t('authorize') }}</BaseButton>
     </div>
   </BaseDialog>
 </template>
