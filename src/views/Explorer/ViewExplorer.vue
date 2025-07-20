@@ -2,9 +2,9 @@
   <div>
     <ExplorerNavbar />
     <div class="layout-container mx-auto flex flex-col gap-2 py-2">
-      <RouterLink v-if="explorerStore.lvlUp" :to="explorerStore.lvlUp">
-        <LazyExplorerElementSystem>...</LazyExplorerElementSystem>
-      </RouterLink>
+      <LazyExplorerElementSystem v-if="explorerStore.lvlUp" :to="explorerStore.lvlUp" tag="RouterLink">
+        ...
+      </LazyExplorerElementSystem>
       <component
         :is="getComponent(folderElement)"
         v-for="(folderElement, idx) in explorerStore.folderElements"

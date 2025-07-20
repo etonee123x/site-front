@@ -5,7 +5,12 @@
         {{ element.name }}
       </div>
       <div class="text-right m-2" title="Created at">
-        {{ birthTimeFormatted }}
+        <ClientOnly>
+          {{ birthTimeFormatted }}
+          <template #fallback>
+            {{ birthTimeFormatted }}
+          </template>
+        </ClientOnly>
       </div>
     </div>
     <hr />
@@ -17,8 +22,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { format } from 'date-fns';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
+import { useDateFns } from '@/composables/useDateFns';
+import ClientOnly from '@/components/ClientOnly.vue';
 
 const props = defineProps<{
   element: ItemFile;
@@ -28,7 +34,9 @@ const emit = defineEmits<{
   click: [];
 }>();
 
+const { format } = useDateFns();
+
 const onClick = () => emit('click');
 
-const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
+const birthTimeFormatted = computed(() => format.value(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
 </script>

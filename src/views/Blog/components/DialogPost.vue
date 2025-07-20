@@ -7,8 +7,14 @@
     />
     <template #footer>
       <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
-        <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
-        <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
+        <ClientOnly>
+          <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
+          <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
+          <template #fallback>
+            <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
+            <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
+          </template>
+        </ClientOnly>
       </div>
     </template>
   </BaseDialog>
@@ -24,7 +30,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, useTemplateRef, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -35,6 +41,7 @@ import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
 import PostData from './PostData.vue';
+import ClientOnly from '@/components/ClientOnly.vue';
 
 const FORMAT_TEMPALTE = 'PPp';
 
@@ -45,8 +52,6 @@ const router = useRouter();
 const blogStore = useBlogStore();
 
 const { format } = useDateFns();
-
-const baseDialog = useTemplateRef('baseDialog');
 
 const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 

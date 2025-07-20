@@ -16,7 +16,12 @@
       <template v-else>
         <PostData :post />
         <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
-          <span>{{ createdAtHumanReadable }}</span>
+          <ClientOnly>
+            {{ createdAtHumanReadable }}
+            <template #fallback>
+              {{ createdAtHumanReadable }}
+            </template>
+          </ClientOnly>
           <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
         </span>
       </template>
@@ -69,6 +74,7 @@ import { onPostTextareaKeyDownEnter } from '../helpers/onPostTextareaKeyDownEnte
 import { RouterLink } from 'vue-router';
 import { useSourcedRef } from '@/composables/useSourcedRef';
 import BaseButton from '@/components/ui/BaseButton';
+import ClientOnly from '@/components/ClientOnly.vue';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 
