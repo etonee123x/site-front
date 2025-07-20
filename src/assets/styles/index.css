@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700;800&display=swap') layer(base);
-
 @import 'tailwindcss';
 
 @theme {
@@ -72,7 +70,20 @@
 
   html,
   body {
-    font-family: Roboto, 'Open Sans', sans-serif;
+    font-family:
+      -apple-system,
+      /* macOS и iOS */
+      BlinkMacSystemFont,
+      /* Chrome на macOS */
+      "Segoe UI",
+      /* Windows */
+      Roboto,
+      /* Android, Chrome OS */
+      "Helvetica Neue",
+      /* macOS */
+      Arial,
+      /* Фолбек */
+      sans-serif;
   }
 
   button {
