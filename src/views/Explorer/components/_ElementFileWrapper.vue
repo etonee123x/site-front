@@ -7,9 +7,6 @@
       <div class="text-right m-2" title="Created at">
         <ClientOnly>
           {{ birthTimeFormatted }}
-          <template #fallback>
-            {{ birthTimeFormatted }}
-          </template>
         </ClientOnly>
       </div>
     </div>
@@ -38,5 +35,5 @@ const { format } = useDateFns();
 
 const onClick = () => emit('click');
 
-const birthTimeFormatted = computed(() => format.value(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
+const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
 </script>

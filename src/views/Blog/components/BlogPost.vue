@@ -18,9 +18,6 @@
         <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
           <ClientOnly>
             {{ createdAtHumanReadable }}
-            <template #fallback>
-              {{ createdAtHumanReadable }}
-            </template>
           </ClientOnly>
           <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
         </span>
@@ -75,6 +72,7 @@ import { RouterLink } from 'vue-router';
 import { useSourcedRef } from '@/composables/useSourcedRef';
 import BaseButton from '@/components/ui/BaseButton';
 import ClientOnly from '@/components/ClientOnly.vue';
+import { FORMAT_TEMPALTE } from '../constants/formatTemplate';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 
@@ -95,7 +93,7 @@ const files = ref<Array<File>>([]);
 
 const [model] = useSourcedRef(() => props.post, { isAutoSynced: true });
 
-const { intlFormatDistance } = useDateFns();
+const { format } = useDateFns();
 
 const { v$ } = useVuelidatePostData(model, files);
 
@@ -136,7 +134,8 @@ const dateExact = computed(() =>
     ...(wasEdited.value ? [t('updatedAt', { date: String(new Date(props.post.updatedAt)) })] : []),
   ].join('\n'),
 );
-const createdAtHumanReadable = computed(() => intlFormatDistance.value(props.post.createdAt, new Date()));
+
+const createdAtHumanReadable = computed(() => format(props.post.createdAt, FORMAT_TEMPALTE));
 
 const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.post.id));
 

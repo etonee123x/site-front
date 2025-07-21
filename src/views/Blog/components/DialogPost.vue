@@ -10,10 +10,6 @@
         <ClientOnly>
           <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
           <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
-          <template #fallback>
-            <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
-            <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
-          </template>
         </ClientOnly>
       </div>
     </template>
@@ -42,8 +38,7 @@ import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
 import PostData from './PostData.vue';
 import ClientOnly from '@/components/ClientOnly.vue';
-
-const FORMAT_TEMPALTE = 'PPp';
+import { FORMAT_TEMPALTE } from '../constants/formatTemplate';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -58,8 +53,8 @@ const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 const dates = computed(() =>
   blogStore.byId
     ? {
-        createdAt: format.value(blogStore.byId.createdAt, FORMAT_TEMPALTE),
-        updatedAt: format.value(blogStore.byId.updatedAt, FORMAT_TEMPALTE),
+        createdAt: format(blogStore.byId.createdAt, FORMAT_TEMPALTE),
+        updatedAt: format(blogStore.byId.updatedAt, FORMAT_TEMPALTE),
       }
     : {
         createdAt: null,
