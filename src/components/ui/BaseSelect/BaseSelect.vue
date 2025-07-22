@@ -99,7 +99,7 @@ import BaseIcon from '@/components/ui/BaseIcon';
 import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { Tippy, type TippyComponent } from 'vue-tippy';
 import { computed, ref, watch, nextTick, watchEffect, useId, useTemplateRef } from 'vue';
-import { objectGet } from '@/utils/objectGet';
+import { objectGet } from '@etonee123x/shared/utils/objectGet';
 import { useElementSize, type MaybeComputedElementRef } from '@vueuse/core';
 import { isNil } from '@etonee123x/shared/utils/isNil';
 import { isEqual } from '@etonee123x/shared/utils/isEqual';

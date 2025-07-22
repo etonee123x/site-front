@@ -24,7 +24,7 @@
     <template v-else>
       <template v-if="hasPosts">
         <div class="flex flex-col gap-4 mb-4">
-          <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post.id" />
+          <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post._meta.id" />
         </div>
         <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center m-4" />
       </template>

@@ -1,5 +1,5 @@
 import type { Id } from '@etonee123x/shared/helpers/id';
-import type { Post, PostData } from '@etonee123x/shared/types/blog';
+import type { Post } from '@etonee123x/shared/types/blog';
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useToggle } from '@vueuse/core';
@@ -10,10 +10,12 @@ import {
   deletePost as _deletePost,
   putPost as _putPost,
   getPostById as _getPostById,
+  type PostWithDatabaseMeta,
 } from '@/api/posts';
 import { postUpload } from '@/api/upload';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import { useSourcedRef } from '@/composables/useSourcedRef';
+import type { ForPut, ForPost } from '@etonee123x/shared/types/database';
 
 export const useBlogStore = defineStore('blog', () => {
   // TODO: сделать SSR-friendly композабл
@@ -22,7 +24,7 @@ export const useBlogStore = defineStore('blog', () => {
   const pageNumber = ref(0);
   const [isEnd, toggleIsEnd] = useToggle();
 
-  const [all, resetAll] = useSourcedRef<Array<Post>>([]);
+  const [all, resetAll] = useSourcedRef<Array<PostWithDatabaseMeta>>([]);
   const { execute: getAll, isLoading: isLoadingGetAll } = useAsyncStateApi(
     async (options: { shouldReset?: boolean } = {}) => {
       if (options.shouldReset) {
@@ -31,7 +33,7 @@ export const useBlogStore = defineStore('blog', () => {
         pageNumber.value = 0;
       }
 
-      return _getPosts(pageNumber.value).then(({ data: _posts, meta: { isEnd: _isEnd } }): Array<Post> => {
+      return _getPosts(pageNumber.value).then(({ rows: _posts, _meta: { isEnd: _isEnd } }): Array<Post> => {
         all.value = all.value.concat(_posts);
         toggleIsEnd(_isEnd);
         pageNumber.value++;
@@ -43,7 +45,7 @@ export const useBlogStore = defineStore('blog', () => {
   );
 
   const { execute: post, isLoading: isLoadingPost } = useAsyncStateApi(
-    async (postData: PostData, files: Array<File> = []) => {
+    async (postData: ForPost<Post>, files: Array<File> = []) => {
       const filesUrls = files.length ? await postUpload(files) : [];
 
       return _postPost({ ...postData, filesUrls });
@@ -51,7 +53,7 @@ export const useBlogStore = defineStore('blog', () => {
   );
 
   const { execute: putById, isLoading: isLoadingPutById } = useAsyncStateApi(
-    async (id: Id, post: Post, files: Array<File> = []) => {
+    async (id: Id, post: ForPut<Post>, files: Array<File> = []) => {
       const filesUrls = files.length ? await postUpload(files) : [];
 
       return _putPost(id, { ...post, filesUrls });

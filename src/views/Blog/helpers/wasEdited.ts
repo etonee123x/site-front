@@ -1,3 +1,3 @@
-import type { Post } from '@etonee123x/shared/types/blog';
+import type { PostWithDatabaseMeta } from '@/api/posts';
 
-export const wasEdited = (post: Post) => post.createdAt !== post.updatedAt;
+export const wasEdited = (post: PostWithDatabaseMeta) => post._meta.createdAt !== post._meta.updatedAt;

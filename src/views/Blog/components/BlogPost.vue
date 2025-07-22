@@ -16,9 +16,7 @@
       <template v-else>
         <PostData :post />
         <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
-          <ClientOnly>
-            {{ createdAtHumanReadable }}
-          </ClientOnly>
+          {{ sinceCreatedFormatted }}
           <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
         </span>
       </template>
@@ -52,7 +50,6 @@ Ru:
 <script setup lang="ts">
 import deepEqual from 'deep-equal';
 import { mdiCancel, mdiContentSave, mdiDelete, mdiPencil } from '@mdi/js';
-import type { Post } from '@etonee123x/shared/types/blog';
 import { areIdsEqual } from '@etonee123x/shared/helpers/id';
 import { computed, ref, nextTick, defineAsyncComponent, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -71,13 +68,12 @@ import { onPostTextareaKeyDownEnter } from '../helpers/onPostTextareaKeyDownEnte
 import { RouterLink } from 'vue-router';
 import { useSourcedRef } from '@/composables/useSourcedRef';
 import BaseButton from '@/components/ui/BaseButton';
-import ClientOnly from '@/components/ClientOnly.vue';
-import { FORMAT_TEMPALTE } from '../constants/formatTemplate';
+import type { PostWithDatabaseMeta } from '@/api/posts';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 
 const props = defineProps<{
-  post: Post;
+  post: PostWithDatabaseMeta;
   onBeforeDelete: () => Promise<boolean>;
 }>();
 
@@ -93,7 +89,7 @@ const files = ref<Array<File>>([]);
 
 const [model] = useSourcedRef(() => props.post, { isAutoSynced: true });
 
-const { format } = useDateFns();
+const { intlFormatDistanceToNow } = useDateFns();
 
 const { v$ } = useVuelidatePostData(model, files);
 
@@ -103,7 +99,9 @@ const onSubmit = async () => {
   }
 
   if (hasChanges.value) {
-    blogStore.putById(props.post.id, model.value, files.value).then(() => blogStore.getAll({ shouldReset: true }));
+    blogStore
+      .putById(props.post._meta.id, model.value, files.value)
+      .then(() => blogStore.getAll({ shouldReset: true }));
   }
 
   closeEditMode();
@@ -121,23 +119,24 @@ const component = computed(() =>
           to: {
             name: RouteName.BlogPost,
             params: {
-              postId: props.post.id,
+              postId: props.post._meta.id,
             },
           },
         },
       },
 );
 
+// TODO: перевести на серверное время
 const dateExact = computed(() =>
   [
-    String(new Date(props.post.createdAt)),
-    ...(wasEdited.value ? [t('updatedAt', { date: String(new Date(props.post.updatedAt)) })] : []),
+    String(new Date(props.post._meta.createdAt)),
+    ...(wasEdited.value ? [t('updatedAt', { date: String(new Date(props.post._meta.updatedAt)) })] : []),
   ].join('\n'),
 );
 
-const createdAtHumanReadable = computed(() => format(props.post.createdAt, FORMAT_TEMPALTE));
+const sinceCreatedFormatted = computed(() => intlFormatDistanceToNow(props.post._meta.sinceCreated));
 
-const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.post.id));
+const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.post._meta.id));
 
 const wasEdited = computed(() => _wasEdited(props.post));
 
@@ -175,7 +174,7 @@ const controls = computed(() => [
           iconPath: mdiPencil,
           isLoading: blogStore.isLoadingPutById,
           onClick: () => {
-            blogStore.editModeFor = props.post.id;
+            blogStore.editModeFor = props.post._meta.id;
 
             nextTick(() => blogEditPost.value?.focusTextarea());
           },
@@ -191,7 +190,7 @@ const controls = computed(() => [
         return;
       }
 
-      return blogStore.deleteById(props.post.id).then(() => blogStore.getAll({ shouldReset: true }));
+      return blogStore.deleteById(props.post._meta.id).then(() => blogStore.getAll({ shouldReset: true }));
     },
   },
 ]);

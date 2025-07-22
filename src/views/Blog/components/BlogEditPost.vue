@@ -39,7 +39,7 @@ En:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
-import type { PostData } from '@etonee123x/shared/types/blog';
+import type { Post } from '@etonee123x/shared/types/blog';
 import { mdiDelete } from '@mdi/js';
 
 import { type useVuelidatePostData } from '../composables/useVuelidatePostData';
@@ -61,7 +61,7 @@ const emit = defineEmits<{
   'keydown:enter': [KeyboardEvent];
 }>();
 
-const model = defineModel<PostData>({ required: true });
+const model = defineModel<Post>({ required: true });
 const files = defineModel<Array<File>>('files', { default: [] });
 
 const onClickDeleteFiles = () => {
