@@ -1,5 +1,15 @@
-import type { FolderData } from '@etonee123x/shared/helpers/folderData';
+import type { FolderData, Item } from '@etonee123x/shared/helpers/folderData';
 
 import { client } from '@/api/_client';
 
-export const getFolderData = (url: string) => client<FolderData>(`/get-folder-data${url}`);
+export interface WithSinceBirthtime {
+  sinceBirthtime: number;
+}
+
+type ItemWithSinceTimestamps = Item & WithSinceBirthtime;
+
+type FolderDataWithSinceTimestamps = Omit<FolderData, 'items'> & {
+  items: Array<ItemWithSinceTimestamps>;
+};
+
+export const getFolderData = (url: string) => client<FolderDataWithSinceTimestamps>(`/get-folder-data${url}`);

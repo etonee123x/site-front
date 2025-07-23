@@ -5,9 +5,7 @@
         {{ element.name }}
       </div>
       <div class="text-right m-2" title="Created at">
-        <ClientOnly>
-          {{ birthTimeFormatted }}
-        </ClientOnly>
+        {{ sinceBirthtime }}
       </div>
     </div>
     <hr />
@@ -21,19 +19,19 @@
 import { computed } from 'vue';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
 import { useDateFns } from '@/composables/useDateFns';
-import ClientOnly from '@/components/ClientOnly.vue';
+import type { WithSinceBirthtime } from '@/api/folderData';
 
 const props = defineProps<{
-  element: ItemFile;
+  element: ItemFile & WithSinceBirthtime;
 }>();
 
 const emit = defineEmits<{
   click: [];
 }>();
 
-const { format } = useDateFns();
-
 const onClick = () => emit('click');
 
-const birthTimeFormatted = computed(() => format(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
+const { intlFormatDistanceToNow } = useDateFns();
+
+const sinceBirthtime = computed(() => intlFormatDistanceToNow(props.element.sinceBirthtime));
 </script>

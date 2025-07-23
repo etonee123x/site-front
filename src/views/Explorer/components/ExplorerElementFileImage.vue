@@ -12,9 +12,10 @@ import type { ItemImage } from '@etonee123x/shared/helpers/folderData';
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
 import { useGalleryStore } from '@/stores/gallery';
+import type { WithSinceBirthtime } from '@/api/folderData';
 
 const props = defineProps<{
-  element: ItemImage;
+  element: ItemImage & WithSinceBirthtime;
 }>();
 
 const { loadGalleryItemFromCurrentExplorerFolder } = useGalleryStore();

@@ -42,9 +42,10 @@ import ElementFileWrapper from './_ElementFileWrapper.vue';
 import { formatDuration } from '@/utils/formatDuration';
 import { usePlayerStore } from '@/stores/player';
 import BaseIcon from '@/components/ui/BaseIcon';
+import type { WithSinceBirthtime } from '@/api/folderData';
 
 const props = defineProps<{
-  element: ItemAudio;
+  element: ItemAudio & WithSinceBirthtime;
 }>();
 
 const playerStore = usePlayerStore();
