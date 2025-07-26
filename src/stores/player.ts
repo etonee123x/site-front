@@ -4,7 +4,6 @@ import { computed, ref, shallowRef } from 'vue';
 
 import { getRandomExceptCurrentIndex } from '@/utils/getRandomExceptCurrentIndex';
 import { useRoute } from 'vue-router';
-import type { WithSinceBirthtime } from '@/api/folderData';
 
 export const usePlayerStore = defineStore('player', () => {
   const route = useRoute();
@@ -29,7 +28,7 @@ export const usePlayerStore = defineStore('player', () => {
   const url = computed(() => theTrack.value?.url);
   const src = computed(() => theTrack.value?.src);
   const name = computed(() => theTrack.value?.name);
-  const duration = computed(() => theTrack.value?.metadata.duration);
+  const duration = computed(() => theTrack.value?.musicMetadata.duration);
 
   const loadTrack = (track: ItemAudio) => {
     if (route.path !== playlistRealHref.value || !theTrack.value) {
@@ -46,12 +45,12 @@ export const usePlayerStore = defineStore('player', () => {
     theTrack.value = null;
   };
 
-  const loadRealPlaylist = (playlist: Array<ItemAudio & WithSinceBirthtime>) => {
+  const loadRealPlaylist = (playlist: Array<ItemAudio>) => {
     playlistReal.value = playlist;
     playlistRealHref.value = route.path;
   };
 
-  const loadPotentialPlaylist = (playlist: Array<ItemAudio & WithSinceBirthtime>) => {
+  const loadPotentialPlaylist = (playlist: Array<ItemAudio>) => {
     playlistPotential.value = playlist;
   };
 

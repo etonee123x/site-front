@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { computed, shallowReactive } from 'vue';
-import { isItemAudio, ItemAudio, type FolderData } from '@etonee123x/shared/helpers/folderData';
+import { isItemAudio, type FolderData } from '@etonee123x/shared/helpers/folderData';
 
 import { usePlayerStore } from '@/stores/player';
-import { getFolderData as _getFolderData, type WithSinceBirthtime } from '@/api/folderData';
+import { getFolderData as _getFolderData } from '@/api/folderData';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
@@ -31,7 +31,7 @@ export const useExplorerStore = defineStore('explorer', () => {
     return _getFolderData(routePath).then((_folderData) => {
       routePathToFolderData[routePath] = _folderData;
 
-      const playlist = _folderData.items.filter((item): item is ItemAudio & WithSinceBirthtime => isItemAudio(item));
+      const playlist = _folderData.items.filter((item) => isItemAudio(item));
 
       if (!playlist.length) {
         return _folderData;

@@ -2,14 +2,14 @@
   <ElementFileWrapper :element @keydown.enter="onClick" @click="onClick">
     <div class="flex gap-4 overflow-x-auto">
       <div
-        v-for="metadata in metadataList"
-        :title="metadata.title"
+        v-for="metadataItem in metadataItems"
+        :title="metadataItem.title"
         class="flex flex-col items-center"
-        :key="metadata.id"
+        :key="metadataItem.key"
       >
-        <BaseIcon class="text-2xl h-6" :path="metadata.path" />
+        <BaseIcon class="text-2xl h-6" :path="metadataItem.path" />
         <div class="text-center max-w-40">
-          {{ metadata.value }}
+          {{ metadataItem.value }}
         </div>
       </div>
     </div>
@@ -42,10 +42,10 @@ import ElementFileWrapper from './_ElementFileWrapper.vue';
 import { formatDuration } from '@/utils/formatDuration';
 import { usePlayerStore } from '@/stores/player';
 import BaseIcon from '@/components/ui/BaseIcon';
-import type { WithSinceBirthtime } from '@/api/folderData';
+import type { ItemWithSinceTimestamps } from '@/api/folderData';
 
 const props = defineProps<{
-  element: ItemAudio & WithSinceBirthtime;
+  element: ItemWithSinceTimestamps<ItemAudio>;
 }>();
 
 const playerStore = usePlayerStore();
@@ -54,50 +54,54 @@ const { t } = useI18n({ useScope: 'local' });
 
 const onClick = () => playerStore.loadTrack(props.element);
 
-const metadataList = computed(() => [
-  {
-    id: 0,
-    title: t('duration'),
-    path: mdiClockOutline,
-    value: formatDuration(props.element.metadata.duration * 1000),
-  },
-  ...(props.element.metadata.artists.length
+const metadataItems = computed(() => [
+  ...(props.element.musicMetadata.duration
     ? [
         {
-          id: 1,
+          key: 'duration',
+          title: t('duration'),
+          path: mdiClockOutline,
+          value: formatDuration(props.element.musicMetadata.duration * 1000),
+        },
+      ]
+    : []),
+  ...(props.element.musicMetadata.artists?.length
+    ? [
+        {
+          key: 'artists',
           title: t('artists'),
           path: mdiAccountOutline,
-          value: props.element.metadata.artists.join(' & '),
+          value: props.element.musicMetadata.artists.join(' & '),
         },
       ]
     : []),
-  ...(props.element.metadata.album
+  ...(props.element.musicMetadata.album
     ? [
         {
-          id: 2,
+          key: 'album',
           title: t('album'),
           path: mdiAlbum,
-          value: props.element.metadata.album,
+          value: props.element.musicMetadata.album,
         },
       ]
     : []),
-  ...(props.element.metadata.year
+  ...(props.element.musicMetadata.year
     ? [
         {
-          id: 3,
+          key: 'year',
           title: t('year'),
           path: mdiCalendarBlankOutline,
-          value: String(props.element.metadata.year),
+          value: String(props.element.musicMetadata.year),
         },
       ]
     : []),
-  ...(props.element.metadata.bpm
+  ...(props.element.musicMetadata.bpm
     ? [
         {
-          id: 4,
+          key: 'bpm',
           title: t('bpm'),
           path: mdiMetronome,
-          value: String(props.element.metadata.bpm),
+          value: String(props.element.musicMetadata.bpm),
         },
       ]
     : []),

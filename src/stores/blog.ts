@@ -10,7 +10,7 @@ import {
   deletePost as _deletePost,
   putPost as _putPost,
   getPostById as _getPostById,
-  type PostWithDatabaseMeta,
+  type PostWithMetaWithSinseTimestamps,
 } from '@/api/posts';
 import { postUpload } from '@/api/upload';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
@@ -24,7 +24,7 @@ export const useBlogStore = defineStore('blog', () => {
   const pageNumber = ref(0);
   const [isEnd, toggleIsEnd] = useToggle();
 
-  const [all, resetAll] = useSourcedRef<Array<PostWithDatabaseMeta>>([]);
+  const [all, resetAll] = useSourcedRef<Array<PostWithMetaWithSinseTimestamps>>([]);
   const { execute: getAll, isLoading: isLoadingGetAll } = useAsyncStateApi(
     async (options: { shouldReset?: boolean } = {}) => {
       if (options.shouldReset) {

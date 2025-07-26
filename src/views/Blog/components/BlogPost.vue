@@ -17,7 +17,7 @@
         <PostData :post />
         <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
           {{ sinceCreatedFormatted }}
-          <BaseIcon v-if="wasEdited" :class="ICON.SIZE.SM" :path="mdiPencil" />
+          <BaseIcon v-if="post._meta.updatedAt" :class="ICON.SIZE.SM" :path="mdiPencil" />
         </span>
       </template>
     </div>
@@ -58,7 +58,6 @@ import PostData from './PostData.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon';
 import { useDateFns } from '@/composables/useDateFns';
-import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidatePostData } from '../composables/useVuelidatePostData';
 import { useAuthStore } from '@/stores/auth';
@@ -68,12 +67,12 @@ import { onPostTextareaKeyDownEnter } from '../helpers/onPostTextareaKeyDownEnte
 import { RouterLink } from 'vue-router';
 import { useSourcedRef } from '@/composables/useSourcedRef';
 import BaseButton from '@/components/ui/BaseButton';
-import type { PostWithDatabaseMeta } from '@/api/posts';
+import type { PostWithMetaWithSinseTimestamps } from '@/api/posts';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 
 const props = defineProps<{
-  post: PostWithDatabaseMeta;
+  post: PostWithMetaWithSinseTimestamps;
   onBeforeDelete: () => Promise<boolean>;
 }>();
 
@@ -130,15 +129,13 @@ const component = computed(() =>
 const dateExact = computed(() =>
   [
     String(new Date(props.post._meta.createdAt)),
-    ...(wasEdited.value ? [t('updatedAt', { date: String(new Date(props.post._meta.updatedAt)) })] : []),
+    ...(props.post._meta.updatedAt ? [t('updatedAt', { date: String(new Date(props.post._meta.updatedAt)) })] : []),
   ].join('\n'),
 );
 
 const sinceCreatedFormatted = computed(() => intlFormatDistanceToNow(props.post._meta.sinceCreated));
 
 const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.post._meta.id));
-
-const wasEdited = computed(() => _wasEdited(props.post));
 
 const onKeyDownEnter = onPostTextareaKeyDownEnter(onSubmit);
 

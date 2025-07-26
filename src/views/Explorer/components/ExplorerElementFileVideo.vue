@@ -11,10 +11,10 @@ import ElementFileWrapper from './_ElementFileWrapper.vue';
 
 import PreviewVideo from '@/components/PreviewVideo.vue';
 import { useGalleryStore } from '@/stores/gallery';
-import type { WithSinceBirthtime } from '@/api/folderData';
+import type { ItemWithSinceTimestamps } from '@/api/folderData';
 
 const props = defineProps<{
-  element: ItemVideo & WithSinceBirthtime;
+  element: ItemWithSinceTimestamps<ItemVideo>;
 }>();
 
 const galleryStore = useGalleryStore();

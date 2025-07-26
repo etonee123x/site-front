@@ -5,7 +5,7 @@
         {{ element.name }}
       </div>
       <div class="text-right m-2" title="Created at">
-        {{ sinceBirthtime }}
+        {{ sinceCreated }}
       </div>
     </div>
     <hr />
@@ -19,10 +19,10 @@
 import { computed } from 'vue';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
 import { useDateFns } from '@/composables/useDateFns';
-import type { WithSinceBirthtime } from '@/api/folderData';
+import type { WithMeta, WithSinceTimestamps } from '@etonee123x/shared/types/database';
 
 const props = defineProps<{
-  element: ItemFile & WithSinceBirthtime;
+  element: ItemFile & WithMeta<WithSinceTimestamps>;
 }>();
 
 const emit = defineEmits<{
@@ -33,5 +33,5 @@ const onClick = () => emit('click');
 
 const { intlFormatDistanceToNow } = useDateFns();
 
-const sinceBirthtime = computed(() => intlFormatDistanceToNow(props.element.sinceBirthtime));
+const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
 </script>

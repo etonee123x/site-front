@@ -9,7 +9,7 @@
       <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
         <ClientOnly>
           <div>{{ t('createdAt', { since: sinceCreated }) }}</div>
-          <div v-if="wasEdited">{{ t('updatedAt', { since: sinceUpdated }) }}</div>
+          <div v-if="sinceUpdated">{{ t('updatedAt', { since: sinceUpdated }) }}</div>
         </ClientOnly>
       </div>
     </template>
@@ -32,12 +32,12 @@ import { useRouter } from 'vue-router';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
-import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
 import PostData from './PostData.vue';
 import ClientOnly from '@/components/ClientOnly.vue';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -50,9 +50,9 @@ const { intlFormatDistanceToNow } = useDateFns();
 const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 
 const sinceCreated = computed(() => blogStore.byId && intlFormatDistanceToNow(blogStore.byId._meta.sinceCreated));
-const sinceUpdated = computed(() => blogStore.byId && intlFormatDistanceToNow(blogStore.byId._meta.sinceUpdated));
-
-const wasEdited = computed(() => Boolean(blogStore.byId && _wasEdited(blogStore.byId)));
+const sinceUpdated = computed(
+  () => isNotNil(blogStore.byId?._meta.sinceUpdated) && intlFormatDistanceToNow(blogStore.byId._meta.sinceUpdated),
+);
 
 const onDialogClose = () => {
   router.push({ name: RouteName.Blog });
