@@ -31,7 +31,7 @@ export const useExplorerStore = defineStore('explorer', () => {
     return _getFolderData(routePath).then((_folderData) => {
       routePathToFolderData[routePath] = _folderData;
 
-      const playlist = _folderData.items.filter(isItemAudio);
+      const playlist = _folderData.items.filter((item) => isItemAudio(item));
 
       if (!playlist.length) {
         return _folderData;

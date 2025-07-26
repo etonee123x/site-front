@@ -8,12 +8,8 @@
     <template #footer>
       <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
         <ClientOnly>
-          <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
-          <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
-          <template #fallback>
-            <div>{{ t('createdAt', { date: dates.createdAt }) }}</div>
-            <div v-if="wasEdited">{{ t('updatedAt', { date: dates.updatedAt }) }}</div>
-          </template>
+          <div>{{ t('createdAt', { since: sinceCreated }) }}</div>
+          <div v-if="sinceUpdated">{{ t('updatedAt', { since: sinceUpdated }) }}</div>
         </ClientOnly>
       </div>
     </template>
@@ -22,11 +18,11 @@
 
 <i18n lang="yaml">
 En:
-  createdAt: 'Created at: { date }'
-  updatedAt: 'Edited at: { date }'
+  createdAt: 'Created { since }'
+  updatedAt: 'Edited { since }'
 Ru:
-  createdAt: 'Создано: { date }'
-  updatedAt: 'Изменено: { date }'
+  createdAt: 'Создано { since }'
+  updatedAt: 'Изменено { since }'
 </i18n>
 
 <script setup lang="ts">
@@ -36,14 +32,12 @@ import { useRouter } from 'vue-router';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
-import { wasEdited as _wasEdited } from '../helpers/wasEdited';
 import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
 import PostData from './PostData.vue';
 import ClientOnly from '@/components/ClientOnly.vue';
-
-const FORMAT_TEMPALTE = 'PPp';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -51,23 +45,14 @@ const router = useRouter();
 
 const blogStore = useBlogStore();
 
-const { format } = useDateFns();
+const { intlFormatDistanceToNow } = useDateFns();
 
 const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 
-const dates = computed(() =>
-  blogStore.byId
-    ? {
-        createdAt: format.value(blogStore.byId.createdAt, FORMAT_TEMPALTE),
-        updatedAt: format.value(blogStore.byId.updatedAt, FORMAT_TEMPALTE),
-      }
-    : {
-        createdAt: null,
-        updatedAt: null,
-      },
+const sinceCreated = computed(() => blogStore.byId && intlFormatDistanceToNow(blogStore.byId._meta.sinceCreated));
+const sinceUpdated = computed(
+  () => isNotNil(blogStore.byId?._meta.sinceUpdated) && intlFormatDistanceToNow(blogStore.byId._meta.sinceUpdated),
 );
-
-const wasEdited = computed(() => Boolean(blogStore.byId && _wasEdited(blogStore.byId)));
 
 const onDialogClose = () => {
   router.push({ name: RouteName.Blog });

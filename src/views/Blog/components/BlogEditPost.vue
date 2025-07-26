@@ -39,7 +39,7 @@ En:
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { type UnwrapRef, defineAsyncComponent, useTemplateRef } from 'vue';
-import type { PostData } from '@etonee123x/shared/types/blog';
+import type { Post } from '@etonee123x/shared/types/blog';
 import { mdiDelete } from '@mdi/js';
 
 import { type useVuelidatePostData } from '../composables/useVuelidatePostData';
@@ -47,6 +47,7 @@ import BaseTextarea from '@/components/ui/BaseTextarea.vue';
 import BaseInputFile from '@/components/ui/BaseInputFile.vue';
 import BaseButton from '@/components/ui/BaseButton/BaseButton.vue';
 import BaseIcon from '@/components/ui/BaseIcon';
+import type { ForPost } from '@etonee123x/shared/types/database';
 // import BaseAudioRecorder from '@/components/ui/BaseAudioRecorder.vue';
 
 const LazyBaseFilesList = defineAsyncComponent(() => import('@/components/ui/BaseFilesList.vue'));
@@ -61,7 +62,7 @@ const emit = defineEmits<{
   'keydown:enter': [KeyboardEvent];
 }>();
 
-const model = defineModel<PostData>({ required: true });
+const model = defineModel<ForPost<Post>>({ required: true });
 const files = defineModel<Array<File>>('files', { default: [] });
 
 const onClickDeleteFiles = () => {

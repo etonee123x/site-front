@@ -5,12 +5,7 @@
         {{ element.name }}
       </div>
       <div class="text-right m-2" title="Created at">
-        <ClientOnly>
-          {{ birthTimeFormatted }}
-          <template #fallback>
-            {{ birthTimeFormatted }}
-          </template>
-        </ClientOnly>
+        {{ sinceCreated }}
       </div>
     </div>
     <hr />
@@ -24,19 +19,19 @@
 import { computed } from 'vue';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
 import { useDateFns } from '@/composables/useDateFns';
-import ClientOnly from '@/components/ClientOnly.vue';
+import type { WithMeta, WithSinceTimestamps } from '@etonee123x/shared/types/database';
 
 const props = defineProps<{
-  element: ItemFile;
+  element: ItemFile & WithMeta<WithSinceTimestamps>;
 }>();
 
 const emit = defineEmits<{
   click: [];
 }>();
 
-const { format } = useDateFns();
-
 const onClick = () => emit('click');
 
-const birthTimeFormatted = computed(() => format.value(new Date(props.element.birthtime), 'dd/MM/yyyy, HH:mm'));
+const { intlFormatDistanceToNow } = useDateFns();
+
+const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
 </script>

@@ -24,7 +24,7 @@
     <template v-else>
       <template v-if="hasPosts">
         <div class="flex flex-col gap-4 mb-4">
-          <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post.id" />
+          <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post._meta.id" />
         </div>
         <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center m-4" />
       </template>
@@ -80,6 +80,8 @@ import { isServer } from '@/constants/target';
 import { clientOnly } from '@/helpers/clientOnly';
 import BaseButton from '@/components/ui/BaseButton';
 import { useSourcedRef } from '@/composables/useSourcedRef';
+import type { Post } from '@etonee123x/shared/types/blog';
+import type { ForPost } from '@etonee123x/shared/types/database';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
@@ -111,7 +113,7 @@ useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
 
 const [files, resetFiles] = useSourcedRef<Array<File>>([]);
 
-const [postData, resetPostModel] = useSourcedRef(() => ({
+const [postData, resetPostModel] = useSourcedRef<ForPost<Post>>(() => ({
   text: '',
   filesUrls: [],
 }));

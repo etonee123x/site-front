@@ -1,9 +1,10 @@
 import { type MaybeRefOrGetter, type Ref, toValue } from 'vue';
-import type { PostData } from '@etonee123x/shared/types/blog';
+import type { Post } from '@etonee123x/shared/types/blog';
 import { helpers, requiredIf } from '@vuelidate/validators';
 
 import { i18n } from '@/i18n';
 import useVuelidate from '@vuelidate/core';
+import type { ForPost } from '@etonee123x/shared/types/database';
 
 const requiredIfNoFiles = (filesUrls: Array<string>, files: MaybeRefOrGetter<Array<File>>) =>
   helpers.withMessage(
@@ -11,7 +12,7 @@ const requiredIfNoFiles = (filesUrls: Array<string>, files: MaybeRefOrGetter<Arr
     requiredIf(() => toValue(files).length === 0 && toValue(filesUrls).length === 0),
   );
 
-export const useVuelidatePostData = (postData: Ref<PostData>, files: MaybeRefOrGetter<Array<File>> = []) => {
+export const useVuelidatePostData = (postData: Ref<ForPost<Post>>, files: MaybeRefOrGetter<Array<File>> = []) => {
   const v$ = useVuelidate(
     {
       text: {

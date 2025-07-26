@@ -1,6 +1,5 @@
 <template>
   <slot v-if="isMounted" />
-  <slot v-else name="fallback" />
 </template>
 
 <script lang="ts" setup>

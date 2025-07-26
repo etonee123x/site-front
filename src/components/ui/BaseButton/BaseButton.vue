@@ -9,19 +9,19 @@
     @touchstart="onTouchStart"
     @touchEnd="onTouchEnd"
   >
-    <div class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
-      <div v-if="$slots.prepend || propsIconPrepend" class="flex">
+    <span class="flex justify-between items-center gap-1" :class="isLoading && 'opacity-20'">
+      <span v-if="$slots.prepend || propsIconPrepend" class="flex">
         <slot name="prepend">
           <BaseIcon v-if="propsIconPrepend" v-bind="propsIconPrepend" />
         </slot>
-      </div>
+      </span>
       <slot />
-      <div v-if="$slots.append || propsIconAppend" class="flex">
+      <span v-if="$slots.append || propsIconAppend" class="flex">
         <slot name="append">
           <BaseIcon v-if="propsIconAppend" v-bind="propsIconAppend" />
         </slot>
-      </div>
-    </div>
+      </span>
+    </span>
     <LazyBaseLoading v-if="isLoading" class="absolute left-1/2" />
   </button>
 </template>

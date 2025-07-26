@@ -28,8 +28,9 @@ import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
 import { useExplorerStore } from '@/stores/explorer';
 import { useRoute } from 'vue-router';
-import { RouteName } from './router';
-import { clientOnly } from './helpers/clientOnly';
+import { RouteName } from '@/router';
+import { clientOnly } from '@/helpers/clientOnly';
+import { i18n } from '@/i18n';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
@@ -62,4 +63,10 @@ if (route.name === RouteName.Explorer) {
   onServerPrefetch(getFolderData);
   clientOnly(getFolderData);
 }
+
+useHead({
+  htmlAttrs: {
+    lang: () => i18n.global.locale.value.toLocaleLowerCase(),
+  },
+});
 </script>

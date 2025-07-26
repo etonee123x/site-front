@@ -9,7 +9,7 @@
       <nav class="flex items-end gap-4">
         <RouterLink :to class="text-xl">{{ siteTitle }}</RouterLink>
         <ul class="flex gap-2">
-          <li v-for="link in links" :key="link.id">
+          <li v-for="link in links" :key="link.key">
             <RouterLink :to="link.to" activeClass="text-details-500">
               {{ link.text }}
             </RouterLink>
@@ -17,9 +17,9 @@
         </ul>
       </nav>
       <ul class="text-2xl ms-auto flex gap-1">
-        <li v-for="icon in icons" :key="icon.id">
-          <BaseButton :aria-label="t('openSettings')" @click="icon.onClick">
-            <BaseIcon :path="icon.path" />
+        <li v-for="button in buttons" :key="button.key">
+          <BaseButton :aria-label="button.ariaLabel" @click="button.onClick">
+            <BaseIcon :path="button.path" />
           </BaseButton>
         </li>
       </ul>
@@ -33,10 +33,12 @@ Ru:
   content: 'Контент'
   blog: 'Блог'
   openSettings: 'Открыть настройки'
+  logout: 'Логаут'
 En:
   content: 'Content'
   blog: 'Blog'
   openSettings: 'Open Settings'
+  logout: 'Logout'
 </i18n>
 
 <script setup lang="ts">
@@ -51,13 +53,13 @@ import { RouteName } from '@/router';
 import { useAuthStore } from '@/stores/auth';
 import BaseButton from '@/components/ui/BaseButton';
 import { useLoadingStore } from '@/stores/loading';
-import ClientOnly from '../ClientOnly.vue';
+import ClientOnly from '@/components/ClientOnly.vue';
+
+const dialogSettings = useTemplateRef('dialogSettings');
 
 const { t } = useI18n({ useScope: 'local' });
 
 const loadingStore = useLoadingStore();
-
-const dialogSettings = useTemplateRef('dialogSettings');
 
 const authStore = useAuthStore();
 
@@ -66,23 +68,37 @@ const siteTitle = String(import.meta.env.VITE_SITE_TITLE);
 const to = { name: RouteName.Home };
 
 const links = computed(() => [
-  { text: t('content'), to: { name: RouteName.Explorer }, id: 0 },
-  { text: t('blog'), to: { name: RouteName.Blog }, id: 1 },
+  {
+    text: t('content'),
+    to: {
+      name: RouteName.Explorer,
+    },
+    key: 'content',
+  },
+  {
+    text: t('blog'),
+    to: {
+      name: RouteName.Blog,
+    },
+    key: 'blog',
+  },
 ]);
 
-const icons = computed(() => [
+const buttons = computed(() => [
   ...(authStore.isAdmin
     ? [
         {
-          id: 0,
+          key: 'logout',
           path: mdiLogout,
+          ariaLabel: t('logout'),
           onClick: authStore.deleteAuth,
         },
       ]
     : []),
   {
-    id: 1,
+    key: 'open-settings',
     path: mdiCog,
+    ariaLabel: t('openSettings'),
     onClick: () => dialogSettings.value?.open(),
   },
 ]);
