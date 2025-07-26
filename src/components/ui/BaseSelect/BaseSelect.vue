@@ -10,6 +10,7 @@
       :hideOnClick="false"
       sticky
       maxWidth="none"
+      tag="div"
       ref="tippy"
       @show="onShow"
       @hidden="onHidden"
