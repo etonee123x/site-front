@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { computed, shallowReactive } from 'vue';
-import { isItemAudio, type FolderData } from '@etonee123x/shared/helpers/folderData';
+import { isItemAudio } from '@etonee123x/shared/helpers/folderData';
 
 import { usePlayerStore } from '@/stores/player';
-import { getFolderData as _getFolderData } from '@/api/folderData';
+import { getFolderData as _getFolderData, type FolderDataWithSinceTimestamps } from '@/api/folderData';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
@@ -13,7 +13,7 @@ const moduleURLResolver = (url: string) => `/explorer${url}`;
 export const useExplorerStore = defineStore('explorer', () => {
   const { loadTrack, loadRealPlaylist, loadPotentialPlaylist } = usePlayerStore();
 
-  const routePathToFolderData = shallowReactive<Record<string, FolderData>>({});
+  const routePathToFolderData = shallowReactive<Record<string, FolderDataWithSinceTimestamps>>({});
 
   const {
     state: folderData,

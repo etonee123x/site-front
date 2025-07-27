@@ -1,18 +1,18 @@
 <template>
   <ElementFileWrapper :element @keydown.enter="onClick" @click="onClick">
-    <div class="flex gap-4 overflow-x-auto">
-      <div
+    <ul class="flex gap-4 overflow-x-auto">
+      <li
         v-for="metadataItem in metadataItems"
         :title="metadataItem.title"
         class="flex flex-col items-center"
         :key="metadataItem.key"
       >
         <BaseIcon class="text-2xl h-6" :path="metadataItem.path" />
-        <div class="text-center max-w-40">
+        <span class="text-center max-w-40">
           {{ metadataItem.value }}
-        </div>
-      </div>
-    </div>
+        </span>
+      </li>
+    </ul>
   </ElementFileWrapper>
 </template>
 
@@ -61,7 +61,7 @@ const metadataItems = computed(() => [
           key: 'duration',
           title: t('duration'),
           path: mdiClockOutline,
-          value: formatDuration(props.element.musicMetadata.duration * 1000),
+          value: formatDuration(props.element.musicMetadata.duration),
         },
       ]
     : []),

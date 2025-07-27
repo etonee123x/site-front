@@ -1,39 +1,39 @@
 <template>
-  <component
-    :is="component.Is"
-    v-bind="component.binds"
+  <article
     class="w-full bg-background border border-dark rounded-sm cursor-pointer shadow-lg shadow-dark/15 hover:text-[initial]"
   >
-    <div class="p-4 flex flex-col">
-      <LazyBlogEditPost
-        v-if="isInEditMode"
-        :v$
-        ref="blogEditPost"
-        v-model="model"
-        v-model:files="files"
-        @keydown:enter="onKeyDownEnter"
-      />
-      <template v-else>
-        <PostData :post />
-        <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
-          {{ sinceCreatedFormatted }}
-          <BaseIcon v-if="post._meta.updatedAt" :class="ICON.SIZE.SM" :path="mdiPencil" />
-        </span>
-      </template>
-    </div>
-    <div v-if="authStore.isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
-      <BaseButton
-        v-for="control in controls"
-        class="p-0.5"
-        :isLoading="control.isLoading"
-        :isDisabled="control.isDisabled"
-        :key="control.key"
-        @click.stop.prevent="control.onClick"
-      >
-        <BaseIcon class="text-2xl" :path="control.iconPath" />
-      </BaseButton>
-    </div>
-  </component>
+    <component :is="component.Is" v-bind="component.binds">
+      <div class="p-4 flex flex-col">
+        <LazyBlogEditPost
+          v-if="isInEditMode"
+          :v$
+          ref="blogEditPost"
+          v-model="model"
+          v-model:files="files"
+          @keydown:enter="onKeyDownEnter"
+        />
+        <template v-else>
+          <PostData :post />
+          <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
+            {{ sinceCreatedFormatted }}
+            <BaseIcon v-if="post._meta.updatedAt" :class="ICON.SIZE.SM" :path="mdiPencil" />
+          </span>
+        </template>
+      </div>
+      <div v-if="authStore.isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
+        <BaseButton
+          v-for="control in controls"
+          class="p-0.5"
+          :isLoading="control.isLoading"
+          :isDisabled="control.isDisabled"
+          :key="control.key"
+          @click.stop.prevent="control.onClick"
+        >
+          <BaseIcon class="text-2xl" :path="control.iconPath" />
+        </BaseButton>
+      </div>
+    </component>
+  </article>
 </template>
 
 <i18n lang="yaml">

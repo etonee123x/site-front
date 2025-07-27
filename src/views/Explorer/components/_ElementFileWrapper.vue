@@ -1,18 +1,18 @@
 <template>
-  <div tabindex="0" class="explorerElement" @keydown.enter="onClick" @click="onClick">
-    <div class="flex justify-between">
+  <article tabindex="0" class="explorerElement" @keydown.enter="onClick" @click="onClick">
+    <header class="flex justify-between">
       <div class="explorerElement__title">
         {{ element.name }}
       </div>
       <div class="text-right m-2" title="Created at">
         {{ sinceCreated }}
       </div>
-    </div>
+    </header>
     <hr />
-    <div class="m-2">
+    <div class="p-2">
       <slot />
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">

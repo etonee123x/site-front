@@ -1,71 +1,73 @@
 <template>
-  <BaseSwipable
-    class="bg-background z-1000 shadow-[0_-2px_4px_0_rgba(34,60,80,0.2)] py-2 relative w-full"
-    @swiped="onSwiped"
-  >
-    <div class="layout-container mx-auto flex flex-col gap-1 justify-center">
-      <BaseButton
-        v-if="shouldRenderButtonClose"
-        class="text-xl absolute end-2 top-2 hover-none:hidden"
-        :aria-label="t('closePlayer')"
-        @click="onClickClose"
-      >
-        <BaseIcon :path="mdiClose" />
-      </BaseButton>
-      <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
-        <div
-          class="cursor-pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
-          :title="t('copyLink')"
-          @click="onClickTitle"
+  <section>
+    <BaseSwipable
+      class="bg-background z-1000 shadow-[0_-2px_4px_0_rgba(34,60,80,0.2)] py-2 relative w-full"
+      @swiped="onSwiped"
+    >
+      <div class="layout-container mx-auto flex flex-col gap-1 justify-center">
+        <BaseButton
+          v-if="shouldRenderButtonClose"
+          class="text-xl absolute end-2 top-2 hover-none:hidden"
+          :aria-label="t('closePlayer')"
+          @click="onClickClose"
         >
-          <span>{{ playerStore.name }}</span>
-          <BaseIcon :path="mdiLinkVariant" />
-        </div>
-      </BaseAlwaysScrollable>
-      <audio :src="playerStore.src" autoplay ref="audio" @ended="onEnded" />
-      <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
-        <span>
-          {{ formattedCurrentTime }}
-        </span>
-        <PlayerSlider
-          :multiplier="duration"
-          isLazy
-          v-model="currentTime"
-          @keydown.right="onKeyDownRightTime"
-          @keydown.left="onKeyDownLeftTime"
-        />
-        <span>
-          {{ formatedDuration }}
-        </span>
-      </div>
-      <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
-        <div class="flex justify-end">
-          <BaseToggler
-            class="whitespace-nowrap min-w-6"
-            :aria-label="playerStore.isShuffleModeEnabled ? t('disableShuffleTracks') : t('enableShuffleTracks')"
-            v-model="playerStore.isShuffleModeEnabled"
+          <BaseIcon :path="mdiClose" />
+        </BaseButton>
+        <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
+          <div
+            class="cursor-pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
+            :title="t('copyLink')"
+            @click="onClickTitle"
           >
-            <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
-          </BaseToggler>
+            <span>{{ playerStore.name }}</span>
+            <BaseIcon :path="mdiLinkVariant" />
+          </div>
+        </BaseAlwaysScrollable>
+        <audio :src="playerStore.src" autoplay ref="audio" @ended="onEnded" />
+        <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
+          <span>
+            {{ formattedCurrentTime }}
+          </span>
+          <PlayerSlider
+            :multiplier="duration"
+            isLazy
+            v-model="currentTimeSeconds"
+            @keydown.right="onKeyDownRightTime"
+            @keydown.left="onKeyDownLeftTime"
+          />
+          <span>
+            {{ formatedDuration }}
+          </span>
         </div>
-        <div class="flex justify-center gap-2">
-          <BaseButton
-            v-for="controlButton in controlButtons"
-            :isDisabled="controlButton.isDisabled"
-            class="whitespace-nowrap min-w-6 h-6 w-8"
-            :aria-label="controlButton.ariaLabel"
-            :key="controlButton.key"
-            @click="controlButton.onClick"
-          >
-            <BaseIcon class="text-2xl" :path="controlButton.icon" />
-          </BaseButton>
-        </div>
-        <div class="flex h-full w-5/6 max-w-20 items-center">
-          <PlayerSlider v-model="volume" @keydown.right="onKeyDownRightVolume" @keydown.left="onKeyDownLeftVolume" />
+        <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
+          <div class="flex justify-end">
+            <BaseToggler
+              class="whitespace-nowrap min-w-6"
+              :aria-label="playerStore.isShuffleModeEnabled ? t('disableShuffleTracks') : t('enableShuffleTracks')"
+              v-model="playerStore.isShuffleModeEnabled"
+            >
+              <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
+            </BaseToggler>
+          </div>
+          <div class="flex justify-center gap-2">
+            <BaseButton
+              v-for="controlButton in controlButtons"
+              :isDisabled="controlButton.isDisabled"
+              class="whitespace-nowrap min-w-6 h-6 w-8"
+              :aria-label="controlButton.ariaLabel"
+              :key="controlButton.key"
+              @click="controlButton.onClick"
+            >
+              <BaseIcon class="text-2xl" :path="controlButton.icon" />
+            </BaseButton>
+          </div>
+          <div class="flex h-full w-5/6 max-w-20 items-center">
+            <PlayerSlider v-model="volume" @keydown.right="onKeyDownRightVolume" @keydown.left="onKeyDownLeftVolume" />
+          </div>
         </div>
       </div>
-    </div>
-  </BaseSwipable>
+    </BaseSwipable>
+  </section>
 </template>
 
 <i18n lang="yaml">
@@ -125,7 +127,7 @@ const toastsStore = useToastsStore();
 
 const audio = useTemplateRef('audio');
 
-const { playing: isPlaying, waiting: isWaiting, currentTime, volume } = useMediaControls(audio);
+const { playing: isPlaying, waiting: isWaiting, currentTime: currentTimeSeconds, volume } = useMediaControls(audio);
 const duration = computed(() => playerStore.duration ?? 0);
 
 const toggleIsPlaying = useToggle(isPlaying);
@@ -161,8 +163,8 @@ const controlButtons = computed(() => [
   },
 ]);
 
-const formatedDuration = computed(() => formatDuration(duration.value * 1000));
-const formattedCurrentTime = computed(() => formatDuration(currentTime.value * 1000));
+const formatedDuration = computed(() => formatDuration(duration.value));
+const formattedCurrentTime = computed(() => formatDuration(currentTimeSeconds.value * 1000));
 
 const onEnded = playerStore.loadNext;
 
@@ -187,11 +189,11 @@ const { copy } = useClipboard({ source: urlFull, legacy: true });
 const onClickTitle = () => copy().then(() => toastsStore.toastSuccess(t('copied')));
 
 const onKeyDownRightTime = () => {
-  currentTime.value += 5;
+  currentTimeSeconds.value += 5;
 };
 
 const onKeyDownLeftTime = () => {
-  currentTime.value -= 5;
+  currentTimeSeconds.value -= 5;
 };
 
 const onKeyDownRightVolume = () => {

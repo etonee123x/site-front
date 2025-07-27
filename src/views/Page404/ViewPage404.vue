@@ -1,7 +1,9 @@
 <template>
   <div class="layout-container mx-auto flex justify-center items-center flex-1 gap-6 flex-col">
     <div class="text-6xl">404</div>
-    <RouterLink :to="{ name: RouteName.Home }" class="text-xl">{{ t('mainPage') }}</RouterLink>
+    <RouterLink :to="{ name: RouteName.Home }" class="text-xl">
+      {{ t('mainPage') }}
+    </RouterLink>
   </div>
 </template>
 
