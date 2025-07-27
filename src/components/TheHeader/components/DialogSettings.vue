@@ -1,11 +1,10 @@
 <template>
   <BaseDialog :title="t('settings')" style="max-width: 25rem" ref="baseDialog" @confirm="onConfirm" @close="onClose">
-    <div class="flex flex-col gap-4 mb-6">
+    <BaseForm class="flex flex-col gap-4 mb-6">
       <BaseSelect :options="Object.values(ThemeColor)" :label="t('color')" v-model="model.themeColor" />
       <BaseSelect :options="Object.values(Language)" :label="t('language')" v-model="model.language" />
-      <BaseButton @click="onClickResetSettings">{{ t('resetSettings') }}</BaseButton>
-      <BaseButton v-if="isDevelopment" @click="onClickAuthorize">{{ t('authorize') }}</BaseButton>
-    </div>
+      <BaseButton v-if="isDevelopment && !authStore.isAdmin" @click="onClickAuthorize">{{ t('authorize') }}</BaseButton>
+    </BaseForm>
   </BaseDialog>
 </template>
 
@@ -38,6 +37,7 @@ import { Language, ThemeColor } from '@/constants/settings';
 import { useAuthStore } from '@/stores/auth';
 import { isDevelopment } from '@/constants/mode';
 import { useSourcedRef } from '@/composables/useSourcedRef';
+import BaseForm from '@/components/ui/BaseForm.vue';
 
 const authStore = useAuthStore();
 
@@ -52,12 +52,6 @@ const [model, resetModel] = useSourcedRef(() => settingsStore.settings);
 const onConfirm = () => settingsStore.saveSettings(model.value);
 
 const onClose = resetModel;
-
-const onClickResetSettings = () => {
-  settingsStore.resetSettings();
-
-  resetModel();
-};
 
 const onClickAuthorize = async () => {
   if (!isDevelopment) {

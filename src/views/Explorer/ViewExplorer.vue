@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <ExplorerNavbar />
-    <section class="layout-container mx-auto flex flex-col gap-2 py-2">
+  <BasePage class="mx-auto">
+    <ExplorerNavbar class="-mt-4" />
+    <section class="flex flex-col gap-2">
       <nav v-if="explorerStore.lvlUp || elements.folders.length" class="contents">
         <LazyExplorerElementSystem v-if="explorerStore.lvlUp" :to="explorerStore.lvlUp" tag="RouterLink">
           ...
@@ -12,7 +12,7 @@
       </nav>
       <component :is="itemFileToComponent(file)" v-for="file in elements.files" :element="file" :key="file.src" />
     </section>
-  </div>
+  </BasePage>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +27,7 @@ import { useExplorerStore } from '@/stores/explorer';
 import { goToPage404 } from '@/composables/goToPage404';
 import { clientOnly } from '@/helpers/clientOnly';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
+import BasePage from '@/components/ui/BasePage.vue';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));

@@ -1,6 +1,5 @@
 <template>
-  <div class="layout-container mx-auto pt-2 flex flex-col">
-    <DialogPost />
+  <BasePage class="mx-auto">
     <template v-if="authStore.isAdmin">
       <LazyBaseForm class="flex flex-col gap-4" ref="baseForm" @submit.prevent="onSubmit">
         <LazyBlogEditPost
@@ -16,22 +15,14 @@
       </LazyBaseForm>
       <hr v-if="hasPosts" class="my-4" />
     </template>
-    <LazyBaseLoading
-      v-if="blogStore.isLoadingGetAll && !hasPosts"
-      isFull
-      class="flex justify-center items-center flex-1"
-    />
-    <template v-else>
-      <template v-if="hasPosts">
-        <div class="flex flex-col gap-4 mb-4">
-          <BlogPost v-for="post in blogStore.all" :post :onBeforeDelete :key="post._meta.id" />
-        </div>
-        <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center m-4" />
-      </template>
-      <div v-else class="text-lg flex justify-center items-center flex-1">
-        {{ t('nothingWasFound') }}
-      </div>
+
+    <template v-if="hasPosts">
+      <BlogPost v-for="post in blogStore.all" class="not-last:mb-4" :post :onBeforeDelete :key="post._meta.id" />
     </template>
+    <div v-else-if="!blogStore.isLoadingGetAll" class="text-lg flex justify-center items-center flex-1 h-full">
+      {{ t('nothingWasFound') }}
+    </div>
+    <LazyBaseLoading v-if="blogStore.isLoadingGetAll" isFull class="flex justify-center" />
 
     <DialogConfirmation
       :title="t('confirmDelete')"
@@ -41,7 +32,9 @@
       @cancel="cancel"
       @close="cancel"
     />
-  </div>
+
+    <DialogPost />
+  </BasePage>
 </template>
 
 <i18n lang="yaml">
@@ -82,6 +75,7 @@ import BaseButton from '@/components/ui/BaseButton';
 import { useSourcedRef } from '@/composables/useSourcedRef';
 import type { Post } from '@etonee123x/shared/types/blog';
 import type { ForPost } from '@etonee123x/shared/types/database';
+import BasePage from '@/components/ui/BasePage.vue';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));

@@ -1,9 +1,11 @@
 <template>
   <BaseDialog isHiddenFooter isHiddenHeader ref="baseDialog" @close="onClose">
-    <div v-if="galleryStore.galleryItem" class="flex flex-col gap-2 items-center flex-1 w-full h-full">
-      <BaseAlwaysScrollable class="w-full [--base-always-scrollable--content--margin:0_auto]" duration="12000">
-        {{ galleryStore.galleryItem.name }}
-      </BaseAlwaysScrollable>
+    <article v-if="galleryStore.galleryItem" class="flex flex-col gap-2 items-center flex-1 w-full h-full">
+      <header class="contents">
+        <BaseAlwaysScrollable class="w-full [--base-always-scrollable--content--margin:0_auto]" duration="12000">
+          {{ galleryStore.galleryItem.name }}
+        </BaseAlwaysScrollable>
+      </header>
       <div class="flex-1 flex items-center justify-center overflow-hidden w-full h-full" ref="mediaContainer">
         <component
           :is="component.is"
@@ -12,7 +14,7 @@
           :src="galleryStore.galleryItem.src"
         />
       </div>
-    </div>
+    </article>
   </BaseDialog>
 </template>
 

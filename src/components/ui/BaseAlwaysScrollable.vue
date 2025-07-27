@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-hidden relative inline-flex" ref="container">
     <div
-      class="whitespace-nowrap [margin:var(--base-always-scrollable--content--margin)]"
+      class="whitespace-nowrap m-[var(--base-always-scrollable--content--margin)]"
       :class="isAnimated && $s.animated"
       ref="content"
     >

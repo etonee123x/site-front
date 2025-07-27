@@ -1,35 +1,37 @@
 <template>
-  <dialog
-    :id="String(id)"
-    v-bind="$attrs"
-    class="dialog"
-    :open="model"
-    ref="dialog"
-    @close="onClose"
-    @cancel.prevent="onClose"
-  >
-    <div class="dialog__backdrop" @click="onClickBackdrop" />
-    <div class="dialog__content">
-      <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
-        <div class="flex justify-between items-center mb-6">
-          <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
-          <BaseButton class="ms-auto" @click="onClickCloseIcon">
-            <BaseIcon :path="mdiClose" />
-          </BaseButton>
-        </div>
-      </slot>
+  <Teleport :to="`#${ID_TELEPORTED}`">
+    <dialog
+      :id="String(id)"
+      v-bind="$attrs"
+      class="dialog"
+      :open="model"
+      ref="dialog"
+      @close="onClose"
+      @cancel.prevent="onClose"
+    >
+      <div class="dialog__backdrop" @click="onClickBackdrop" />
+      <div class="dialog__content">
+        <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
+          <header class="flex justify-between items-center mb-6">
+            <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
+            <BaseButton class="ms-auto" @click="onClickCloseIcon">
+              <BaseIcon :path="mdiClose" />
+            </BaseButton>
+          </header>
+        </slot>
 
-      <slot v-bind="{ close }" />
+        <slot v-bind="{ close }" />
 
-      <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
-        <div v-if="buttons.length" class="flex justify-end gap-2 mt-auto">
-          <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
-            {{ button.text }}
-          </BaseButton>
-        </div>
-      </slot>
-    </div>
-  </dialog>
+        <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
+          <footer v-if="buttons.length" class="flex justify-end gap-2 mt-auto">
+            <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
+              {{ button.text }}
+            </BaseButton>
+          </footer>
+        </slot>
+      </div>
+    </dialog>
+  </Teleport>
 </template>
 
 <i18n lang="yaml">
@@ -53,6 +55,7 @@ import BaseButton from './BaseButton';
 import BaseIcon from './BaseIcon';
 import { useDialogStore } from '@/stores/dialog';
 import { isNil } from '@etonee123x/shared/utils/isNil';
+import { ID_TELEPORTED } from '@/constants/idTeleports';
 
 const dialog = useTemplateRef('dialog');
 

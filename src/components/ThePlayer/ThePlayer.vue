@@ -14,14 +14,14 @@
           <BaseIcon :path="mdiClose" />
         </BaseButton>
         <BaseAlwaysScrollable class="[--base-always-scrollable--content--margin:0_auto]">
-          <div
+          <header
             class="cursor-pointer flex items-start gap-0.5 border-b border-b-dark border-dashed"
             :title="t('copyLink')"
             @click="onClickTitle"
           >
             <span>{{ playerStore.name }}</span>
             <BaseIcon :path="mdiLinkVariant" />
-          </div>
+          </header>
         </BaseAlwaysScrollable>
         <audio :src="playerStore.src" autoplay ref="audio" @ended="onEnded" />
         <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
@@ -29,7 +29,7 @@
             {{ formattedCurrentTime }}
           </span>
           <PlayerSlider
-            :multiplier="duration"
+            :multiplier="duration / 1000"
             isLazy
             v-model="currentTimeSeconds"
             @keydown.right="onKeyDownRightTime"
@@ -40,27 +40,25 @@
           </span>
         </div>
         <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
-          <div class="flex justify-end">
-            <BaseToggler
-              class="whitespace-nowrap min-w-6"
-              :aria-label="playerStore.isShuffleModeEnabled ? t('disableShuffleTracks') : t('enableShuffleTracks')"
-              v-model="playerStore.isShuffleModeEnabled"
-            >
-              <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
-            </BaseToggler>
-          </div>
-          <div class="flex justify-center gap-2">
-            <BaseButton
-              v-for="controlButton in controlButtons"
-              :isDisabled="controlButton.isDisabled"
-              class="whitespace-nowrap min-w-6 h-6 w-8"
-              :aria-label="controlButton.ariaLabel"
-              :key="controlButton.key"
-              @click="controlButton.onClick"
-            >
-              <BaseIcon class="text-2xl" :path="controlButton.icon" />
-            </BaseButton>
-          </div>
+          <BaseToggler
+            class="whitespace-nowrap min-w-6 justify-self-end"
+            :aria-label="playerStore.isShuffleModeEnabled ? t('disableShuffleTracks') : t('enableShuffleTracks')"
+            v-model="playerStore.isShuffleModeEnabled"
+          >
+            <BaseIcon class="text-2xl" :path="mdiShuffleVariant" />
+          </BaseToggler>
+          <ul class="flex justify-center gap-2">
+            <li v-for="controlButton in controlButtons" :key="controlButton.key">
+              <BaseButton
+                :isDisabled="controlButton.isDisabled"
+                class="whitespace-nowrap min-w-6 h-6 w-8"
+                :aria-label="controlButton.ariaLabel"
+                @click="controlButton.onClick"
+              >
+                <BaseIcon class="text-2xl" :path="controlButton.icon" />
+              </BaseButton>
+            </li>
+          </ul>
           <div class="flex h-full w-5/6 max-w-20 items-center">
             <PlayerSlider v-model="volume" @keydown.right="onKeyDownRightVolume" @keydown.left="onKeyDownLeftVolume" />
           </div>

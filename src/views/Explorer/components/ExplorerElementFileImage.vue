@@ -1,8 +1,6 @@
 <template>
   <ElementFileWrapper :element @keydown.enter="onClick" @click="onClick">
-    <div class="flex justify-center max-w-full">
-      <img class="max-w-full" :src="element.src" :alt="element.name" />
-    </div>
+    <img class="max-w-full mx-auto" :src="element.src" :alt="element.name" />
   </ElementFileWrapper>
 </template>
 
