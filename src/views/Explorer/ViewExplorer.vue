@@ -1,5 +1,5 @@
 <template>
-  <BasePage class="mx-auto">
+  <BasePage :h1="t('content')" class="mx-auto">
     <ExplorerNavbar class="-mt-4" />
     <section class="flex flex-col gap-2">
       <nav v-if="explorerStore.lvlUp || elements.folders.length" class="contents">
@@ -15,6 +15,13 @@
   </BasePage>
 </template>
 
+<i18n lang="yaml">
+En:
+  content: 'Content'
+Ru:
+  content: 'Контент'
+</i18n>
+
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, type RouteLocationNormalizedLoaded } from 'vue-router';
@@ -28,6 +35,7 @@ import { goToPage404 } from '@/composables/goToPage404';
 import { clientOnly } from '@/helpers/clientOnly';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
 import BasePage from '@/components/ui/BasePage.vue';
+import { useI18n } from 'vue-i18n';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
@@ -35,6 +43,8 @@ const LazyExplorerElementFolder = defineAsyncComponent(() => import('./component
 const LazyExplorerElementFileAudio = defineAsyncComponent(() => import('./components/ExplorerElementFileAudio.vue'));
 const LazyExplorerElementFileImage = defineAsyncComponent(() => import('./components/ExplorerElementFileImage.vue'));
 const LazyExplorerElementFileVideo = defineAsyncComponent(() => import('./components/ExplorerElementFileVideo.vue'));
+
+const { t } = useI18n({ useScope: 'local' });
 
 const explorerStore = useExplorerStore();
 

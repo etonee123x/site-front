@@ -1,5 +1,5 @@
 <template>
-  <BasePage class="mx-auto">
+  <BasePage :h1="t('blog')" class="mx-auto">
     <template v-if="authStore.isAdmin">
       <LazyBaseForm class="flex flex-col gap-4" ref="baseForm" @submit.prevent="onSubmit">
         <LazyBlogEditPost
@@ -39,11 +39,13 @@
 
 <i18n lang="yaml">
 En:
+  blog: 'Blog'
   send: 'Send'
   nothingWasFound: 'Nothing was found...'
   confirmDelete: 'Delete Post'
   deleteMessage: 'Are you sure you want to delete this post?'
 Ru:
+  blog: 'Блог'
   send: 'Отправить'
   nothingWasFound: 'Ничего не найдено...'
   confirmDelete: 'Удалить пост'

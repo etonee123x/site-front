@@ -1,5 +1,5 @@
 <template>
-  <nav class="sticky top-0 flex items-center overflow-x-auto bg-background z-explorer-navbar py-1">
+  <nav class="sticky bottom-0 flex items-center overflow-x-auto bg-background z-explorer-navbar py-1">
     <ul>
       <li
         v-for="navigationItem in explorerStore.navigationItems"

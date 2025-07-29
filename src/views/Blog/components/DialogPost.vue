@@ -8,8 +8,12 @@
     </article>
     <template #footer>
       <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
-        <div>{{ t('createdAt', { since: sinceCreated }) }}</div>
-        <div v-if="sinceUpdated">{{ t('updatedAt', { since: sinceUpdated }) }}</div>
+        <time :datetime="createdAtISO" :title="t('createdAt', { since: createdAtISO })">{{
+          t('created', { since: sinceCreated })
+        }}</time>
+        <time v-if="sinceUpdated" :datetime="updatedAtISO" :title="t('updatedAt', { at: updatedAtISO })" class="mt-1">
+          {{ t('updated', { since: sinceUpdated }) }}
+        </time>
       </div>
     </template>
   </BaseDialog>
@@ -17,15 +21,19 @@
 
 <i18n lang="yaml">
 En:
-  createdAt: 'Created { since }'
-  updatedAt: 'Edited { since }'
+  created: 'Created { since }'
+  updated: 'Edited { since }'
+  createdAt: 'Created at { at }'
+  updatedAt: 'Edited at { at }'
 Ru:
-  createdAt: 'Создано { since }'
-  updatedAt: 'Изменено { since }'
+  created: 'Создано { since }'
+  updated: 'Изменено { since }'
+  createdAt: 'Создано в { at }'
+  updatedAt: 'Изменено в { at }'
 </i18n>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -52,12 +60,15 @@ const sinceUpdated = computed(
   () => isNotNil(blogStore.byId?._meta.sinceUpdated) && intlFormatDistanceToNow(blogStore.byId._meta.sinceUpdated),
 );
 
+const createdAtISO = computed(() => blogStore.byId && new Date(blogStore.byId._meta.createdAt).toISOString());
+
+const updatedAtISO = computed(() =>
+  blogStore.byId?._meta.updatedAt ? new Date(blogStore.byId._meta.updatedAt).toISOString() : undefined,
+);
+
 const onDialogClose = () => {
   router.push({ name: RouteName.Blog });
 };
 
-watch(
-  () => blogStore.byId,
-  () => toggleIsDialogOpen(Boolean(blogStore.byId)),
-);
+watchEffect(() => toggleIsDialogOpen(Boolean(blogStore.byId)));
 </script>

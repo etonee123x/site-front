@@ -1,17 +1,16 @@
 <template>
-  <BasePage class="mx-auto flex justify-center items-center flex-1 gap-6 flex-col">
-    <div class="text-6xl">404</div>
+  <BasePage h1="404" class="mx-auto flex justify-center items-center flex-1 gap-6 flex-col">
     <RouterLink :to="{ name: RouteName.Home }" class="text-xl">
-      {{ t('mainPage') }}
+      {{ t('toMain') }}
     </RouterLink>
   </BasePage>
 </template>
 
 <i18n lang="yaml">
 En:
-  mainPage: 'To home'
+  toMain: 'To main'
 Ru:
-  mainPage: 'На главную'
+  toMain: 'На главную'
 </i18n>
 
 <script setup lang="ts">

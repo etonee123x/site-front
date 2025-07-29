@@ -1,7 +1,5 @@
 <template>
-  <article
-    class="w-full bg-background border border-dark rounded-sm cursor-pointer shadow-lg shadow-dark/15 hover:text-[initial]"
-  >
+  <article class="w-full bg-background border border-dark rounded-sm cursor-pointer shadow-lg shadow-dark/15">
     <component :is="component.Is" v-bind="component.binds">
       <div class="p-4 flex flex-col">
         <LazyBlogEditPost
@@ -14,10 +12,14 @@
         />
         <template v-else>
           <PostData :post />
-          <span class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5" :title="dateExact">
+          <time
+            :datetime="createdAtISO"
+            :title="createdAtUpdatedAt"
+            class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5"
+          >
             {{ sinceCreatedFormatted }}
             <BaseIcon v-if="post._meta.updatedAt" :class="ICON.SIZE.SM" :path="mdiPencil" />
-          </span>
+          </time>
         </template>
       </div>
       <div v-if="authStore.isAdmin" class="flex justify-end border-t border-t-dark p-1 gap-2">
@@ -38,11 +40,13 @@
 
 <i18n lang="yaml">
 En:
-  updatedAt: 'Edited at: { date }'
+  createdAt: 'Created at { at }'
+  updatedAt: 'Edited at { at }'
   confirmDelete: 'Delete Post'
   deleteMessage: 'Are you sure you want to delete this post?'
 Ru:
-  updatedAt: 'Изменено: { date }'
+  createdAt: 'Создано в { at }'
+  updatedAt: 'Изменено в { at }'
   confirmDelete: 'Удалить пост'
   deleteMessage: 'Вы уверены, что хотите удалить этот пост?'
 </i18n>
@@ -68,6 +72,7 @@ import { RouterLink } from 'vue-router';
 import { useSourcedRef } from '@/composables/useSourcedRef';
 import BaseButton from '@/components/ui/BaseButton';
 import type { PostWithMetaWithSinseTimestamps } from '@/api/posts';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 
@@ -121,19 +126,23 @@ const component = computed(() =>
               postId: props.post._meta.id,
             },
           },
+          class: 'hover:text-[initial]',
         },
       },
 );
 
-// TODO: перевести на серверное время
-const dateExact = computed(() =>
-  [
-    String(new Date(props.post._meta.createdAt)),
-    ...(props.post._meta.updatedAt ? [t('updatedAt', { date: String(new Date(props.post._meta.updatedAt)) })] : []),
-  ].join('\n'),
+const sinceCreatedFormatted = computed(() => intlFormatDistanceToNow(props.post._meta.sinceCreated));
+const createdAtISO = computed(() => new Date(props.post._meta.createdAt).toISOString());
+const updatedAtISO = computed(() =>
+  props.post._meta.updatedAt ? new Date(props.post._meta.updatedAt).toISOString() : undefined,
 );
 
-const sinceCreatedFormatted = computed(() => intlFormatDistanceToNow(props.post._meta.sinceCreated));
+const createdAtUpdatedAt = computed(() =>
+  [
+    t('createdAt', { at: createdAtISO.value }),
+    ...(isNotNil(updatedAtISO.value) ? [t('updatedAt', { at: updatedAtISO.value })] : []),
+  ].join('\n'),
+);
 
 const isInEditMode = computed(() => areIdsEqual(blogStore.editModeFor, props.post._meta.id));
 
