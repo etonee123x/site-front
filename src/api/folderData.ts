@@ -5,7 +5,7 @@ import type { WithMeta, WithSinceTimestamps } from '@etonee123x/shared/types/dat
 
 export type ItemWithSinceTimestamps<TItem extends Item> = TItem & WithMeta<WithSinceTimestamps>;
 
-type FolderDataWithSinceTimestamps = Omit<FolderData, 'items' | 'linkedFile'> & {
+export type FolderDataWithSinceTimestamps = Omit<FolderData, 'items' | 'linkedFile'> & {
   items: Array<ItemWithSinceTimestamps<Item>>;
   linkedFile: ItemWithSinceTimestamps<ItemFile>;
 };

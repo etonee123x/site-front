@@ -1,9 +1,6 @@
 <template>
   <BaseDialog :title ref="baseDialog">
-    <div class="flex flex-col gap-4">
-      <p>{{ message }}</p>
-      <div class="flex gap-2"></div>
-    </div>
+    <p>{{ message }}</p>
   </BaseDialog>
 </template>
 

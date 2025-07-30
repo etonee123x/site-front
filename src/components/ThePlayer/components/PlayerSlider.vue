@@ -8,9 +8,10 @@
     @mousedown.stop
     @touchstart.stop
   >
-    <div class="bg-[rgb(from_var(--color-details-500)_r_g_b_/_0.25)]">
-      <div class="h-1 bg-details-500" :style />
-    </div>
+    <div
+      :style
+      class="bg-details-75 h-1 relative after:absolute after:bg-details-500 after:h-full after:w-[var(--width)]"
+    />
   </div>
 </template>
 
@@ -37,7 +38,7 @@ const [isUsingPosition, setIsUsingPosition] = useToggle();
 const model = defineModel<number>();
 
 const style = computed(() => ({
-  width: `${Number(((isUsingPosition.value ? position.value : props.modelValue) * 100) / props.multiplier).toFixed(2)}%`,
+  '--width': `${Number(((isUsingPosition.value ? position.value : props.modelValue) * 100) / props.multiplier).toFixed(2)}%`,
 }));
 
 const slider = useTemplateRef('slider');

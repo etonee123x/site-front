@@ -15,7 +15,7 @@ export const useDialogStore = defineStore('dialog', () => {
 
   const getLastId = () => idsOpened.at(-1);
 
-  const removeId = (id: Id) => {
+  const onClose = (id: Id) => {
     const index = idsOpened.indexOf(id);
 
     if (index === -1) {
@@ -26,9 +26,8 @@ export const useDialogStore = defineStore('dialog', () => {
   };
 
   return {
-    idsOpened,
     onOpen,
     getLastId,
-    removeId,
+    onClose,
   };
 });

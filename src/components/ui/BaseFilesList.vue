@@ -1,17 +1,15 @@
 <template>
   <ol class="flex gap-4 flex-col" ref="ol">
-    <li v-for="(file, index) in model" :key="getKeyByFile(file)">
-      <div class="flex items-center gap-2">
-        <FilesListFilePreview :file />
-        <BaseAlwaysScrollable duration="10000" class="flex-1">
-          {{ file.name }}
-        </BaseAlwaysScrollable>
-        <div class="text-2xl flex gap-2 ms-auto items-center">
-          <BaseIcon class="cursor-grab text-dark" :class="CLASS_HANDLE" :path="mdiSwapVertical" />
-          <BaseButton @click="() => onClickDeteleByIndex(index)">
-            <BaseIcon :path="mdiDelete" />
-          </BaseButton>
-        </div>
+    <li v-for="(file, index) in model" class="flex items-center gap-2" :key="getKeyByFile(file)">
+      <FilesListFilePreview :file />
+      <BaseAlwaysScrollable duration="10000" class="flex-1">
+        {{ file.name }}
+      </BaseAlwaysScrollable>
+      <div class="text-2xl flex gap-2 ms-auto items-center">
+        <BaseIcon class="cursor-grab text-dark" :class="CLASS_HANDLE" :path="mdiSwapVertical" />
+        <BaseButton @click="() => onClickDeteleByIndex(index)">
+          <BaseIcon :path="mdiDelete" />
+        </BaseButton>
       </div>
     </li>
   </ol>

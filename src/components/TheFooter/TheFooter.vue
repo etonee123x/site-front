@@ -1,10 +1,10 @@
 <template>
   <footer class="border-t border-t-dark">
-    <div class="layout-container mx-auto py-2 flex gap-2 items-center">
+    <address class="layout-container mx-auto py-2 flex gap-2 items-center">
       <a target="_blank" :href="TELEGRAM_LINK">
         <img class="size-6" src="./assets/icons/Logo.svg" :alt="t('telegramLogo')" />
       </a>
-    </div>
+    </address>
   </footer>
 </template>
 

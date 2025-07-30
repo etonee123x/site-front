@@ -11,22 +11,22 @@
     <div class="dialog__backdrop" @click="onClickBackdrop" />
     <div class="dialog__content">
       <slot v-if="!isHiddenHeader" name="header" v-bind="{ close }">
-        <div class="flex justify-between items-center mb-6">
+        <header class="flex justify-between items-center mb-6">
           <span v-if="isNotNil(title)" class="text-lg">{{ title }}</span>
           <BaseButton class="ms-auto" @click="onClickCloseIcon">
             <BaseIcon :path="mdiClose" />
           </BaseButton>
-        </div>
+        </header>
       </slot>
 
       <slot v-bind="{ close }" />
 
       <slot v-if="!isHiddenFooter" name="footer" v-bind="{ close }">
-        <div v-if="buttons.length" class="flex justify-end gap-2 mt-auto">
+        <footer v-if="buttons.length" class="flex justify-end gap-2 mt-auto">
           <BaseButton v-for="button in buttons" :key="button.id" @click="button.onClick">
             {{ button.text }}
           </BaseButton>
-        </div>
+        </footer>
       </slot>
     </div>
   </dialog>
@@ -42,7 +42,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, useId, useTemplateRef, watchEffect } from 'vue';
+import { computed, onBeforeUnmount, useId, useTemplateRef, watchEffect } from 'vue';
 import { onKeyDown, useToggle } from '@vueuse/core';
 import { mdiClose } from '@mdi/js';
 import { useI18n } from 'vue-i18n';
@@ -56,7 +56,7 @@ import { isNil } from '@etonee123x/shared/utils/isNil';
 
 const dialog = useTemplateRef('dialog');
 
-const id = toId(useId());
+const id = useId();
 
 interface Button extends WithId {
   text: string;
@@ -138,17 +138,19 @@ const onClickBackdrop = close;
 onKeyDown('Escape', () => {
   const maybeLastDialogId = dialogStore.getLastId();
 
-  if (isNil(maybeLastDialogId) || !areIdsEqual(maybeLastDialogId, id)) {
+  if (isNil(maybeLastDialogId) || !areIdsEqual(maybeLastDialogId, toId(id))) {
     return;
   }
 
   close();
 });
 
+onBeforeUnmount(() => dialogStore.onClose(toId(id)));
+
 watchEffect(() =>
   model.value //
-    ? dialogStore.onOpen(id)
-    : dialogStore.removeId(id),
+    ? dialogStore.onOpen(toId(id))
+    : dialogStore.onClose(toId(id)),
 );
 
 defineExpose({
