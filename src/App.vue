@@ -31,6 +31,7 @@ import { useRoute } from 'vue-router';
 import { RouteName } from '@/router';
 import { clientOnly } from '@/helpers/clientOnly';
 import { i18n } from '@/i18n';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
 const LazyThePlayer = defineAsyncComponent(() => import('@/components/ThePlayer'));
 const LazyTheToasts = defineAsyncComponent(() => import('@/components/TheToasts.vue'));
@@ -48,7 +49,6 @@ if (isServer) {
   settingsStore.initSettings(ssrContext.request.locals.settings);
 
   useHead({
-    title: String(import.meta.env.VITE_SITE_TITLE),
     bodyAttrs: {
       class: themeColorToThemeColorClass(settingsStore.settings.themeColor),
     },
@@ -65,6 +65,16 @@ if (route.name === RouteName.Explorer) {
 }
 
 useHead({
+  titleTemplate: (title) =>
+    [
+      ...(isNotNil(title)
+        ? [
+            //
+            title,
+          ]
+        : []),
+      String(import.meta.env.VITE_SITE_TITLE),
+    ].join(' | '),
   htmlAttrs: {
     lang: () => i18n.global.locale.value.toLocaleLowerCase(),
   },

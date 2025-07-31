@@ -1,5 +1,5 @@
 <template>
-  <ElementFileWrapper :element @keydown.enter="onClick" @click="onClick">
+  <ElementFileWrapper :element>
     <ul class="flex gap-4 overflow-x-auto">
       <li
         v-for="metadataItem in metadataItems"
@@ -40,7 +40,6 @@ import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
 import { formatDuration } from '@/utils/formatDuration';
-import { usePlayerStore } from '@/stores/player';
 import BaseIcon from '@/components/ui/BaseIcon';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
 
@@ -48,11 +47,7 @@ const props = defineProps<{
   element: ItemWithSinceTimestamps<ItemAudio>;
 }>();
 
-const playerStore = usePlayerStore();
-
 const { t } = useI18n({ useScope: 'local' });
-
-const onClick = () => playerStore.loadTrack(props.element);
 
 const metadataItems = computed(() => [
   ...(props.element.musicMetadata.duration

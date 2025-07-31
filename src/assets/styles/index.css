@@ -298,16 +298,16 @@
     }
   }
 
-  .explorerElement {
+  .explorer-element {
     @apply bg-items border-2 border-dark rounded-lg w-full cursor-pointer;
     @apply hover:bg-items-hovered hover:border-details-500;
     @apply focus-visible:on-focus focus-visible:no-underline;
 
-    .explorerElement__title {
+    .explorer-element__title {
       @apply w-2/3 overflow-x-auto overflow-y-hidden m-2
     }
 
-    &.explorerElement_folder {
+    &.explorer-element_folder {
       @apply bg-folders;
       @apply hover:bg-folders-hovered hover:text-[initial];
     }

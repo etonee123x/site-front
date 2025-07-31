@@ -49,10 +49,13 @@ export const useGalleryStore = defineStore('gallery', () => {
     return isExtVideo(maybeExt);
   });
 
-  const loadGalleryItemFromCurrentExplorerFolder = (explorerElement: ItemImage | ItemVideo) =>
+  const loadGalleryItemFromCurrentExplorerFolder = (
+    explorerElement: ItemImage | ItemVideo,
+    folderData = explorerStore.folderData,
+  ) =>
     loadGalleryItem(
       pick(explorerElement, ['name', 'src']),
-      explorerStore.folderElements.reduce<Array<GalleryItem>>(
+      folderData?.items.reduce<Array<GalleryItem>>(
         (acc, folderElement) =>
           isItemImage(folderElement) || isItemVideo(folderElement)
             ? [...acc, pick(folderElement, ['name', 'src'])]

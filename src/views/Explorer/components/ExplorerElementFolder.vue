@@ -1,6 +1,6 @@
 <template>
-  <RouterLink :to="element.url" class="explorerElement explorerElement_folder">
-    <div class="explorerElement__title w-2/3 overflow-x-auto overflow-y-hidden m-2">
+  <RouterLink :to="element.url" class="explorer-element explorer-element_folder">
+    <div class="explorer-element__title w-2/3 overflow-x-auto overflow-y-hidden m-2">
       {{ element.name }}
     </div>
   </RouterLink>

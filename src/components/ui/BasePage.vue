@@ -8,7 +8,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { useHead } from '@unhead/vue';
+
+const props = defineProps<{
   h1: string;
 }>();
+
+useHead({ title: () => props.h1 }, { tagPriority: 'low' });
 </script>

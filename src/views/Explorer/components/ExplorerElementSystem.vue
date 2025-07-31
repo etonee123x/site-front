@@ -1,6 +1,6 @@
 <template>
-  <component :is="tag" class="explorerElement">
-    <div class="explorerElement__title">
+  <component :is="tag" class="explorer-element">
+    <div class="explorer-element__title">
       <slot />
     </div>
   </component>

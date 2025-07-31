@@ -2,8 +2,12 @@
   <BasePage :h1="t('content')" class="mx-auto">
     <ExplorerNavbar class="-mt-4" />
     <section class="flex flex-col gap-2">
-      <nav v-if="explorerStore.lvlUp || elements.folders.length" class="contents">
-        <LazyExplorerElementSystem v-if="explorerStore.lvlUp" :to="explorerStore.lvlUp" tag="RouterLink">
+      <nav v-if="explorerStore.folderData?.lvlUp || elements.folders.length" class="contents">
+        <LazyExplorerElementSystem
+          v-if="explorerStore.folderData?.lvlUp"
+          :to="explorerStore.folderData.lvlUp"
+          tag="RouterLink"
+        >
           ...
         </LazyExplorerElementSystem>
         <LazyExplorerElementFolder v-for="folder in elements.folders" :element="folder" :key="folder.src">
@@ -36,6 +40,8 @@ import { clientOnly } from '@/helpers/clientOnly';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
 import BasePage from '@/components/ui/BasePage.vue';
 import { useI18n } from 'vue-i18n';
+import { useHead } from '@unhead/vue';
+import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
@@ -63,22 +69,47 @@ const itemFileToComponent = (itemFile: ItemFile) => {
   }
 };
 
-const elements = computed(() =>
-  explorerStore.folderElements.reduce<{
-    folders: Array<ItemWithSinceTimestamps<ItemFolder>>;
-    files: Array<ItemWithSinceTimestamps<ItemFile>>;
-  }>(
-    (elements, folderElement) =>
-      isItemFolder(folderElement)
-        ? { ...elements, folders: elements.folders.concat(folderElement) }
-        : { ...elements, files: elements.files.concat(folderElement) },
-    { folders: [], files: [] },
-  ),
+const elements = computed(
+  () =>
+    explorerStore.folderData?.items.reduce<{
+      folders: Array<ItemWithSinceTimestamps<ItemFolder>>;
+      files: Array<ItemWithSinceTimestamps<ItemFile>>;
+    }>(
+      (elements, folderElement) =>
+        isItemFolder(folderElement)
+          ? {
+              ...elements,
+              folders: elements.folders.concat(folderElement),
+            }
+          : {
+              ...elements,
+              files: elements.files.concat(folderElement),
+            },
+      {
+        folders: [],
+        files: [],
+      },
+    ) ?? {
+      folders: [],
+      files: [],
+    },
 );
 
 const fetchData = (to: RouteLocationNormalizedLoaded) => explorerStore.getFolderData(to).catch(goToPage404);
 
 clientOnly(() => fetchData(route));
+
+useHead({
+  title: () => {
+    const maybeLinkedFileName = explorerStore.folderData?.linkedFile?.name;
+    const maybeLastNavigationItemText = explorerStore.folderData?.navigationItems.at(-1)?.text;
+
+    return [
+      ...(isNotNil(maybeLastNavigationItemText) ? [maybeLastNavigationItemText] : []),
+      ...(isNotNil(maybeLinkedFileName) ? [maybeLinkedFileName] : []),
+    ].join(' – ');
+  },
+});
 
 onBeforeRouteUpdate((to) => void fetchData(to));
 </script>

@@ -1,17 +1,19 @@
 import { defineStore } from 'pinia';
-import { computed, shallowReactive } from 'vue';
-import { isItemAudio } from '@etonee123x/shared/helpers/folderData';
+import { shallowReactive } from 'vue';
+import { isItemAudio, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
 
 import { usePlayerStore } from '@/stores/player';
 import { getFolderData as _getFolderData, type FolderDataWithSinceTimestamps } from '@/api/folderData';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import { useGalleryStore } from '@/stores/gallery';
 
-const moduleURLResolver = (url: string) => `/explorer${url}`;
+const moduleURLResolver = (url: string) => `/explorer${url.replace(/^\/explorer/, '')}`;
 
 export const useExplorerStore = defineStore('explorer', () => {
-  const { loadTrack, loadRealPlaylist, loadPotentialPlaylist } = usePlayerStore();
+  const playerStore = usePlayerStore();
+  const galleryStore = useGalleryStore();
 
   const routePathToFolderData = shallowReactive<Record<string, FolderDataWithSinceTimestamps>>({});
 
@@ -24,59 +26,49 @@ export const useExplorerStore = defineStore('explorer', () => {
 
     const maybeFolderData = routePathToFolderData[routePath];
 
-    if (isNotNil(maybeFolderData)) {
-      return maybeFolderData;
-    }
+    const __folderData = isNotNil(maybeFolderData) ? maybeFolderData : await _getFolderData(routePath);
 
-    return _getFolderData(routePath).then((_folderData) => {
-      routePathToFolderData[routePath] = _folderData;
-
-      const playlist = _folderData.items.filter((item) => isItemAudio(item));
-
-      if (!playlist.length) {
-        return _folderData;
-      }
-
-      if (_folderData.linkedFile && isItemAudio(_folderData.linkedFile)) {
-        loadRealPlaylist(playlist);
-        loadTrack(_folderData.linkedFile);
-      } else {
-        loadPotentialPlaylist(playlist);
-      }
-
-      return _folderData;
-    });
-  });
-
-  const navigationItems = computed(
-    () =>
-      folderData.value?.navigationItems.map((navigationItem) => ({
-        ...navigationItem,
-        link: moduleURLResolver(navigationItem.link),
-      })) ?? [],
-  );
-
-  const linkedFile = computed(() => folderData.value?.linkedFile);
-
-  const folderElements = computed(
-    () =>
-      folderData.value?.items.map((item) => ({
+    const _folderData = {
+      ...__folderData,
+      items: __folderData.items.map((item) => ({
         ...item,
         url: moduleURLResolver(item.url),
-      })) ?? [],
-  );
+      })),
+      lvlUp: __folderData.lvlUp && moduleURLResolver(__folderData.lvlUp),
+      navigationItems: __folderData.navigationItems.map((navigationItem) => ({
+        ...navigationItem,
+        link: moduleURLResolver(navigationItem.link),
+      })),
+    };
 
-  const lvlUp = computed(() => folderData.value?.lvlUp && moduleURLResolver(folderData.value.lvlUp));
+    routePathToFolderData[routePath] = _folderData;
+
+    if (!_folderData.linkedFile) {
+      return _folderData;
+    }
+
+    const playlist = _folderData.items.filter((item) => isItemAudio(item));
+
+    if (isItemAudio(_folderData.linkedFile)) {
+      playerStore.loadRealPlaylist(playlist);
+      playerStore.loadTrack(_folderData.linkedFile);
+    } else {
+      playerStore.loadPotentialPlaylist(playlist);
+    }
+
+    if (isItemImage(_folderData.linkedFile) || isItemVideo(_folderData.linkedFile)) {
+      galleryStore.loadGalleryItemFromCurrentExplorerFolder(_folderData.linkedFile, _folderData);
+    }
+
+    return _folderData;
+  });
 
   return {
+    // SSR compatibility
     routePathToFolderData,
 
     getFolderData,
     isLoadingGetFolderData,
-
-    folderElements,
-    lvlUp,
-    navigationItems,
-    linkedFile,
+    folderData,
   };
 });
