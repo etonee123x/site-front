@@ -1,5 +1,5 @@
 <template>
-  <BasePage h1="404" class="mx-auto flex justify-center items-center flex-1 gap-6 flex-col">
+  <BasePage h1="404" class="mx-auto flex justify-center items-center flex-1 flex-col">
     <RouterLink :to="{ name: RouteName.Home }" class="text-xl">
       {{ t('toMain') }}
     </RouterLink>

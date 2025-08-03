@@ -86,6 +86,18 @@ export default [
       curly: ['error', 'all'],
       'arrow-body-style': ['error', 'as-needed'],
       'no-sparse-arrays': ['off'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'vue',
+              importNames: ['useSSRContext'],
+              message: 'use useSSRContext from custom composable instead',
+            },
+          ],
+        },
+      ],
     },
   },
   {
@@ -138,11 +150,7 @@ export default [
         },
       ],
       'vue/prop-name-casing': ['error', 'camelCase'],
-      'vue/custom-event-name-casing': [
-        'error',
-        'camelCase',
-        { ignores: ['foo-bar', '/^(?:[a-z]+[A-Z]*)+:(?:[a-z]+[A-Z]*)+$/'] },
-      ],
+      'vue/custom-event-name-casing': ['error', 'camelCase', { ignores: ['/^(?:[a-z]+[A-Z]*)+:(?:[a-z]+[A-Z]*)+$/'] }],
       'vue/attribute-hyphenation': ['error', 'never'],
       'vue/v-on-event-hyphenation': ['error', 'never'],
     },

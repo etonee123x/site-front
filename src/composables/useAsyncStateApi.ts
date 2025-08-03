@@ -1,9 +1,10 @@
 import { useLoadingStore } from '@/stores/loading';
 import type { FetchError } from 'ofetch';
-import { computed, ref, useSSRContext } from 'vue';
+import { computed, ref } from 'vue';
 import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
-import { useSourcedRef } from './useSourcedRef';
+import { useSourcedRef } from '@/composables/useSourcedRef';
+import { useSSRContext } from '@/composables/useSSRContext';
 
 /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 type RequestFunction<Data, Params extends Array<any> = []> = (...params: Params) => Promise<Data>;

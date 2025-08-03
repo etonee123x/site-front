@@ -44,6 +44,8 @@ export const useExplorerStore = defineStore('explorer', () => {
     routePathToFolderData[routePath] = _folderData;
 
     if (!_folderData.linkedFile) {
+      galleryStore.unloadGalleryItem();
+
       return _folderData;
     }
 

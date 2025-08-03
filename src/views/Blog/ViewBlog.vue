@@ -65,7 +65,7 @@ import BlogPost from './components/BlogPost.vue';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidatePostData } from './composables/useVuelidatePostData';
 import { useAuthStore } from '@/stores/auth';
-import { goToPage404 } from '@/composables/goToPage404';
+import { useGoToPage404 } from '@/composables/useGoToPage404';
 import { MAIN } from '@/constants/selectors';
 import { useElementFinder } from '@/composables/useElementFinder';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
@@ -101,6 +101,8 @@ const authStore = useAuthStore();
 const hasPosts = computed(() => Boolean(blogStore.all.length));
 
 const elementMain = useElementFinder(() => document.getElementById(MAIN));
+
+const goToPage404 = useGoToPage404();
 
 useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
   canLoadMore: () => !(blogStore.isLoadingGetAll || blogStore.isEnd),

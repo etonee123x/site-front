@@ -16,6 +16,7 @@
       </nav>
       <component :is="itemFileToComponent(file)" v-for="file in elements.files" :element="file" :key="file.src" />
     </section>
+    <TheDialogGallery />
   </BasePage>
 </template>
 
@@ -35,13 +36,14 @@ import type { ItemFile, ItemFolder } from '@etonee123x/shared/helpers/folderData
 import ExplorerNavbar from './components/ExplorerNavbar.vue';
 
 import { useExplorerStore } from '@/stores/explorer';
-import { goToPage404 } from '@/composables/goToPage404';
+import { useGoToPage404 } from '@/composables/useGoToPage404';
 import { clientOnly } from '@/helpers/clientOnly';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
 import BasePage from '@/components/ui/BasePage.vue';
 import { useI18n } from 'vue-i18n';
 import { useHead } from '@unhead/vue';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import TheDialogGallery from './components/TheDialogGallery.vue';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
@@ -49,6 +51,8 @@ const LazyExplorerElementFolder = defineAsyncComponent(() => import('./component
 const LazyExplorerElementFileAudio = defineAsyncComponent(() => import('./components/ExplorerElementFileAudio.vue'));
 const LazyExplorerElementFileImage = defineAsyncComponent(() => import('./components/ExplorerElementFileImage.vue'));
 const LazyExplorerElementFileVideo = defineAsyncComponent(() => import('./components/ExplorerElementFileVideo.vue'));
+
+const goToPage404 = useGoToPage404();
 
 const { t } = useI18n({ useScope: 'local' });
 
