@@ -1,13 +1,18 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { isExtVideo, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
 import { useCycleList } from '@vueuse/core';
 import { pick } from '@etonee123x/shared/utils/pick';
 
 import { useExplorerStore } from './explorer';
 
-import { getFileUrlExt } from '@/utils/url';
-import type { ItemImage, ItemVideo } from '@etonee123x/shared/helpers/folderData';
+import { getFileUrlExtension } from '@/utils/url';
+import {
+  extensionToFileType,
+  FILE_TYPES,
+  ITEM_TYPES,
+  type ItemImage,
+  type ItemVideo,
+} from '@etonee123x/shared/helpers/folderData';
 
 type GalleryItem = Pick<ItemImage | ItemVideo, 'src' | 'name'>;
 
@@ -40,13 +45,13 @@ export const useGalleryStore = defineStore('gallery', () => {
       return false;
     }
 
-    const maybeExt = getFileUrlExt(galleryItem.value.src);
+    const maybeExt = getFileUrlExtension(galleryItem.value.src);
 
     if (!maybeExt) {
       return false;
     }
 
-    return isExtVideo(maybeExt);
+    return extensionToFileType(maybeExt) === FILE_TYPES.VIDEO;
   });
 
   const loadGalleryItemFromCurrentExplorerFolder = (
@@ -57,7 +62,8 @@ export const useGalleryStore = defineStore('gallery', () => {
       pick(explorerElement, ['name', 'src']),
       folderData?.items.reduce<Array<GalleryItem>>(
         (acc, folderElement) =>
-          isItemImage(folderElement) || isItemVideo(folderElement)
+          folderElement.itemType === ITEM_TYPES.FILE &&
+          (folderElement.fileType === FILE_TYPES.IMAGE || folderElement.fileType === FILE_TYPES.VIDEO)
             ? [...acc, pick(folderElement, ['name', 'src'])]
             : acc,
         [],

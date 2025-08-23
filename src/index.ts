@@ -123,7 +123,10 @@ const main: RequestHandler = async (request: RequestWithLocals, response, next) 
         return;
       }
 
-      response.status(200).set({ 'Content-Type': 'text/html' }).send(html);
+      response
+        .status(response.statusCode || 200)
+        .set({ 'Content-Type': 'text/html' })
+        .send(html);
     })
     .catch(next);
 };
@@ -136,7 +139,10 @@ const error: ErrorRequestHandler = async (error, request, response, next) => {
   }
 
   renderHTML('404', { request, response, next }).then((html) =>
-    response.status(500).set({ 'Content-Type': 'text/html' }).send(html),
+    response
+      .status(response.statusCode || 500)
+      .set({ 'Content-Type': 'text/html' })
+      .send(html),
   );
 };
 

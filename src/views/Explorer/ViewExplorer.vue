@@ -23,15 +23,24 @@
 <i18n lang="yaml">
 En:
   content: 'Content'
+  thatsWhatCloseToMe: 'Thats what close to me. Folder {folderName}, {description}'
+  foldersAndFiles: 'folders and files; with music, pictures, videos'
+  listenToAudio: 'listen to audio {fileName}, and other @:foldersAndFiles'
+  watchTheImage: 'watch the image {fileName}, and other @:foldersAndFiles'
+  watchTheVideo: 'watch the video {fileName}, and other @:foldersAndFiles'
 Ru:
   content: 'Контент'
+  thatsWhatCloseToMe: 'То, что мне близко. Папка {folderName}, {description}'
+  foldersAndFiles: 'папки и файлы; с музыкой, картинками, видосиками'
+  listenToAudio: 'слушать аудио {fileName}, и другие @:foldersAndFiles'
+  watchTheImage: 'смотреть изображение {fileName}, и другие @:foldersAndFiles'
+  watchTheVideo: 'смотреть видео {fileName}, и другие @:foldersAndFiles'
 </i18n>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 import { onBeforeRouteUpdate, useRoute, type RouteLocationNormalizedLoaded } from 'vue-router';
-import { isItemFolder, isItemAudio, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
-import type { ItemFile, ItemFolder } from '@etonee123x/shared/helpers/folderData';
+import { FILE_TYPES, ITEM_TYPES, type ItemFile, type ItemFolder } from '@etonee123x/shared/helpers/folderData';
 
 import ExplorerNavbar from './components/ExplorerNavbar.vue';
 
@@ -41,9 +50,10 @@ import { clientOnly } from '@/helpers/clientOnly';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
 import BasePage from '@/components/ui/BasePage.vue';
 import { useI18n } from 'vue-i18n';
-import { useHead } from '@unhead/vue';
+import { useSeoMeta } from '@unhead/vue';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import TheDialogGallery from './components/TheDialogGallery.vue';
+import { isNil } from '@etonee123x/shared/utils/isNil';
 
 const LazyExplorerElementSystem = defineAsyncComponent(() => import('./components/ExplorerElementSystem.vue'));
 const LazyExplorerElementFolder = defineAsyncComponent(() => import('./components/ExplorerElementFolder.vue'));
@@ -61,12 +71,12 @@ const explorerStore = useExplorerStore();
 const route = useRoute();
 
 const itemFileToComponent = (itemFile: ItemFile) => {
-  switch (true) {
-    case isItemAudio(itemFile):
+  switch (itemFile.fileType) {
+    case FILE_TYPES.AUDIO:
       return LazyExplorerElementFileAudio;
-    case isItemImage(itemFile):
+    case FILE_TYPES.IMAGE:
       return LazyExplorerElementFileImage;
-    case isItemVideo(itemFile):
+    case FILE_TYPES.VIDEO:
       return LazyExplorerElementFileVideo;
     default:
       return LazyExplorerElementSystem;
@@ -80,7 +90,7 @@ const elements = computed(
       files: Array<ItemWithSinceTimestamps<ItemFile>>;
     }>(
       (elements, folderElement) =>
-        isItemFolder(folderElement)
+        folderElement.itemType === ITEM_TYPES.FOLDER
           ? {
               ...elements,
               folders: elements.folders.concat(folderElement),
@@ -103,15 +113,37 @@ const fetchData = (to: RouteLocationNormalizedLoaded) => explorerStore.getFolder
 
 clientOnly(() => fetchData(route));
 
-useHead({
-  title: () => {
-    const maybeLinkedFileName = explorerStore.folderData?.linkedFile?.name;
-    const maybeLastNavigationItemText = explorerStore.folderData?.navigationItems.at(-1)?.text;
+const maybeLastNavigationItemText = computed(() => explorerStore.folderData?.navigationItems.at(-1)?.text);
+const maybeLinkedFile = computed(() => explorerStore.folderData?.linkedFile);
 
-    return [
-      ...(isNotNil(maybeLastNavigationItemText) ? [maybeLastNavigationItemText] : []),
-      ...(isNotNil(maybeLinkedFileName) ? [maybeLinkedFileName] : []),
-    ].join(' – ');
+useSeoMeta({
+  title: () =>
+    [
+      ...(isNotNil(maybeLastNavigationItemText.value) ? [maybeLastNavigationItemText.value] : []),
+      ...(isNotNil(maybeLinkedFile.value) ? [maybeLinkedFile.value.name] : []),
+    ].join(' – ') || undefined,
+  description: () => {
+    if (isNil(maybeLastNavigationItemText.value)) {
+      return undefined;
+    }
+
+    if (!maybeLinkedFile.value) {
+      return t('thatsWhatCloseToMe', {
+        folderName: maybeLastNavigationItemText.value,
+        description: t('foldersAndFiles'),
+      });
+    }
+
+    const FILE_TYPE_TO_DESCRIPTION = {
+      [FILE_TYPES.AUDIO]: t('listenToAudio', { fileName: maybeLinkedFile.value.name }),
+      [FILE_TYPES.IMAGE]: t('watchTheImage', { fileName: maybeLinkedFile.value.name }),
+      [FILE_TYPES.VIDEO]: t('watchTheVideo', { fileName: maybeLinkedFile.value.name }),
+    };
+
+    return t('thatsWhatCloseToMe', {
+      folderName: maybeLastNavigationItemText.value,
+      description: FILE_TYPE_TO_DESCRIPTION[maybeLinkedFile.value.fileType],
+    });
   },
 });
 

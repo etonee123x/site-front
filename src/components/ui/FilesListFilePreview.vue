@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
+import { extensionToFileType, FILE_TYPES } from '@etonee123x/shared/helpers/folderData';
 import { mdiFileOutline } from '@mdi/js';
-import { isExtAudio, isExtImage, isExtVideo } from '@etonee123x/shared/helpers/folderData';
 import { defineAsyncComponent, computed } from 'vue';
 
 const LazyBaseIcon = defineAsyncComponent(() => import('@/components/ui/BaseIcon'));
@@ -13,10 +13,8 @@ const LazyPreviewVideo = defineAsyncComponent(() => import('@/components/Preview
 const props = defineProps<{ file: File }>();
 
 const component = computed(() => {
-  const ext = props.file.type.replace(/.*\//, '.');
-
-  switch (true) {
-    case isExtImage(ext):
+  switch (extensionToFileType(props.file.type.replace(/.*\//, '.'))) {
+    case FILE_TYPES.IMAGE:
       return {
         is: 'img',
         binds: {
@@ -28,7 +26,7 @@ const component = computed(() => {
           },
         },
       };
-    case isExtAudio(ext):
+    case FILE_TYPES.AUDIO:
       return {
         is: 'audio',
         binds: {
@@ -36,7 +34,7 @@ const component = computed(() => {
           controls: true,
         },
       };
-    case isExtVideo(ext):
+    case FILE_TYPES.VIDEO:
       return {
         is: LazyPreviewVideo,
         binds: {

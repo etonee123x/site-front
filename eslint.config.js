@@ -43,7 +43,6 @@ export default [
       '@stylistic/js/semi': ['error', 'always'],
       '@stylistic/js/block-spacing': ['error', 'always'],
       '@stylistic/js/comma-dangle': ['error', 'always-multiline'],
-      '@stylistic/js/no-mixed-operators': 'error',
       '@stylistic/js/lines-around-comment': [
         'error',
         {

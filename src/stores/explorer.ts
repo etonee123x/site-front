@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { shallowReactive } from 'vue';
-import { isItemAudio, isItemImage, isItemVideo } from '@etonee123x/shared/helpers/folderData';
 
 import { usePlayerStore } from '@/stores/player';
 import { getFolderData as _getFolderData, type FolderDataWithSinceTimestamps } from '@/api/folderData';
@@ -8,6 +7,7 @@ import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
 import { useGalleryStore } from '@/stores/gallery';
+import { FILE_TYPES, ITEM_TYPES } from '@etonee123x/shared/helpers/folderData';
 
 const moduleURLResolver = (url: string) => `/explorer${url.replace(/^\/explorer/, '')}`;
 
@@ -49,16 +49,18 @@ export const useExplorerStore = defineStore('explorer', () => {
       return _folderData;
     }
 
-    const playlist = _folderData.items.filter((item) => isItemAudio(item));
+    const playlist = _folderData.items.filter(
+      (item) => item.itemType === ITEM_TYPES.FILE && item.fileType === FILE_TYPES.AUDIO,
+    );
 
-    if (isItemAudio(_folderData.linkedFile)) {
+    if (_folderData.linkedFile.fileType === FILE_TYPES.AUDIO) {
       playerStore.loadRealPlaylist(playlist);
       playerStore.loadTrack(_folderData.linkedFile);
     } else {
       playerStore.loadPotentialPlaylist(playlist);
     }
 
-    if (isItemImage(_folderData.linkedFile) || isItemVideo(_folderData.linkedFile)) {
+    if (_folderData.linkedFile.fileType === FILE_TYPES.IMAGE || _folderData.linkedFile.fileType === FILE_TYPES.VIDEO) {
       galleryStore.loadGalleryItemFromCurrentExplorerFolder(_folderData.linkedFile, _folderData);
     }
 
