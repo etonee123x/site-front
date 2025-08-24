@@ -39,7 +39,7 @@ import { mdiClockOutline, mdiAccountOutline, mdiAlbum, mdiCalendarBlankOutline, 
 
 import ElementFileWrapper from './_ElementFileWrapper.vue';
 
-import { formatDuration } from '@/utils/formatDuration';
+import { millisecondsToHumanReadable } from '@/utils/millisecondsToHumanReadable';
 import BaseIcon from '@/components/ui/BaseIcon';
 import type { ItemWithSinceTimestamps } from '@/api/folderData';
 
@@ -56,7 +56,7 @@ const metadataItems = computed(() => [
           key: 'duration',
           title: t('duration'),
           path: mdiClockOutline,
-          value: formatDuration(props.element.musicMetadata.duration),
+          value: millisecondsToHumanReadable(props.element.musicMetadata.duration),
         },
       ]
     : []),

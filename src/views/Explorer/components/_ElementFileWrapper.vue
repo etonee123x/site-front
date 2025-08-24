@@ -27,7 +27,7 @@ Ru:
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
-import { useDateFns } from '@/composables/useDateFns';
+
 import type { WithMeta, WithSinceTimestamps } from '@etonee123x/shared/types/database';
 import { useI18n } from 'vue-i18n';
 
@@ -37,8 +37,8 @@ const props = defineProps<{
 
 const { t } = useI18n({ useScope: 'local' });
 
-const { intlFormatDistanceToNow } = useDateFns();
-
-const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
+// DATE-FNS
+// const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
+const sinceCreated = computed(() => String(props.element._meta.sinceCreated));
 const createdAtISO = computed(() => new Date(props.element._meta.createdAt).toISOString());
 </script>

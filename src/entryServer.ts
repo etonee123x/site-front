@@ -9,7 +9,7 @@ export const render = async (url: string, expressContext: ExpressContext) => {
   const { app, router, pinia } = createApp({ url });
 
   app.config.errorHandler = () => {
-    if (isClient) {
+    if (isClient || expressContext.response.headersSent) {
       return;
     }
 

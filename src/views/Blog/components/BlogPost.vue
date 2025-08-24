@@ -61,7 +61,6 @@ import { useI18n } from 'vue-i18n';
 import PostData from './PostData.vue';
 
 import BaseIcon from '@/components/ui/BaseIcon';
-import { useDateFns } from '@/composables/useDateFns';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidatePostData } from '../composables/useVuelidatePostData';
 import { useAuthStore } from '@/stores/auth';
@@ -92,8 +91,6 @@ const { t } = useI18n({ useScope: 'local' });
 const files = ref<Array<File>>([]);
 
 const [model] = useSourcedRef(() => props.post, { isAutoSynced: true });
-
-const { intlFormatDistanceToNow } = useDateFns();
 
 const { v$ } = useVuelidatePostData(model, files);
 
@@ -131,7 +128,8 @@ const component = computed(() =>
       },
 );
 
-const sinceCreatedFormatted = computed(() => intlFormatDistanceToNow(props.post._meta.sinceCreated));
+// DATE-FNS
+const sinceCreatedFormatted = computed(() => String(props.post._meta.sinceCreated));
 const createdAtISO = computed(() => new Date(props.post._meta.createdAt).toISOString());
 const updatedAtISO = computed(() =>
   props.post._meta.updatedAt ? new Date(props.post._meta.updatedAt).toISOString() : undefined,

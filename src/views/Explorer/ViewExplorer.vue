@@ -1,7 +1,7 @@
 <template>
   <BasePage :h1="t('content')" class="mx-auto">
     <ExplorerNavbar class="-mt-4" />
-    <section class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2">
       <nav v-if="explorerStore.folderData?.lvlUp || elements.folders.length" class="contents">
         <LazyExplorerElementSystem
           v-if="explorerStore.folderData?.lvlUp"
@@ -15,7 +15,7 @@
         </LazyExplorerElementFolder>
       </nav>
       <component :is="itemFileToComponent(file)" v-for="file in elements.files" :element="file" :key="file.src" />
-    </section>
+    </div>
     <TheDialogGallery />
   </BasePage>
 </template>

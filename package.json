@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@etonee123x/shared": "github:etonee123x/shared",
+    "@js-temporal/polyfill": "^0.5.1",
     "@mdi/js": "^7.4.47",
     "@unhead/vue": "^2.0.14",
     "@vuelidate/core": "^2.0.3",
@@ -23,7 +24,6 @@
     "@vueuse/integrations": "^13.5.0",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
-    "date-fns": "^4.1.0",
     "deep-equal": "^2.2.3",
     "express": "^5.1.0",
     "is-mobile": "^5.0.0",
