@@ -5,8 +5,12 @@
         <div class="explorer-element__title">
           {{ element.name }}
         </div>
-        <time :datetime="createdAtISO" :title="t('createdAt', { at: createdAtISO })" class="text-right m-2">
-          {{ sinceCreated }}
+        <time
+          :datetime="relativeDatetimeFormats.forMachine.value"
+          :title="t('createdAt', { at: relativeDatetimeFormats.forMachine.value })"
+          class="text-right m-2"
+        >
+          {{ relativeDatetimeFormats.forHuman.value }}
         </time>
       </header>
       <hr />
@@ -25,11 +29,11 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
 
 import type { WithMeta, WithSinceTimestamps } from '@etonee123x/shared/types/database';
 import { useI18n } from 'vue-i18n';
+import { useRelativeDatetimeFormats } from '@/composables/useRelativeDatetimeFormats';
 
 const props = defineProps<{
   element: ItemFile & WithMeta<WithSinceTimestamps>;
@@ -37,8 +41,5 @@ const props = defineProps<{
 
 const { t } = useI18n({ useScope: 'local' });
 
-// DATE-FNS
-// const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
-const sinceCreated = computed(() => String(props.element._meta.sinceCreated));
-const createdAtISO = computed(() => new Date(props.element._meta.createdAt).toISOString());
+const relativeDatetimeFormats = useRelativeDatetimeFormats(() => -props.element._meta.sinceCreated);
 </script>

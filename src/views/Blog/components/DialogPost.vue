@@ -8,11 +8,19 @@
     </article>
     <template #footer>
       <div class="sticky bottom-0 -mb-4 py-4 bg-background text-sm text-dark flex flex-col items-end">
-        <time :datetime="createdAtISO" :title="t('createdAt', { since: createdAtISO })">{{
-          t('created', { since: sinceCreated })
-        }}</time>
-        <time v-if="sinceUpdated" :datetime="updatedAtISO" :title="t('updatedAt', { at: updatedAtISO })" class="mt-1">
-          {{ t('updated', { since: sinceUpdated }) }}
+        <time
+          :datetime="relativeDatetimeFormatsCreated.forMachine.value"
+          :title="t('createdAt', { since: relativeDatetimeFormatsCreated.forMachine.value })"
+        >
+          {{ t('created', { since: relativeDatetimeFormatsCreated.forHuman.value }) }}
+        </time>
+        <time
+          v-if="isNotNil(blogStore.byId?._meta.sinceUpdated)"
+          :datetime="relativeDatetimeFormatsUpdated.forMachine.value"
+          :title="t('updatedAt', { at: relativeDatetimeFormatsUpdated.forMachine.value })"
+          class="mt-1"
+        >
+          {{ t('updated', { since: relativeDatetimeFormatsUpdated.forHuman.value }) }}
         </time>
       </div>
     </template>
@@ -33,7 +41,7 @@ Ru:
 </i18n>
 
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue';
+import { watchEffect } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -43,6 +51,7 @@ import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
 import PostData from './PostData.vue';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import { useRelativeDatetimeFormats } from '@/composables/useRelativeDatetimeFormats';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -52,16 +61,12 @@ const blogStore = useBlogStore();
 
 const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 
-// DATEFNS
-const sinceCreated = computed(() => blogStore.byId && String(blogStore.byId._meta.sinceCreated));
-const sinceUpdated = computed(
-  () => isNotNil(blogStore.byId?._meta.sinceUpdated) && String(blogStore.byId._meta.sinceUpdated),
+const relativeDatetimeFormatsCreated = useRelativeDatetimeFormats(() =>
+  blogStore.byId ? -blogStore.byId._meta.sinceCreated : 0,
 );
 
-const createdAtISO = computed(() => blogStore.byId && new Date(blogStore.byId._meta.createdAt).toISOString());
-
-const updatedAtISO = computed(() =>
-  blogStore.byId?._meta.updatedAt ? new Date(blogStore.byId._meta.updatedAt).toISOString() : undefined,
+const relativeDatetimeFormatsUpdated = useRelativeDatetimeFormats(() =>
+  isNotNil(blogStore.byId?._meta.sinceUpdated) ? -blogStore.byId._meta.sinceUpdated : 0,
 );
 
 const onDialogClose = () => {

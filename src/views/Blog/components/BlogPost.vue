@@ -13,11 +13,11 @@
         <template v-else>
           <PostData :post />
           <time
-            :datetime="createdAtISO"
+            :datetime="relativeDatetimeFormats.forMachine.value"
             :title="createdAtUpdatedAt"
             class="text-sm mt-4 text-dark flex justify-end items-center gap-0.5"
           >
-            {{ sinceCreatedFormatted }}
+            {{ relativeDatetimeFormats.forHuman.value }}
             <BaseIcon v-if="post._meta.updatedAt" :class="ICON.SIZE.SM" :path="mdiPencil" />
           </time>
         </template>
@@ -72,6 +72,7 @@ import { useSourcedRef } from '@/composables/useSourcedRef';
 import BaseButton from '@/components/ui/BaseButton';
 import type { PostWithMetaWithSinseTimestamps } from '@/api/posts';
 import { isNotNil } from '@etonee123x/shared/utils/isNotNil';
+import { useRelativeDatetimeFormats } from '@/composables/useRelativeDatetimeFormats';
 
 const LazyBlogEditPost = defineAsyncComponent(() => import('./BlogEditPost.vue'));
 
@@ -128,17 +129,14 @@ const component = computed(() =>
       },
 );
 
-// DATE-FNS
-const sinceCreatedFormatted = computed(() => String(props.post._meta.sinceCreated));
-const createdAtISO = computed(() => new Date(props.post._meta.createdAt).toISOString());
-const updatedAtISO = computed(() =>
-  props.post._meta.updatedAt ? new Date(props.post._meta.updatedAt).toISOString() : undefined,
-);
+const relativeDatetimeFormats = useRelativeDatetimeFormats(() => -props.post._meta.sinceCreated);
 
 const createdAtUpdatedAt = computed(() =>
   [
-    t('createdAt', { at: createdAtISO.value }),
-    ...(isNotNil(updatedAtISO.value) ? [t('updatedAt', { at: updatedAtISO.value })] : []),
+    t('createdAt', { at: new Date(props.post._meta.createdAt).toISOString() }),
+    ...(isNotNil(props.post._meta.updatedAt)
+      ? [t('updatedAt', { at: new Date(props.post._meta.updatedAt).toISOString() })]
+      : []),
   ].join('\n'),
 );
 
