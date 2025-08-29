@@ -19,15 +19,15 @@
             :title="t('copyLink')"
             @click="onClickTitle"
           >
-            <span>{{ playerStore.name }}</span>
+            <h2>{{ playerStore.name }}</h2>
             <BaseIcon :path="mdiLinkVariant" />
           </header>
         </BaseAlwaysScrollable>
         <audio :src="playerStore.src" autoplay ref="audio" @ended="onEnded" />
         <div class="h-5 w-full mx-auto flex justify-between items-center gap-2">
-          <span>
-            {{ formattedCurrentTime }}
-          </span>
+          <time :datetime="currentTimeFormats.iso">
+            {{ currentTimeFormats.humanReadable }}
+          </time>
           <PlayerSlider
             :multiplier="duration / 1000"
             isLazy
@@ -35,9 +35,9 @@
             @keydown.right="onKeyDownRightTime"
             @keydown.left="onKeyDownLeftTime"
           />
-          <span>
-            {{ formatedDuration }}
-          </span>
+          <time :datetime="durationFormats.iso">
+            {{ durationFormats.humanReadable }}
+          </time>
         </div>
         <div class="grid grid-cols-[1fr_min-content_1fr] grid-areas-['left_center_right'] gap-x-4 items-center">
           <BaseToggler
@@ -113,9 +113,10 @@ import BaseSwipable from '@/components/ui/BaseSwipable.vue';
 import BaseToggler from '@/components/ui/BaseToggler.vue';
 import { usePlayerStore } from '@/stores/player';
 import { useToastsStore } from '@/stores/toasts';
-import { formatDuration } from '@/utils/formatDuration';
+import { millisecondsToHumanReadable } from '@/utils/millisecondsToHumanReadable';
 import { to0To1Borders } from '@/utils/to0To1Borders';
 import BaseAlwaysScrollable from '@/components/ui/BaseAlwaysScrollable.vue';
+import { Temporal } from '@js-temporal/polyfill';
 
 const { t } = useI18n({ useScope: 'local' });
 
@@ -161,9 +162,6 @@ const controlButtons = computed(() => [
   },
 ]);
 
-const formatedDuration = computed(() => formatDuration(duration.value));
-const formattedCurrentTime = computed(() => formatDuration(currentTimeSeconds.value * 1000));
-
 const onEnded = playerStore.loadNext;
 
 const onClickClose = playerStore.unloadTrack;
@@ -201,4 +199,12 @@ const onKeyDownRightVolume = () => {
 const onKeyDownLeftVolume = () => {
   volume.value = to0To1Borders(volume.value - 0.05);
 };
+
+const millisecondsToTimeFormats = (milliseconds: number) => ({
+  humanReadable: millisecondsToHumanReadable(milliseconds),
+  iso: Temporal.Duration.from({ milliseconds: Math.ceil(milliseconds) }).toString(),
+});
+
+const currentTimeFormats = computed(() => millisecondsToTimeFormats(currentTimeSeconds.value * 1000));
+const durationFormats = computed(() => millisecondsToTimeFormats(duration.value));
 </script>

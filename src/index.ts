@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { readFile, access } from 'node:fs/promises';
-import express, { type Request } from 'express';
+import express, { type ErrorRequestHandler, type RequestHandler } from 'express';
 import type { ViteDevServer } from 'vite';
 import cookieParser from 'cookie-parser';
 import { transformHtmlTemplate } from '@unhead/vue/server';
@@ -12,13 +12,10 @@ import { isProduction } from '@/constants/mode';
 import { KEY_JWT } from '@/constants/keys';
 import http from 'http';
 import https from 'https';
-import { type Locals } from '@/types';
+import { type Locals, type RequestWithLocals } from '@/types';
 import { requestToOrigin } from '@/utils/requestToOrigin';
 import { isNil } from '@etonee123x/shared/utils/isNil';
-
-interface RequestWithLocals extends Request {
-  locals?: Locals;
-}
+import type { ExpressContext } from '@/constants/injectionKeyExpressContext.js';
 
 // Constants
 const port = process.env.PORT || 5173;
@@ -26,6 +23,25 @@ const base = process.env.BASE || '/';
 
 // Cached production assets
 const templateHtml = isProduction ? await readFile('./dist/client/index.html', 'utf-8') : '';
+
+const renderHTML = async (url: string, expressContext: ExpressContext) => {
+  const template = isProduction
+    ? templateHtml
+    : await vite.transformIndexHtml(url, await readFile('index.html', 'utf-8'));
+
+  const { render } = isProduction
+    ? await import('../dist/server/entryServer.js')
+    : await vite.ssrLoadModule('./src/entryServer.ts');
+
+  const rendered = await render(url, expressContext);
+
+  return transformHtmlTemplate(
+    rendered.head,
+    template
+      .replace(`<!--app-html-->`, rendered.html ?? '')
+      .replace('<!--app-teleport-->', rendered.teleports['#teleported'] ?? ''),
+  );
+};
 
 // Create http server
 const app = express();
@@ -47,92 +63,90 @@ if (isProduction) {
   app.use(vite.middlewares);
 }
 
-// Serve HTML
-app.use(
-  '*all',
-  async (request, response, next) => {
-    // auth
+const noShit: RequestHandler = (request, response, next) => {
+  if (request.originalUrl.startsWith('/.well-known/')) {
+    response.status(404).send('Not Found');
 
-    const maybeQueryJwt = request.query[KEY_JWT]?.toString();
+    return;
+  }
 
-    if (isNil(maybeQueryJwt)) {
-      return next();
-    }
+  next();
+};
 
-    await postAuth(maybeQueryJwt)
-      .then((cookies) => response.setHeader('Set-Cookie', cookies))
-      .catch(() => response.clearCookie(KEY_JWT));
+const auth: RequestHandler = async (request, response, next) => {
+  const maybeQueryJwt = request.query[KEY_JWT]?.toString();
 
-    const requestUrl = new URL(request.url, requestToOrigin(request));
+  if (isNil(maybeQueryJwt)) {
+    return next();
+  }
 
-    requestUrl.searchParams.delete(KEY_JWT);
+  await postAuth(maybeQueryJwt)
+    .then((cookies) => response.setHeader('Set-Cookie', cookies))
+    .catch(() => response.clearCookie(KEY_JWT));
 
-    return response.redirect(requestUrl.toString());
-  },
-  async (request: RequestWithLocals, response, next) => {
-    // settings
+  const requestUrl = new URL(request.url, requestToOrigin(request));
 
-    const initialSettings = JSON.parse(await readFile(resolve('./public/settings.json'), 'utf-8'));
+  requestUrl.searchParams.delete(KEY_JWT);
 
-    const settings = {
-      ...initialSettings,
-      ...pick(request.cookies, ['themeColor', 'language']),
-    };
+  return response.redirect(requestUrl.toString());
+};
 
-    const locals: Locals = {
-      settings,
-    };
+const settings: RequestHandler = async (request: RequestWithLocals, response, next) => {
+  const initialSettings = JSON.parse(await readFile(resolve('./public/settings.json'), 'utf-8'));
 
-    response.cookie('language', settings.language, {
-      maxAge: 365 * 24 * 60 * 60 * 1000,
-    });
+  const settings = {
+    ...initialSettings,
+    ...pick(request.cookies, ['themeColor', 'language']),
+  };
 
-    response.cookie('themeColor', settings.themeColor, {
-      maxAge: 365 * 24 * 60 * 60 * 1000,
-    });
+  const locals: Locals = {
+    settings,
+  };
 
-    request.locals = locals;
+  response.cookie('language', settings.language, {
+    maxAge: 365 * 24 * 60 * 60 * 1000,
+  });
 
-    next();
-  },
-  async (request: RequestWithLocals, response) => {
-    try {
-      const url = request.originalUrl.replace(base, '');
+  response.cookie('themeColor', settings.themeColor, {
+    maxAge: 365 * 24 * 60 * 60 * 1000,
+  });
 
-      let template: string;
-      let render;
+  request.locals = locals;
 
-      if (isProduction) {
-        template = templateHtml;
-        render = (await import('../dist/server/entryServer.js')).render;
-      } else {
-        // Always read fresh template in development
-        template = await readFile('index.html', 'utf-8');
-        template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule('./src/entryServer.ts')).render;
+  next();
+};
+
+const main: RequestHandler = async (request: RequestWithLocals, response, next) => {
+  renderHTML(request.originalUrl.replace(base, ''), { request, response, next })
+    .then((html) => {
+      if (response.headersSent) {
+        return;
       }
 
-      const rendered = await render(url, request);
+      response
+        .status(response.statusCode || 200)
+        .set({ 'Content-Type': 'text/html' })
+        .send(html);
+    })
+    .catch(next);
+};
 
-      const html = await transformHtmlTemplate(
-        rendered.head,
-        template
-          .replace(`<!--app-html-->`, rendered.html ?? '')
-          .replace('<!--app-teleport-->', rendered.teleports['#teleported'] ?? ''),
-      );
+const error: ErrorRequestHandler = async (error, request, response, next) => {
+  if (error instanceof Error) {
+    vite?.ssrFixStacktrace(error);
 
-      response.status(200).set({ 'Content-Type': 'text/html' }).send(html);
-    } catch (error) {
-      if (!(error instanceof Error)) {
-        return console.error('Unknown error', error);
-      }
+    console.error('Unknown error', error);
+  }
 
-      vite?.ssrFixStacktrace(error);
-      console.error(error.stack);
-      response.status(500).end(error.stack);
-    }
-  },
-);
+  renderHTML('404', { request, response, next }).then((html) =>
+    response
+      .status(response.statusCode || 500)
+      .set({ 'Content-Type': 'text/html' })
+      .send(html),
+  );
+};
+
+app.use('*all', noShit, auth, settings, main, error);
 
 const pathToCert = process.env.PATH_TO_CERT;
 const pathToKey = process.env.PATH_TO_KEY;

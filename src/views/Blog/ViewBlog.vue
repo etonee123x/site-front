@@ -44,12 +44,16 @@ En:
   nothingWasFound: 'Nothing was found...'
   confirmDelete: 'Delete Post'
   deleteMessage: 'Are you sure you want to delete this post?'
+  microblogWithNoClearDirection: 'Microblog with no clear direction. Something from thoughts, something random. Everything is combined into one feed.'
+  myBlog: 'My blog. Post.'
 Ru:
   blog: 'Блог'
   send: 'Отправить'
   nothingWasFound: 'Ничего не найдено...'
   confirmDelete: 'Удалить пост'
   deleteMessage: 'Вы уверены, что хотите удалить этот пост?'
+  microblogWithNoClearDirection: 'Микроблог без чёткой направленности. Что-то из мыслей, что-то случайное. Всё складывается в одну ленту'
+  myBlog: 'Мой блог. Пост.'
 </i18n>
 
 <script setup lang="ts">
@@ -65,7 +69,7 @@ import BlogPost from './components/BlogPost.vue';
 import { useBlogStore } from '@/stores/blog';
 import { useVuelidatePostData } from './composables/useVuelidatePostData';
 import { useAuthStore } from '@/stores/auth';
-import { goToPage404 } from '@/composables/goToPage404';
+import { useGoToPage404 } from '@/composables/useGoToPage404';
 import { MAIN } from '@/constants/selectors';
 import { useElementFinder } from '@/composables/useElementFinder';
 import DialogConfirmation from '@/components/DialogConfirmation.vue';
@@ -78,6 +82,7 @@ import { useSourcedRef } from '@/composables/useSourcedRef';
 import type { Post } from '@etonee123x/shared/types/blog';
 import type { ForPost } from '@etonee123x/shared/types/database';
 import BasePage from '@/components/ui/BasePage.vue';
+import { useSeoMeta } from '@unhead/vue';
 
 const LazyBaseForm = defineAsyncComponent(() => import('@/components/ui/BaseForm.vue'));
 const LazyBaseLoading = defineAsyncComponent(() => import('@/components/ui/BaseLoading.vue'));
@@ -101,6 +106,8 @@ const authStore = useAuthStore();
 const hasPosts = computed(() => Boolean(blogStore.all.length));
 
 const elementMain = useElementFinder(() => document.getElementById(MAIN));
+
+const goToPage404 = useGoToPage404();
 
 useInfiniteScroll(elementMain, () => blogStore.getAll().then(() => undefined), {
   canLoadMore: () => !(blogStore.isLoadingGetAll || blogStore.isEnd),
@@ -168,4 +175,8 @@ if (!isServer) {
     },
   );
 }
+
+useSeoMeta({
+  description: () => (blogStore.byId ? t('myBlog') : t('microblogWithNoClearDirection')),
+});
 </script>

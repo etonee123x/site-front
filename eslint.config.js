@@ -43,7 +43,6 @@ export default [
       '@stylistic/js/semi': ['error', 'always'],
       '@stylistic/js/block-spacing': ['error', 'always'],
       '@stylistic/js/comma-dangle': ['error', 'always-multiline'],
-      '@stylistic/js/no-mixed-operators': 'error',
       '@stylistic/js/lines-around-comment': [
         'error',
         {
@@ -86,6 +85,18 @@ export default [
       curly: ['error', 'all'],
       'arrow-body-style': ['error', 'as-needed'],
       'no-sparse-arrays': ['off'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'vue',
+              importNames: ['useSSRContext'],
+              message: 'use useSSRContext from custom composable instead',
+            },
+          ],
+        },
+      ],
     },
   },
   {
@@ -138,11 +149,7 @@ export default [
         },
       ],
       'vue/prop-name-casing': ['error', 'camelCase'],
-      'vue/custom-event-name-casing': [
-        'error',
-        'camelCase',
-        { ignores: ['foo-bar', '/^(?:[a-z]+[A-Z]*)+:(?:[a-z]+[A-Z]*)+$/'] },
-      ],
+      'vue/custom-event-name-casing': ['error', 'camelCase', { ignores: ['/^(?:[a-z]+[A-Z]*)+:(?:[a-z]+[A-Z]*)+$/'] }],
       'vue/attribute-hyphenation': ['error', 'never'],
       'vue/v-on-event-hyphenation': ['error', 'never'],
     },

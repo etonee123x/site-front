@@ -10,14 +10,15 @@ En:
 </i18n>
 
 <script setup lang="ts">
-import { isExtAudio, isExtImage, isExtVideo } from '@etonee123x/shared/helpers/folderData';
 import { pick } from '@etonee123x/shared/utils/pick';
 import { computed, defineAsyncComponent } from 'vue';
 
-import { getFileUrlExt, getLastParameter } from '@/utils/url';
+import { getFileUrlExtension, getLastParameter } from '@/utils/url';
 import { useGalleryStore } from '@/stores/gallery';
 import { useBlogStore } from '@/stores/blog';
 import { useI18n } from 'vue-i18n';
+import { isNil } from '@etonee123x/shared/utils/isNil';
+import { extensionToFileType, FILE_TYPES } from '@etonee123x/shared/helpers/folderData';
 
 const LazyAttachmentWithUnknownExtension = defineAsyncComponent(() => import('./AttachmentWithUnknownExtension.vue'));
 const LazyPreviewVideo = defineAsyncComponent(() => import('@/components/PreviewVideo.vue'));
@@ -46,9 +47,15 @@ const loadToGallery = () => {
       (acc, post) => [
         ...acc,
         ...post.filesUrls.reduce<NonNullable<Parameters<typeof loadGalleryItem>[1]>>((acc, fileUrl) => {
-          const maybeExt = getFileUrlExt(fileUrl);
+          const maybeExtension = getFileUrlExtension(fileUrl);
 
-          if (!(maybeExt && (isExtImage(maybeExt) || isExtVideo(maybeExt)))) {
+          if (isNil(maybeExtension)) {
+            return acc;
+          }
+
+          const fileType = extensionToFileType(maybeExtension);
+
+          if (!(fileType === FILE_TYPES.IMAGE || fileType === FILE_TYPES.VIDEO)) {
             return acc;
           }
 
@@ -67,10 +74,19 @@ const loadToGallery = () => {
 };
 
 const component = computed(() => {
-  const maybeExt = getFileUrlExt(props.fileUrl);
+  const maybeExtension = getFileUrlExtension(props.fileUrl);
 
-  switch (true) {
-    case maybeExt && isExtImage(maybeExt):
+  if (isNil(maybeExtension)) {
+    return {
+      is: LazyAttachmentWithUnknownExtension,
+      binds: pick(props, ['fileUrl']),
+    };
+  }
+
+  const fileType = extensionToFileType(maybeExtension);
+
+  switch (fileType) {
+    case FILE_TYPES.IMAGE:
       return {
         is: 'img',
         binds: {
@@ -79,7 +95,7 @@ const component = computed(() => {
           onClick: loadToGallery,
         },
       };
-    case maybeExt && isExtAudio(maybeExt):
+    case FILE_TYPES.AUDIO:
       return {
         is: 'audio',
         binds: {
@@ -87,7 +103,7 @@ const component = computed(() => {
           controls: true,
         },
       };
-    case maybeExt && isExtVideo(maybeExt):
+    case FILE_TYPES.VIDEO:
       return {
         is: LazyPreviewVideo,
         binds: {

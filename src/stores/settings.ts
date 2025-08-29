@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { enGB, ru } from 'date-fns/locale';
 
 import { i18n } from '@/i18n';
 import { Language, ThemeColor, type Settings } from '@/constants/settings';
@@ -10,10 +9,16 @@ import { THEME_COLOR } from '@/helpers/ui';
 import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
 
-const LANGUAGE_TO_DATE_FNS_LOCALE = Object.freeze({
-  [Language.En]: enGB,
-  [Language.Ru]: ru,
-});
+const LANGUAGES = [
+  {
+    name: Language.En,
+    locale: 'en-GB',
+  },
+  {
+    name: Language.Ru,
+    locale: 'ru-RU',
+  },
+] as const;
 
 export const useSettingsStore = defineStore('settings', () => {
   const cookies = useCookies();
@@ -69,7 +74,7 @@ export const useSettingsStore = defineStore('settings', () => {
     bodyClassList?.add(themeColorToThemeColorClass(color));
   };
 
-  const dateFnsLocale = computed(() => LANGUAGE_TO_DATE_FNS_LOCALE[i18n.global.locale.value]);
+  const languageInfo = computed(() => LANGUAGES.find((language) => language.name === settings.value.language));
 
   const saveSettings = (_settings: Settings) => {
     // сохранить настройки
@@ -93,7 +98,8 @@ export const useSettingsStore = defineStore('settings', () => {
   return {
     settings,
     themeColor,
-    dateFnsLocale,
+
+    languageInfo,
 
     themeColorToThemeColorTranslation,
 

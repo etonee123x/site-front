@@ -1,5 +1,5 @@
 <template>
-  <BaseDialog isHiddenHeader ref="baseDialog" v-model="isDialogOpen" @close="onDialogClose">
+  <BaseDialog isHiddenHeader v-model="isDialogOpen" @close="onDialogClose">
     <article v-if="blogStore.byId">
       <PostData
         class="max-w-full w-full h-full max-h-[calc(90dvh_-2*4*var(--spacing)_-6*var(--spacing)_-2*var(--spacing))] overflow-y-auto"
@@ -39,7 +39,6 @@ import { useRouter } from 'vue-router';
 
 import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { useBlogStore } from '@/stores/blog';
-import { useDateFns } from '@/composables/useDateFns';
 import { RouteName } from '@/router';
 import { useToggle } from '@vueuse/core';
 import PostData from './PostData.vue';
@@ -51,13 +50,12 @@ const router = useRouter();
 
 const blogStore = useBlogStore();
 
-const { intlFormatDistanceToNow } = useDateFns();
-
 const [isDialogOpen, toggleIsDialogOpen] = useToggle(Boolean(blogStore.byId));
 
-const sinceCreated = computed(() => blogStore.byId && intlFormatDistanceToNow(blogStore.byId._meta.sinceCreated));
+// DATEFNS
+const sinceCreated = computed(() => blogStore.byId && String(blogStore.byId._meta.sinceCreated));
 const sinceUpdated = computed(
-  () => isNotNil(blogStore.byId?._meta.sinceUpdated) && intlFormatDistanceToNow(blogStore.byId._meta.sinceUpdated),
+  () => isNotNil(blogStore.byId?._meta.sinceUpdated) && String(blogStore.byId._meta.sinceUpdated),
 );
 
 const createdAtISO = computed(() => blogStore.byId && new Date(blogStore.byId._meta.createdAt).toISOString());

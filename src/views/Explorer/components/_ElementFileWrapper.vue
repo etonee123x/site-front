@@ -1,18 +1,20 @@
 <template>
-  <article tabindex="0" class="explorerElement" @keydown.enter="onClick" @click="onClick">
-    <header class="flex justify-between">
-      <div class="explorerElement__title">
-        {{ element.name }}
+  <RouterLink :to="element.url" class="explorer-element">
+    <article>
+      <header class="flex justify-between">
+        <div class="explorer-element__title">
+          {{ element.name }}
+        </div>
+        <time :datetime="createdAtISO" :title="t('createdAt', { at: createdAtISO })" class="text-right m-2">
+          {{ sinceCreated }}
+        </time>
+      </header>
+      <hr />
+      <div class="p-2">
+        <slot />
       </div>
-      <time :datetime="createdAtISO" :title="t('createdAt', { at: createdAtISO })" class="text-right m-2">
-        {{ sinceCreated }}
-      </time>
-    </header>
-    <hr />
-    <div class="p-2">
-      <slot />
-    </div>
-  </article>
+    </article>
+  </RouterLink>
 </template>
 
 <i18n lang="yaml">
@@ -25,7 +27,7 @@ Ru:
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { ItemFile } from '@etonee123x/shared/helpers/folderData';
-import { useDateFns } from '@/composables/useDateFns';
+
 import type { WithMeta, WithSinceTimestamps } from '@etonee123x/shared/types/database';
 import { useI18n } from 'vue-i18n';
 
@@ -33,16 +35,10 @@ const props = defineProps<{
   element: ItemFile & WithMeta<WithSinceTimestamps>;
 }>();
 
-const emit = defineEmits<{
-  click: [];
-}>();
-
 const { t } = useI18n({ useScope: 'local' });
 
-const onClick = () => emit('click');
-
-const { intlFormatDistanceToNow } = useDateFns();
-
-const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
+// DATE-FNS
+// const sinceCreated = computed(() => intlFormatDistanceToNow(props.element._meta.sinceCreated, { numeric: 'always' }));
+const sinceCreated = computed(() => String(props.element._meta.sinceCreated));
 const createdAtISO = computed(() => new Date(props.element._meta.createdAt).toISOString());
 </script>

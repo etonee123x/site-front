@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, useSSRContext } from 'vue';
+import { computed } from 'vue';
 
 import { postAuth as _postAuth, deleteAuth as _deleteAuth } from '@/api/auth';
 import { useAsyncStateApi } from '@/composables/useAsyncStateApi';
@@ -11,6 +11,7 @@ import { KEY_JWT } from '@/constants/keys';
 import { isDevelopment } from '@/constants/mode';
 import { isServer } from '@/constants/target';
 import { nonNullable } from '@/utils/nonNullable';
+import { useSSRContext } from '@/composables/useSSRContext';
 
 export const useAuthStore = defineStore('auth', () => {
   const cookies = useCookies([KEY_JWT]);
@@ -20,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAdmin = computed(() => {
     const cookieJwt = isServer //
-      ? nonNullable(useSSRContext()).request.cookies[KEY_JWT]
+      ? nonNullable(useSSRContext()).express.request.cookies[KEY_JWT]
       : cookies.get(KEY_JWT);
 
     if (!isString(cookieJwt)) {
